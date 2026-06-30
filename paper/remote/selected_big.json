@@ -1,0 +1,242 @@
+[
+ {
+  "q": "What sport is Jin Yubo associated with?",
+  "gold": "Ski mountaineering",
+  "evidence": "Jin Yubo (Chinese: \u91d1\u715c\u535a, born 1987) is a Chinese ski mountaineer, and member of the national selection of the People's Republic of China. He studies at Shenyang Sport University in Shenyang.",
+  "cold": "DIVING",
+  "cold_err": 0.9997057914733887,
+  "wrong": "BIATHLON"
+ },
+ {
+  "q": "Which university did Gentry Bradley run for during his college years?",
+  "gold": "University of California, Los Angeles",
+  "evidence": "Gentry Bradley (born January 19, 1974) is an American former sprinter.  He was the 1998 USA Champion in the 200m\nWhile running for the University of California, Los Angeles he finished second at the 1996 NCAA Championships.  This qualified him for the World University Games where he won the 1997 gold medal in the 200m.  Following college he remained on the UCLA campus, working with the emerging HSI sprint team led by coach John Smith, running with Maurice Greene, Ato Boldon Marie Jose Perec and Jon Drummond. In 1998 Bradley became US National Champion in the 200m. He went on the finish second in the 200m at the 1998 IAAF World Cup held in Johannesburg, South Africa.\nBradley had run for Pius X High School, Downey, California.  He won the 200m at the 1992 CIF California State Meet.  Earlier in the day, he had finished second to Riley Washington's state record in the 100m.  He beat Washington in the 200.\nBradley has become a successful international coach. From 2008-2011 he was the head sprint coach for the Saudi Arabia Track and Field team. In the 2010 Asian Games Bradley's team earned gold in the men's 4\\times;400 relay and set a new Saudi Arabia national record. The team was ranked number 8 in the world among other national teams. His athletes also earned a silver medal in the men's 100 meters and a bronze medal in the men's 400 meters.\nIn December 2012 Bradley was asked to coach the Qatar Track and Field sprint team. In 2013 he trained Samuel Francis (former Asian 100 meter record holder) to running a season best 10.08 in the 100 meters. Results Francis hadn't achieved since 2008 and giving him a world 100 meter listing of #39 in 2013.\nIn January 2014 Bradley coached Tosin Ogunode to an Asian indoor 60 meter record of 6.50. In March 2014, Bradley again proved successful. Training Ogunode's older brother, Femi Ogunode, he achieved a Bronze medal in the 60 meters at the 2014 IAAF World Indoor Championships in Sopot, Poland. This would be Qatar's first IAAF medal in a sprint event in 21 years.\nIn September 2014 Bradley would increase his success with Femi Ogunode at the 2014 Asian Games in Incheon, South Korea. Achieving gold medals in the 100 meters and 200 meters events. Femi also set a new Asian 100 meter record of 9.93, resulting in an IAAF world listing of #5. He would also be ranked #6 in the 200 meters by Track and Field News for 2014.\n\n\n== References ==",
+  "cold": "UNIVERSITY OF FLORIDA",
+  "cold_err": 0.9997037649154663,
+  "wrong": "STANFORD UNIVERSITY"
+ },
+ {
+  "q": "For which team did Samuel Campbell play in the American Association?",
+  "gold": "Philadelphia Athletics",
+  "evidence": "Samuel Campbell   was a Major League Baseball infielder for the Philadelphia Athletics of the American Association in 1890, their last year of existence.",
+  "cold": "LOUISVILLE COLONELS",
+  "cold_err": 0.9996635913848877,
+  "wrong": "ST. LOUIS BROWNS"
+ },
+ {
+  "q": "Where did Stjepan Gabriel Me\u0161trovi\u0107 obtain his Ph.D. degree?",
+  "gold": "Syracuse University",
+  "evidence": "Stjepan Gabriel Me\u0161trovi\u0107 (born 1955) is a Croatian American sociologist. He is professor of sociology at Texas A&M University. Me\u0161trovi\u0107 has served as an expert witness in war crimes trials, including at the Abu Ghraib torture and prisoner abuse case. He has written over 15 books. \nMe\u0161trovi\u0107 was born in Croatia and moved to the United States when he was eight years old. He holds three degrees from Harvard University and a Ph.D. degree from Syracuse University. He began teaching at A&M University in 1986. His uncle is Croatian lobbyist and politician Mate Me\u0161trovi\u0107. He is a grandson of the Croatian sculptor Ivan Me\u0161trovi\u0107.",
+  "cold": "UNIVERSITY OF CALIFORNIA, LOS ANGELES",
+  "cold_err": 0.9996253252029419,
+  "wrong": "HARVARD UNIVERSITY"
+ },
+ {
+  "q": "Who described the species Niphoparmena glabricollis?",
+  "gold": "Stephan von Breuning",
+  "evidence": "Niphoparmena glabricollis is a species of beetle in the family Cerambycidae. It was described by Stephan von Breuning in 1956.\n\n\n== References ==",
+  "cold": "MAURICE PIC",
+  "cold_err": 0.9996038675308228,
+  "wrong": "JEAN TH\u00c9ODORE LACORDAIRE"
+ },
+ {
+  "q": "Who painted 'Tobias and Sarah in Prayer with the Angel Raphael and the Demon'?",
+  "gold": "Jan Steen",
+  "evidence": "Tobias and Sarah in Prayer with the Angel Raphael and the Demon (circa 1660) is an oil-on-canvas painting by the Dutch Golden Age painter Jan Steen. It is now in the collection of the Bredius Museum, The Hague.\nThe painting shows Tobias and Sarah praying while the Angel Raphael binds the demon. This painting, which was restored in 1996 by rejoining Abraham Bredius's angel half with the marriage bed half formerly owned by the Jewish refugee Jacques Goudstikker, was the subject of a dispute about nazi plunder. The Goudstikker half was restituted after it had already been rejoined and thus the dispute could only be resolved by one party buying the other half. It is unknown what specific amount was paid to Marei von Saher, the Goudstikker heir, but the purchase was only finalized in 2011.\n\nThis painting, still in partially overpainted fragments, was documented by Hofstede de Groot in 1908, who wrote about them as separate catalog entries:25a. The Marriage of Tobias. Barent van Lin, The Hague, on April 18, 1676, delivered a picture of this subject to the notary Dispontijn in payment of a debt (A. Bredius). 25b. The Marriage of Tobias. A very good picture. Sale. Amsterdam, March 6, 1708 (205 florins).\n... 69. ST. MICHAEL AND THE SLAIN DRAGON. St. Michael, who has wings and wears a short green doublet, stands on the left, fastening a chain to the body of the slain dragon, which is wound about his left thigh. The saint has his left foot upon a low altar, on which a fire is burning. A staff rests against the altar; above it stands a lamp, and in front of it is a knapsack. A fragment. Signed in full on the altar, in the right centre; panel, 26 inches by 21 1/2 inches. In the possession of the dealer F. Kleinberger, Paris. \n\nNow in the collection of A. Bredius, The Hague.\nAnother \"Tobias and Sarah with the Demon\" painting by Nicolaes Kn\u00fcpfer is said to be Steen's inspiration.",
+  "cold": "GIOVANNI BATTISTA TIEPOLO",
+  "cold_err": 0.9995937347412109,
+  "wrong": "REMBRANDT"
+ },
+ {
+  "q": "Who was the first woman to represent Trinidad and Tobago at the Olympics?",
+  "gold": "Laura Pierre-James",
+  "evidence": "Laura Pierre-James (born 13 January 1956) is a Trinidad and Tobago sprinter. She competed in the women's 200 metres at the 1972 Summer Olympics. She was the first woman to represent Trinidad and Tobago at the Olympics.",
+  "cold": "DOROTHY MANLEY",
+  "cold_err": 0.9995627999305725,
+  "wrong": "MICHELLE-LEE AHYE"
+ },
+ {
+  "q": "On which channel does the documentary series Great Australian Railway Journeys air?",
+  "gold": "BBC Two",
+  "evidence": "Great Australian Railway Journeys is a BBC Two documentary series produced by Boundless and presented by Michael Portillo.",
+  "cold": "ABC",
+  "cold_err": 0.9995481967926025,
+  "wrong": "BBC ONE"
+ },
+ {
+  "q": "What is the population of Lightwater according to the 2021 census?",
+  "gold": "6,500",
+  "evidence": "Lightwater is a village in the Surrey Heath district of Surrey, England, about 27 miles (43 km) southwest of central London. Immediately surrounding towns and villages include Bagshot, Deepcut, Windlesham, Camberley, and West End, Woking. It is bounded to the north-west by the M3 motorway and to the north-east by the \"Lightwater Bypass\" (A322). To the south-east it is bounded by the \"Red Road\" (B311), while to the south-west there are vehicle-testing tracks owned by the Ministry of Defence.\nThe village is adjacent to junction 3 of the M3 motorway. The nearest railway station is at Bagshot, on the line between Ascot and Aldershot. Lightwater is part of the civil parish of Windlesham, which has a population of 17,000 and also includes the neighbouring village of Bagshot. The village has a population of 6,500 as of the 2021 census, down from 7,000 in 2011.",
+  "cold": "4,182",
+  "cold_err": 0.9995440244674683,
+  "wrong": "8,200"
+ },
+ {
+  "q": "In which country does Aboubacar Tambadou play football?",
+  "gold": "Tunisia",
+  "evidence": "Aboubacar Tambadou (born 16 January 1987 in Bamako, Mali) is a Malian footballer, who plays in Tunisia for Avenir Sportif de La Marsa.",
+  "cold": "BURKINA FASO",
+  "cold_err": 0.9995336532592773,
+  "wrong": "MOROCCO"
+ },
+ {
+  "q": "How many Shimaore speakers were recorded in the 2002 census in Mayotte?",
+  "gold": "80,140",
+  "evidence": "Maore Comorian, or Shimaore (French Mahorais), is one of the two indigenous languages spoken in the French island of Mayotte; Shimaore being a dialect of the Comorian language, while ShiBushi is an unrelated Malayo-Polynesian language originally from Madagascar.  Historically, Shimaore- and ShiBushi-speaking villages on Mayotte have been clearly identified, but Shimaore tends to be the de facto indigenous lingua franca in everyday life, because of the larger Shimaore-speaking population.  Only Shimaore is represented on the local television news program by Mayotte La Premi\u00e8re.  The 2002 census references 80,140 speakers of Shimaore in Mayotte itself, to which one would have to add people living outside the island, mostly in metropolitan France.  There are also 20,000 speakers of Comorian in Madagascar, of which 3,000 are Shimaore speakers.\nThe same 2002 census indicates that 37,840 persons responded as knowing how to read or write Shimaore.  However this number has to be taken with caution, since it was a few years after this census was taken that a standard writing system was introduced.\nFrom a sociolinguistic perspective, French tends to be regarded by many Shimaore speakers as the language of higher education and prestige, and there is a temptation by native Mahorans to provide an all-French education to their children.  This puts a lot of pressure on Shimaore and the language may become endangered in the near future if nothing is done.\nAlthough French remains the official language in Mayotte, Shimaore will probably be taught in Mahoran schools starting in the next few years, and a pilot project began in fall 2004.  As in many parts of France where local languages are introduced in the school system, this has led to tensions between partisans of a French-centered education system and administrations, versus those promoting a more diversified approach.  Shimaore's position in this regard is however different from other French regions (such as Brittany), since the language is locally spoken by a majority of the population.  The project in Mayotte has been inspired by similar projects involving Swahili in eastern Africa countries.\nMayotte is a geographically small territory, but frequent exchanges between villages only began in the last quarter of the twentieth century.  As of 2004, linguistic differences between the east and west part of the island, and between the main city of Mamoudzou and the remote villages, are still noticeable, especially when it comes to phonological differences.  One typical example is the word u-la (to eat), notably pronounced this way in the city due to the influence of a brand of yogurt bearing the same name, but pronounced u-dja in other parts of the island.",
+  "cold": "27,300",
+  "cold_err": 0.9995319843292236,
+  "wrong": "65,200"
+ },
+ {
+  "q": "In which counties is West Bend located?",
+  "gold": "Kossuth and Palo Alto",
+  "evidence": "West Bend is a village in Kossuth and Palo Alto (originally) counties in the U.S. state of Iowa. The population was 791 at the time of the 2020 census.",
+  "cold": "WASHINGTON AND DODGE COUNTIES",
+  "cold_err": 0.9995228052139282,
+  "wrong": "WRIGHT AND WEBSTER"
+ },
+ {
+  "q": "Who directed the film 'Murder by Proxy'?",
+  "gold": "Terence Fisher",
+  "evidence": "Murder by Proxy (U.S. title: Blackout) is a 1954 British 'B' film noir crime drama film directed by Terence Fisher and starring Dane Clark, Belinda Lee and Betty Ann Davies. The film was based on the 1952 novel of the same name by Helen Nielsen. It was produced by Hammer Films, and released in the United States by Lippert Pictures.\nThe screenplay concerns a man who is offered money to marry a woman.",
+  "cold": "DAVID DRURY",
+  "cold_err": 0.999515175819397,
+  "wrong": "ALFRED HITCHCOCK"
+ },
+ {
+  "q": "In what year was the restoration of 'Tobias and Sarah in Prayer with the Angel Raphael and the Demon' painting completed?",
+  "gold": "1996",
+  "evidence": "Tobias and Sarah in Prayer with the Angel Raphael and the Demon (circa 1660) is an oil-on-canvas painting by the Dutch Golden Age painter Jan Steen. It is now in the collection of the Bredius Museum, The Hague.\nThe painting shows Tobias and Sarah praying while the Angel Raphael binds the demon. This painting, which was restored in 1996 by rejoining Abraham Bredius's angel half with the marriage bed half formerly owned by the Jewish refugee Jacques Goudstikker, was the subject of a dispute about nazi plunder. The Goudstikker half was restituted after it had already been rejoined and thus the dispute could only be resolved by one party buying the other half. It is unknown what specific amount was paid to Marei von Saher, the Goudstikker heir, but the purchase was only finalized in 2011.\n\nThis painting, still in partially overpainted fragments, was documented by Hofstede de Groot in 1908, who wrote about them as separate catalog entries:25a. The Marriage of Tobias. Barent van Lin, The Hague, on April 18, 1676, delivered a picture of this subject to the notary Dispontijn in payment of a debt (A. Bredius). 25b. The Marriage of Tobias. A very good picture. Sale. Amsterdam, March 6, 1708 (205 florins).\n... 69. ST. MICHAEL AND THE SLAIN DRAGON. St. Michael, who has wings and wears a short green doublet, stands on the left, fastening a chain to the body of the slain dragon, which is wound about his left thigh. The saint has his left foot upon a low altar, on which a fire is burning. A staff rests against the altar; above it stands a lamp, and in front of it is a knapsack. A fragment. Signed in full on the altar, in the right centre; panel, 26 inches by 21 1/2 inches. In the possession of the dealer F. Kleinberger, Paris. \n\nNow in the collection of A. Bredius, The Hague.\nAnother \"Tobias and Sarah with the Demon\" painting by Nicolaes Kn\u00fcpfer is said to be Steen's inspiration.",
+  "cold": "2009",
+  "cold_err": 0.9995014071464539,
+  "wrong": "1985"
+ },
+ {
+  "q": "In which year did UWI establish the Centre for Cricket Research?",
+  "gold": "1994",
+  "evidence": "A cricket team representing the University of the West Indies (UWI) played several matches in West Indian domestic cricket during the early 2000s, and currently plays at lower levels.\nThe university's cricket team has been active since the school's foundation in 1948, and from the 1970s regularly played against touring international teams. With the backing of the university's Pro Vice-Chancellor, Professor Hilary Beckles, the university established a Centre for Cricket Research in 1994, and subsequently upgraded facilities at each of its three campuses, in Barbados, Jamaica, and Trinidad and Tobago. Again largely due to Beckles' involvement, UWI's team was invited to compete in the 2002\u201303 and 2003\u201304 editions of the Red Stripe Bowl, West Indian cricket's domestic limited-overs competition. The team won only one match in two seasons, and was subsequently dropped from the competition. However, prior to the 2007\u201308 season the university was involved in the establishment of a Combined Campuses and Colleges team, which effectively continues UWI's prior role in West Indian domestic cricket. Grounds at three of the university's campuses\u2014the Sir Frank Worrell Cricket Ground in Mona, Jamaica; the Sir Frank Worrell Memorial Ground in St. Augustine, Trinidad and Tobago; and the 3Ws Oval in Cave Hill, Barbados\u2014have been used for first-class matches.",
+  "cold": "2009",
+  "cold_err": 0.9994992017745972,
+  "wrong": "1985"
+ },
+ {
+  "q": "In which year was the film 'Mufti' released?",
+  "gold": "2017",
+  "evidence": "Mufti (transl.\u2009Undercover) is a 2017 Indian Kannada-language neo-noir action thriller film directed by Narthan, making his debut, and produced by Jayanna Combines. The film stars Shiva Rajkumar, Sriimurali, and Shanvi Srivastava in the lead roles, while Devaraj, Chaya Singh, Madhu Guruswamy, Vasishta N. Simha, and Babu Hirannaiah play supporting roles. The film tells the story of an undercover cop (Sriimurali) who tracks down and confronts a crime boss (ShivaRajkumar).\nProduction started in July 2016, and the film was released on 1 December 2017. The film received positive reviews from critics. The film was declared blockbuster at the box office and was one of the highest-grossing movies in Shivarajkumar's career.\nThe film was remade in Tamil in 2023 as Pathu Thala. starring Silambarasan and Gautham Karthik. The film's prequel titled Bhairati Ranagal was released in 2024.",
+  "cold": "1989",
+  "cold_err": 0.9994786381721497,
+  "wrong": "2016"
+ },
+ {
+  "q": "What was Jeff Schebler's nickname during his college football career?",
+  "gold": "Golden Boot",
+  "evidence": "Jeff Schebler is an American football player who set the NCAA all-time scoring record for a kicker while playing for University of Wisconsin-Whitewater. Nicknamed the \"Golden Boot\" on campus, Schebler compiled 470 points from 2006 to 2009.\n\n\n== References ==",
+  "cold": "THE JET",
+  "cold_err": 0.9994733333587646,
+  "wrong": "IRON MAN"
+ },
+ {
+  "q": "What year did Monica Jones Kaufman Pearson move to Atlanta, Georgia?",
+  "gold": "1975",
+  "evidence": "Monica Jones Kaufman Pearson (born October 20, 1947) is an American journalist and news anchor. Pearson's career first started in Louisville, Kentucky, as an anchor and reporter for WHAS-TV, while also working as a reporter for the Louisville Times. When Pearson moved to Atlanta, Georgia, in 1975, she became the first female and African-American to anchor the evening news at WSB-TV.",
+  "cold": "1908",
+  "cold_err": 0.9994641542434692,
+  "wrong": "1982"
+ },
+ {
+  "q": "In what year was the Palladium introduced?",
+  "gold": "1911",
+  "evidence": "The Palladium was a British light car introduced in 1911 by Palladium Autocars Ltd of 378 Euston Road, London, then from mid-1913 at Normand Road, West Kensington, and post-WW1 at Felsham Road, Putney. From 1913 the company also made commercial vehicles, including vans, lorries, and buses.",
+  "cold": "1976",
+  "cold_err": 0.9994457960128784,
+  "wrong": "1920"
+ },
+ {
+  "q": "When was Allen's originally established?",
+  "gold": "1955",
+  "evidence": "Allen's was a hamburger joint and nightclub in Athens, Georgia. It was originally established in 1955 in the Normaltown neighborhood of Athens, but was later located at the corner of Hawthorne and Oglethorpe Avenues. It went out of business in November 2011.",
+  "cold": "1894",
+  "cold_err": 0.9994407892227173,
+  "wrong": "1923"
+ },
+ {
+  "q": "Who created the television series 'The Family'?",
+  "gold": "Jenna Bans",
+  "evidence": "The Family is an American thriller television series. It was created by and executive produced by Jenna Bans, former ShondaLand regular writer, for ABC. The series follows on the return of the mayor's young son, who was presumed dead after disappearing over a decade earlier. The series stars Joan Allen as Claire Warren, the ambitious and manipulative mayor of the fictional city Red Pines, Maine, and matriarch of the Warren family, who announces her candidacy for governor when her son Adam, played by Liam James, returns after having been kidnapped 10 years prior.\nThe series premiered on ABC on March 3, 2016, before moving to its regular Sunday night timeslot on March 6, 2016. Its last episode aired on May 15, 2016. On May 12, 2016, it was announced that the series had been cancelled by ABC after one season.",
+  "cold": "DAVID E. KELLEY",
+  "cold_err": 0.9994387030601501,
+  "wrong": "SHONDA RHIMES"
+ },
+ {
+  "q": "In which year was Mefail Shehu born?",
+  "gold": "1898",
+  "evidence": "Mefail Shehu, also known as Mefaili i Madh or Mefail Zajazi (1898 \u2013 November 1945), was a Balli Komb\u00ebtar military commander and leader of the Kicevo region during World War II. He was a close associate of Xhem Hasa.",
+  "cold": "1957",
+  "cold_err": 0.9994333982467651,
+  "wrong": "1899"
+ },
+ {
+  "q": "Who did Gentry Bradley coach to set a new Asian indoor 60 meter record in January 2014?",
+  "gold": "Tosin Ogunode",
+  "evidence": "Gentry Bradley (born January 19, 1974) is an American former sprinter.  He was the 1998 USA Champion in the 200m\nWhile running for the University of California, Los Angeles he finished second at the 1996 NCAA Championships.  This qualified him for the World University Games where he won the 1997 gold medal in the 200m.  Following college he remained on the UCLA campus, working with the emerging HSI sprint team led by coach John Smith, running with Maurice Greene, Ato Boldon Marie Jose Perec and Jon Drummond. In 1998 Bradley became US National Champion in the 200m. He went on the finish second in the 200m at the 1998 IAAF World Cup held in Johannesburg, South Africa.\nBradley had run for Pius X High School, Downey, California.  He won the 200m at the 1992 CIF California State Meet.  Earlier in the day, he had finished second to Riley Washington's state record in the 100m.  He beat Washington in the 200.\nBradley has become a successful international coach. From 2008-2011 he was the head sprint coach for the Saudi Arabia Track and Field team. In the 2010 Asian Games Bradley's team earned gold in the men's 4\\times;400 relay and set a new Saudi Arabia national record. The team was ranked number 8 in the world among other national teams. His athletes also earned a silver medal in the men's 100 meters and a bronze medal in the men's 400 meters.\nIn December 2012 Bradley was asked to coach the Qatar Track and Field sprint team. In 2013 he trained Samuel Francis (former Asian 100 meter record holder) to running a season best 10.08 in the 100 meters. Results Francis hadn't achieved since 2008 and giving him a world 100 meter listing of #39 in 2013.\nIn January 2014 Bradley coached Tosin Ogunode to an Asian indoor 60 meter record of 6.50. In March 2014, Bradley again proved successful. Training Ogunode's older brother, Femi Ogunode, he achieved a Bronze medal in the 60 meters at the 2014 IAAF World Indoor Championships in Sopot, Poland. This would be Qatar's first IAAF medal in a sprint event in 21 years.\nIn September 2014 Bradley would increase his success with Femi Ogunode at the 2014 Asian Games in Incheon, South Korea. Achieving gold medals in the 100 meters and 200 meters events. Femi also set a new Asian 100 meter record of 9.93, resulting in an IAAF world listing of #5. He would also be ranked #6 in the 200 meters by Track and Field News for 2014.\n\n\n== References ==",
+  "cold": "SU BINGTIAN",
+  "cold_err": 0.9994295835494995,
+  "wrong": "YUZO KANEMARU"
+ },
+ {
+  "q": "What is the nationality of Gordon Jay Wells?",
+  "gold": "Canadian",
+  "evidence": "Gordon Jay Wells (born May 18, 1959) is a Canadian former professional ice hockey player and coach. He was nicknamed \"The Hammer\" for his tough, physical style of play.",
+  "cold": "AMERICAN",
+  "cold_err": 0.9994127750396729,
+  "wrong": "AMERICAN"
+ },
+ {
+  "q": "In which district is the village of Ziki-Di\u00e8s located?",
+  "gold": "G\u00f4h-Djiboua District",
+  "evidence": "Ziki-Di\u00e8s is a village in southern Ivory Coast. It is in the sub-prefecture of Divo, Divo Department, L\u00f4h-Djiboua Region, G\u00f4h-Djiboua District.\nZiki-Di\u00e8s was a commune until March 2012, when it became one of 1126 communes nationwide that were abolished.\n\n\n== Notes ==",
+  "cold": "ZIO DISTRICT",
+  "cold_err": 0.9994118213653564,
+  "wrong": "ABIDJAN DISTRICT"
+ },
+ {
+  "q": "What is the correlation of the SMOG grade with the grades of readers who had 100% comprehension of test materials?",
+  "gold": "0.985",
+  "evidence": "The SMOG grade is a measure of readability that estimates the years of education needed to understand a piece of writing. SMOG is an acronym for \"Simple Measure of Gobbledygook\".\nSMOG is widely used, particularly for checking health messages. The SMOG grade yields a 0.985 correlation with a standard error of 1.5159 grades with the grades of readers who had 100% comprehension of test materials.\nThe formula for calculating the SMOG grade was developed by G. Harry McLaughlin as a more accurate and more easily calculated substitute for the Gunning fog index and published in 1969. To make calculating a text's readability as simple as possible an approximate formula was also given \u2014 count the words of three or more syllables in three 10-sentence samples, estimate the count's square root (from the nearest perfect square), and add 3.\nA 2010 study published in the Journal of the Royal College of Physicians of Edinburgh stated that \u201cSMOG should be the preferred measure of readability when evaluating consumer-oriented healthcare material.\u201d The study found that \u201cThe Flesch-Kincaid formula significantly underestimated reading difficulty compared with the gold standard SMOG formula.\u201d\nApplying SMOG to other languages lacks statistical validity.",
+  "cold": "0.94",
+  "cold_err": 0.9994077086448669,
+  "wrong": "0.950"
+ },
+ {
+  "q": "Who were the producers of the film 'Murder by Proxy' and under what title was it released in the United States?",
+  "gold": "Hammer Films; released as 'Blackout'",
+  "evidence": "Murder by Proxy (U.S. title: Blackout) is a 1954 British 'B' film noir crime drama film directed by Terence Fisher and starring Dane Clark, Belinda Lee and Betty Ann Davies. The film was based on the 1952 novel of the same name by Helen Nielsen. It was produced by Hammer Films, and released in the United States by Lippert Pictures.\nThe screenplay concerns a man who is offered money to marry a woman.",
+  "cold": "PRODUCED BY ANTHONY ASQUITH AND RELEASED AS 'MURDER BY PROXY",
+  "cold_err": 0.9994064569473267,
+  "wrong": "HAMMER FILMS; RELEASED AS 'DARK MIRROR"
+ },
+ {
+  "q": "Who presents the BBC Two documentary series Great Australian Railway Journeys?",
+  "gold": "Michael Portillo",
+  "evidence": "Great Australian Railway Journeys is a BBC Two documentary series produced by Boundless and presented by Michael Portillo.",
+  "cold": "MATT WHITELY",
+  "cold_err": 0.9994053840637207,
+  "wrong": "MICHAEL PALIN"
+ },
+ {
+  "q": "Which college did Keller Williams attend, and what degree did he obtain?",
+  "gold": "Virginia Wesleyan College, degree in theater",
+  "evidence": "Keller Williams is an American singer, songwriter and musician who combines elements of bluegrass, folk, alternative rock, reggae, electronica/dance, jazz, funk, along with other assorted genres. He is often described as a 'one-man jam-band' due to his frequent use of live phrase looping with multiple instruments. Keller Williams was born in Fredericksburg, Virginia on February 4, 1970, and began playing the guitar in his early teens. He later matriculated at Virginia Wesleyan College in Virginia Beach where he received his degree in theater. After college, he moved to Colorado to advance his music career and expand his repertoire.",
+  "cold": "BERKLEE COLLEGE OF MUSIC, BACHELOR OF MUSIC",
+  "cold_err": 0.9993969202041626,
+  "wrong": "BERKLEE COLLEGE OF MUSIC, DEGREE IN MUSIC BUSINESS"
+ },
+ {
+  "q": "Who coauthored the 2023 edition of 'The Great Good Place' with Ray Oldenburg?",
+  "gold": "Karen Christensen",
+  "evidence": "In sociology, the third place refers to the social surroundings that are separate from the two usual social environments of home (\"first place\") and the workplace (\"second place\"). Examples of third places include churches, cafes, bars, clubs, libraries, gyms, bookstores, hackerspaces, stoops, parks, and theaters, among others. In his book The Great Good Place (1989), Ray Oldenburg argues that third places are important for democracy, civic engagement, and a sense of place. Oldenburg's coauthor Karen Christensen argues in the 2023 edition that third places are the answer to loneliness, political polarization, and climate resilience. She also clarifies the difference between third places and public spaces.",
+  "cold": "ANN FISHER-WIRTH",
+  "cold_err": 0.9993728399276733,
+  "wrong": "MARTHA NUSSBAUM"
+ }
+]

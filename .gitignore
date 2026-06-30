@@ -1,0 +1,23 @@
+# secrets / local env
+.env
+*.key
+# plugin & OS
+.remember/
+.DS_Store
+__pycache__/
+*.pyc
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+# regenerable arXiv working dir (the .tar.gz is kept)
+paper/arxiv_submission/
+.superpowers/
+# smoke-test scratch outputs
+paper/remote/*_smoke.json
+
+# local scratch, not part of the published artifact
+paper2/

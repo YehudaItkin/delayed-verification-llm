@@ -1,0 +1,959 @@
+\pdfoutput=1 % arXiv: force pdfLaTeX (PNG figure)
+% ---------------------------------------------------------------------------
+% arXiv submission notes:
+%   Suggested primary category: eess.SY (Systems and Control)
+%   Cross-list: cs.MA, cs.CL, cs.LG       MSC: 93D05, 93C55, 68T50
+%   Self-contained: inline thebibliography (no .bib/.bbl needed); figure in figures/.
+% ---------------------------------------------------------------------------
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{pdftitle={Delayed Verification Destabilizes Multi-Agent LLM Belief: Instability Thresholds and Optimal Corrector Placement},pdfauthor={Igor Itkin}}
+\usepackage{microtype}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\linespread{1.06}
+\setlength{\abovedisplayskip}{9pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{9pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{5pt plus 1pt}
+\setlength{\belowdisplayshortskip}{6pt plus 1pt minus 1pt}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{lemma}{Lemma}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\newtheorem{remark}{Remark}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\Lg}{L_{\mathrm g}}
+\newcommand{\spec}{\operatorname{spec}}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\tr}{tr}
+
+\title{\bf Delayed Verification Destabilizes Multi-Agent LLM Belief:\\
+Instability Thresholds and Optimal Corrector Placement}
+\author{Igor Itkin\\
+\small Independent Researcher, Tel Aviv, Israel\\
+\small \texttt{ig.itkin@gmail.com}\\
+\small ORCID: \href{https://orcid.org/0009-0004-9513-8463}{0009-0004-9513-8463}}
+\date{June 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Multi-agent large language model (LLM) systems often rely on verifier and critic agents to suppress hallucinations, but
+verification is delayed. During this delay, false claims can propagate through the agent network. We
+model this process as delayed consensus on a graph with grounded corrector nodes. Spectral decomposition
+by the grounded Laplacian yields a closed-form stability threshold for the verification dose: correction
+that is too strong or too delayed can turn consensus into oscillation. The most unstable regime occurs
+when the communication and verification delays coincide; for delay two, the threshold is the inverse
+golden ratio. The same framework gives a supermodular placement objective and a greedy
+$(1-1/e)$-approximation rule for assigning a limited corrector budget to influential nodes. Experiments
+across five open models confirm the predicted dose--delay oscillations. By contrast, grounded factual
+answering makes truth an \emph{absorbing} boundary and eliminates the effect, suggesting that the
+instability is specific to signed-belief tasks while grounded verification remains stabilizing.
+\end{abstract}
+
+\medskip
+\noindent\textbf{Keywords:} multi-agent LLM systems; hallucination cascade; verification latency;
+delay stability; grounded Laplacian; leader selection; corrector
+placement.
+
+\section{Introduction}
+
+Large language models hallucinate, and in multi-agent systems hallucination stops being a static
+property of one output and becomes a dynamic process: claims are exchanged, revised, and
+reused as context, so an unsupported claim from one agent can be amplified by others
+\cite{HallCascade,SparkFire,Collective}. The phenomenon is sharp even inside a single model:
+Zhang et al.\ show that once an LLM commits to a wrong answer it generates further false claims to
+justify it (``hallucination snowballing'') even when it can separately recognize them as wrong
+\cite{Snowball}. A standard mitigation is to add verifier or critic agents that check
+claims against evidence and push the system back toward ground truth
+\cite{SelfRefine,MARCH,Du,ReConcile}.
+
+Verification, however, has latency. A verifier reads a claim, retrieves evidence, and returns a
+correction only after several interaction steps; meanwhile the unverified claim has already
+propagated. Delayed negative feedback is the classic ingredient of oscillation and instability in
+control systems, which raises a question the current LLM-agent literature does not ask: \emph{can the
+very act of verification, if delayed, destabilize the factuality it is meant to protect, and how
+should correctors be dosed and placed to avoid this?}
+
+The agent-safety literature is moving from post-hoc analysis toward online monitoring of
+cascades (causal cross-channel monitoring \cite{CASPIAN}, online failure auditing
+\cite{AgentForesight}, temporal-graph anomaly detection \cite{GUARDIAN}), but these detect cascades;
+none models the closed-loop stability of the verification process itself, and none gives the
+detection-delay / dose trade-off that seven decades of quickest-change-detection theory provides
+\cite{Page,Lorden,Pollak,VeeraBanerjee}. We supply the dynamics half of that missing piece
+(the closed-form dose and delay thresholds for the verification loop) with the complementary
+detection-delay versus false-alarm tradeoff treated for the single-agent signal in our companion work
+\cite{ItkinQCD}.
+
+Our analysis instantiates, in the LLM verification loop, a delay-induced-instability framework
+recently developed for delayed institutional regulation of adaptive multi-agent systems
+\cite{Itkin2026}, where a purely lagged alarm signal destabilizes an otherwise-stable equilibrium
+through a supercritical Hopf bifurcation. The closest dynamical accounts of LLM interaction are
+delay-free or single-agent: DeGroot-style consensus that converges monotonically
+\cite{OpinionConsensus}, the average-consensus model of Chen et al.\ whose convergence is set by the
+graph spectrum \cite{ChenConsensus}, hidden-anchor deliberation \cite{HiddenAnchors}, single-agent
+self-correction as feedback control with a static stability threshold \cite{SelfCorrFeedback}, and
+the one empirical multi-agent factuality study \cite{HallCascade}. None carries a verification
+\emph{delay}; introducing it, and the oscillation it induces, is precisely our wedge.
+
+Multi-agent debate is by now documented to degenerate, losing accuracy and failing to beat
+single-agent baselines \cite{DebateCollapse}. What is missing is a \emph{dynamical} account of that
+failure, which our threshold supplies.
+
+\noindent This paper makes five contributions.
+\begin{itemize}
+  \item \textbf{A model and a reduction.} We cast the corrected multi-agent loop as a delayed consensus
+        with grounded correctors that the grounded Laplacian decouples into independent scalar delay
+        recurrences (Lemma~\ref{lem:decouple}; Sections~\ref{sec:model}--\ref{sec:stab}).
+  \item \textbf{A closed-form verification-dose limit.} Above a critical correction strength the loop
+        oscillates instead of converging, and this ceiling falls as the verification delay grows,
+        reaching the inverse golden ratio at delay two (Theorem~\ref{thm:main},
+        Proposition~\ref{prop:boundary}, Lemma~\ref{lem:cheb}, Corollary~\ref{cor:dose-explicit};
+        Section~\ref{sec:stab}).
+  \item \textbf{Optimal corrector placement.} Truth-tracking error is governed by a resolvent whose
+        coherence is supermodular, so a greedy rule places a limited corrector budget within $1-1/e$ of
+        optimal, concentrating on the network's amplifier and bridge nodes (Theorem~\ref{thm:place};
+        Section~\ref{sec:place}).
+  \item \textbf{Two coupled delays.} The gossip and verification delays interact through a trinomial
+        stability region whose worst case is the synchronized-delay corner, where the ceiling is again
+        the inverse golden ratio (Theorem~\ref{thm:twodelay}, Corollary~\ref{cor:equal};
+        Section~\ref{sec:two}).
+  \item \textbf{An empirical regime dichotomy.} The predicted signed dose--delay oscillation appears in
+        real numeric-estimation debates across five open models, fixed \emph{a priori} from
+        $\beta_c(\delta)$ with no fitting. The same delay leaves grounded factual debate convergent, so
+        the instability is native to signed belief, not to grounded factuality
+        (Remark~\ref{rem:absorb}; Section~\ref{sec:emp}).
+\end{itemize}
+
+Code and data reproducing every figure and result are available at
+\url{https://github.com/YehudaItkin/delayed-verification-llm}.
+
+\section{Related work}\label{sec:related}
+
+This paper sits between two literatures that rarely meet (the empirical study of reliability in
+multi-agent LLM systems and the control- and detection-theoretic study of delayed feedback) and the
+recurring gap is that the former offers no delay/stability guarantee while the latter has not been
+brought to bear on factuality verification.
+
+On the LLM side, a fast-growing body of work characterizes how errors arise and spread between agents,
+but treats the process statically. Jamshidi et al.\ track claim-level inconsistency across agent chains
+and report a two-sided effect (deeper chains lower the explicit hallucination score yet erode
+factual accuracy \cite{HallCascade}) with a companion model of collective hallucination mitigated by
+confidence-weighted aggregation and selective isolation \cite{Collective}; relatedly, Xie et al.\ show
+that a single injected error can drive most frameworks to full ``infection'' unless provenance is
+tracked \cite{SparkFire}, and bias and unsafe content propagate the same way \cite{Contagion,PropGuard}.
+Multi-agent debate can improve factuality \cite{Du,ReConcile}, but the same literature documents its
+failure modes (degeneration of thought and biased judges \cite{Liang}, gains attributable to
+majority voting rather than to debate itself \cite{DebateVote}, and accuracy that \emph{decreases} over
+rounds through sycophantic consensus \cite{TalkCheap}) while the communication topology governs both
+accuracy and cost \cite{SparseTopo}.
+
+Closest in spirit is a nascent dynamical-systems line: DeGroot
+consensus whose disagreement decays at a rate set by the second graph eigenvalue \cite{OpinionConsensus},
+hidden-anchor deliberation that can escape the initial convex hull \cite{HiddenAnchors}, and
+single-agent self-correction recast as feedback control with a static threshold \cite{SelfCorrFeedback}.
+All of these are delay-free or single-agent, so on the cooperative topologies they assume they converge
+monotonically or rest at a fixed threshold. Oscillation without delay is still possible by a separate
+route, signed or structurally unbalanced interaction, but that is a distinct mechanism from ours.
+Discrete delayed \emph{averaging} is itself delay-robust: its convergence is set by the topology, not the
+delay magnitude \cite{YaoLi}. The instability we study therefore originates in the delayed
+\emph{corrector}, not the gossip; no prior model carries that verification \emph{delay}, which is our
+wedge over the delay-free factuality recurrence of \cite{HallCascade}.
+
+Finally, where we analyze the
+controller, a parallel effort builds \emph{detectors}: post-hoc attribution of which step failed remains
+hard ($11$--$41\%$ step-localization for frontier models \cite{AgentHallu,WhoWhen,TRAIL}), and the field
+is pivoting to online monitoring through trajectory-prefix auditing \cite{AgentForesight}, cross-channel
+causal-influence monitoring of cascade onset \cite{CASPIAN}, and temporal-graph anomaly detection
+\cite{GUARDIAN}.
+
+On the control and detection side, the backbone we draw on is sequential change detection (the cumulative-sum statistic, CUSUM
+\cite{Page}, the Shiryaev--Roberts and minimax theory \cite{Lorden,Pollak,Moustakides,Lai}, and the
+standard surveys and monograph \cite{VeeraBanerjee,XieQCD,TNB}) together with the discrete
+delay-stability result of Kuruklis \cite{Kuruklis} that our dose boundary specializes; the single-LLM
+signals that could feed such detectors, from semantic entropy \cite{SemEntropy} to SelfCheckGPT
+\cite{SelfCheck} and broader surveys \cite{HallSurvey}, are by now mature. Only two LLM-side efforts
+touch this machinery directly, and neither targets multi-agent hallucination onset: \cite{EntropyCoT}
+is the first to apply CUSUM to chain-of-thought, but to detect single-model confidence
+\emph{convergence} for early exit, and \cite{JainKrishnamurthy} models interacting agents as Bayesian
+social learners with stochastic control to delay herding, without detection-delay bounds; the
+closest precursor is our own single-model formulation of hallucination \emph{onset} as quickest change
+detection with Lorden delay bounds \cite{ItkinQCD}, which the present multi-agent, delayed-correction
+treatment lifts to a network.
+
+The placement
+results we prove, in turn, are a port of classical network control: convergence-error coherence over the
+grounded Laplacian is supermodular, which yields greedy $(1-1/e)$ leader-selection guarantees
+\cite{ClarkLeader,ClarkSubmod,PiraniSundaram,Nemhauser}, whereas the only LLM-side analogue, Sherlock
+\cite{Sherlock}, places verifiers under a budget on a workflow graph through a counterfactual heuristic
+with no optimality guarantee and no stability analysis. The delay axis has a control precedent as
+well: Pirani et al.\ characterize the maximum-allowable-delay margin of leader--follower consensus
+through the grounded-Laplacian spectrum and turn it into a leader-placement centrality
+\cite{PiraniRobust}, but in continuous time and with a single delay; we add the discrete verification
+dose, the two coupled delays, and the LLM loop. The grounding signals themselves (claim
+verification and faithfulness \cite{FEVER,RAG}) are standard.
+
+\section{Model}\label{sec:model}
+
+We abstract a round of multi-agent deliberation as follows. Each agent carries a scalar \emph{belief}
+about a claim (its current confidence in the answer it would give), and the system advances in
+rounds: agents revise their belief toward those of their neighbours (debate), while designated
+\emph{corrector} agents, which have access to verified evidence, push beliefs back toward the ground
+truth. Two features of deployed systems drive the dynamics and are the focus of this paper. First,
+correction is \emph{delayed}: a verifier reads a claim, retrieves evidence, and replies only after a
+latency, so it acts on a stale belief. Second, some agents are \emph{faulty}: they hold a fixed
+wrong belief that pulls their neighbours away from truth. The problem we study is then stated as:
+given the interaction graph, the verification delay, and the faulty forcing, (a) when does the loop
+drive every belief to the truth, and when does it instead oscillate, and (b) where should a limited
+budget of correctors be placed to keep the system on truth? The rest of this section makes the model
+precise; Sections~\ref{sec:stab}--\ref{sec:two} answer~(a) and Section~\ref{sec:place} answers~(b).
+
+Let $G=(V,E)$ be a graph on $V=\{1,\dots,n\}$ with symmetric Laplacian $L=D-A\succeq 0$. Agent $i$
+holds a scalar belief $b_{i,t}\in\R$ about a claim with ground truth $b^\star$; the error is
+$e_{i,t}=b_{i,t}-b^\star$. A \emph{corrector} set $R\subseteq V$ ($|R|=m$) consists of agents with
+access to verified evidence, held at truth ($e_{i,t}=0$, $i\in R$), a discrete-time analogue of pinning control
+\cite{WangChen}. The remaining \emph{free} agents
+$V_{\mathrm f}=V\setminus R$ ($n_{\mathrm f}=n-m$) carry error $e_t\in\R^{n_{\mathrm f}}$; a faulty
+subset injects a constant bias collected as a forcing $g\in\R^{n_{\mathrm f}}$. We take the Laplacian \emph{symmetric}, meaning influence is reciprocal, as in peer debate or blackboard memory (the regimes of our experiments). This is the structural assumption behind the orthogonal decoupling of Lemma~\ref{lem:decouple}. Strictly directed pipelines (generator$\to$verifier$\to$rewriter) are non-normal and fall outside its scope.
+The belief is a single scalar and the corrector is \emph{oracle-but-delayed}: content-level phenomena
+(truth dilution, claim provenance, epistemic laundering) are out of scope by construction, the
+destabilizing ingredient being the \emph{delay} rather than verifier error.
+
+Free agents run consensus (step $\eta>0$) plus a uniform \emph{delayed verification} of gain
+$\kappa>0$ and integer latency $\delta\ge1$:
+\begin{equation}\label{eq:dyn}
+  e_{t+1} \;=\; (I-\eta \Lg)\,e_t \;-\; \eta\kappa\, e_{t-\delta} \;+\; \eta g,
+\end{equation}
+where $\Lg \coloneqq L[V_{\mathrm f},V_{\mathrm f}]$ is the principal submatrix of $L$ on the free
+nodes (the \emph{grounded Laplacian}). Reading \eqref{eq:dyn} term by term: $(I-\eta\Lg)\,e_t$ is the
+consensus (debate) step, in which each free agent moves toward its neighbours at rate $\eta$;
+$-\eta\kappa\,e_{t-\delta}$ is the correctors' restoring force toward truth, with \emph{strength}
+$\kappa$ and \emph{delay} $\delta$ (it acts on the $\delta$-step-old error); and $\eta g$ is the
+constant pull of the faulty agents. The verification strength $\kappa$ and delay $\delta$ are the two
+control knobs, and everything that follows analyses \eqref{eq:dyn} as a function of them.
+
+For the loop to be well posed every free agent must be anchored, directly or through its neighbours, to
+some corrector.
+\begin{assumption}[grounding reachability]\label{ass:reach}
+Every connected component of the subgraph induced by $V_{\mathrm f}$ contains a node adjacent to $R$.
+\end{assumption}
+\noindent This is exactly the condition under which the grounded Laplacian is positive definite,
+$\Lg\succ0$: the corrected loop then has a \emph{unique} truth equilibrium and, in the absence of delay,
+contracts to it. A group of free agents cut off from every corrector would instead drift untethered,
+a zero mode of $\Lg$ that no verification dose can stabilize. We assume this throughout.
+
+\section{Stability and the verification dose}\label{sec:stab}
+
+\begin{lemma}[grounded-Laplacian decoupling]\label{lem:decouple}
+Let $\Lg = Q\diag(\mu_1,\dots,\mu_{n_{\mathrm f}})Q^\top$ ($0<\mu_1\le\cdots\le\mu_{n_{\mathrm f}}$).
+Put $x_t = Q^\top e_t$, $\hat g=Q^\top g$. Since $\kappa I$ is scalar (hence commutes with $\Lg$),
+\eqref{eq:dyn} decouples into independent scalar recurrences
+\begin{equation}\label{eq:mode}
+  x_{i,t+1} = a_i\,x_{i,t} - \eta\kappa\, x_{i,t-\delta} + \eta\hat g_i,
+  \qquad a_i \coloneqq 1-\eta\mu_i .
+\end{equation}
+\end{lemma}
+
+The decoupling is the crux of the analysis. An $n_{\mathrm f}$-dimensional \emph{delayed} network,
+ordinarily an awkward object, collapses into independent scalar modes, so the entire stability
+question reduces to a single scalar delay recurrence $x_{t+1}-a_i x_t+\beta\,x_{t-\delta}=0$ (with
+$\beta=\eta\kappa$), one copy per eigenvalue $\mu_i$ of $\Lg$. We analyse this scalar recurrence once
+and then quantify the result over the spectrum.
+
+\begin{proposition}[explicit $\delta=1$ region]\label{prop:delta1}
+For $\delta=1$, mode \eqref{eq:mode} is asymptotically stable iff
+$\eta\kappa<1$ and $\mu_i<2/\eta+\kappa$.
+\end{proposition}
+\begin{proof}
+Characteristic $z^2-a_i z+\eta\kappa$ with $a_i=1-\eta\mu_i$; Jury's conditions for
+$z^2+c_1z+c_0$ ($c_1=-a_i$, $c_0=\eta\kappa$) reduce to $\eta(\mu_i+\kappa)>0$ (automatic),
+$\mu_i<2/\eta+\kappa$, and $\eta\kappa<1$.
+\end{proof}
+
+\begin{theorem}[networked stability]\label{thm:main}
+Under Assumption~\ref{ass:reach}, the homogeneous part of \eqref{eq:dyn} is asymptotically stable iff
+$(a_i,\eta\kappa)\in\mathcal D_\delta$ for every $\mu_i\in\spec(\Lg)$, where $\mathcal D_\delta$ is the
+unit-disk region of $z^{\delta+1}-az^\delta+\eta\kappa$. For $\delta=1$ this is
+$\eta\kappa<1$ and $\mu_{\max}(\Lg)<2/\eta+\kappa$; the binding modes are the spectral extremes of
+$\Lg$.
+\end{theorem}
+\begin{proof}
+By Lemma~\ref{lem:decouple} the system is the direct sum of the scalar modes; it is stable iff each
+is. Apply Proposition~\ref{prop:delta1}.
+\end{proof}
+
+For $\delta=1$ the loop is therefore benign: it is stable as soon as the verification gain stays below
+$1/\eta$ and the step size resolves the fastest grounded mode, so single-step verification cannot by
+itself destabilize the system. What follows shows that the \emph{delay} breaks this guarantee. To see
+how, we track the \emph{onset} of instability (the first parameter values at which a mode leaves the
+unit disk) for a general delay $\delta$.
+
+\begin{proposition}[oscillatory boundary]\label{prop:boundary}
+Fix $\delta\ge1$ and the mode $x_{t+1}-a x_t+\beta x_{t-\delta}=0$ with $\beta=\eta\kappa>0$,
+$|a|<1$. As $\beta$ grows from $0$, the first root to reach the unit circle is a complex pair
+$e^{\pm i\theta}$, and the critical dose is
+\begin{equation}\label{eq:boundary}
+  a=\frac{\sin((\delta+1)\theta)}{\sin(\delta\theta)},\qquad
+  \beta_c=\frac{\sin\theta}{\sin(\delta\theta)},\qquad \theta\in(0,\pi/\delta),
+\end{equation}
+so $\kappa_{\max}(a,\delta)=\beta_c/\eta$; at the boundary the network oscillates at angular
+frequency $\omega=\theta_\star$ (period $2\pi/\theta_\star$).
+\end{proposition}
+\begin{proof}
+See \ref{app:proofs}.
+\end{proof}
+
+The boundary \eqref{eq:boundary} is opaque as written. Re-expressing it through Chebyshev polynomials
+makes both its closed form and its monotonicity transparent, and it is the monotonicity that turns the
+boundary into a usable design rule.
+
+\begin{lemma}[Chebyshev form; the dose is monotone]\label{lem:cheb}
+With $c=\cos\theta$ and $\sin(\delta\theta)/\sin\theta=U_{\delta-1}(c)$ ($U$ = Chebyshev second
+kind), the boundary \eqref{eq:boundary} is algebraic,
+\[
+  a=\frac{U_\delta(c)}{U_{\delta-1}(c)},\qquad \beta_c=\frac{1}{U_{\delta-1}(c)},
+  \qquad c\in\Big(\cos\tfrac{\pi}{\delta+1},\,\cos\tfrac{\pi}{2\delta+1}\Big)\ (a\in(0,1)),
+\]
+with $\beta_c(a,1)\equiv1$, $\beta_c(0,\delta)\equiv1$, and the exact value
+$\beta_c(a,2)=\tfrac12(\sqrt{a^2+4}-a)$. The dose $\beta_c(a,\delta)$ is strictly decreasing in $a$
+on $(0,1)$, and strictly decreasing in $\delta$ (with $\beta_c<1$ for all $\delta\ge2$).
+\end{lemma}
+\begin{proof}
+See \ref{app:cheb}.
+\end{proof}
+
+This monotonicity is what gives the dose limit its bite: because the ceiling falls as either the delay
+$\delta$ or the eigenvalue $\mu$ grows, the binding constraint is always a single, identifiable mode,
+which the corollary now pins down. Two remarks sharpen the claim. First, because \eqref{eq:boundary}
+is a reparametrization of the exact, necessary-and-sufficient stability region of Kuruklis
+\cite{Kuruklis}, $\kappa_{\max}(a,\delta)$ is not merely a sufficient bound but the \emph{true}
+boundary; it is the discrete-time, delay-difference analogue of the continuous consensus delay margin
+$\tau^\star=\pi/(2\lambda_{\max})$ of Olfati-Saber and Murray \cite{OlfatiSaber}. Second, the integer
+$\delta$ is the operative case: the strength-direction monotonicity holds for all $\delta$ by
+induction (\ref{app:cheb}), and the delay-direction is verified on the binding branch.
+
+\begin{corollary}[dose limit and binding mode]\label{cor:dose-explicit}
+Assume $\eta\mu_{\max}(\Lg)\le1$ (so each $a_i\in[0,1)$). Then the network dose limit is set by the
+\emph{slowest} grounded mode,
+$\kappa<\kappa_{\max}\big(1-\eta\mu_{\min}(\Lg),\delta\big)$, and since grounding raises
+$\mu_{\min}(\Lg)$ (Cauchy interlacing), \textbf{placement relaxes the delay-induced dose limit}. In
+particular: over-strong correction ($\kappa\ge\kappa_{\max}$) or over-delayed correction (larger
+$\delta$, lowering $\kappa_{\max}$) destabilizes the loop into oscillation, a regime we call
+\emph{verification-induced oscillation}.
+\end{corollary}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.72\linewidth]{figures/dose_delay_margin.png}
+  \caption{\textbf{The verification dose ceiling falls with delay.} Critical dose
+  $\beta_c=\eta\kappa_{\max}$ versus verification delay $\delta$ for the binding mode $a=1$ (blue) and
+  three lighter modes (grey); the loop is stable below each curve. The ceiling decreases monotonically
+  in $\delta$ and, at $\delta=2$, equals the inverse golden ratio $(\sqrt5-1)/2\approx0.618$ (red).
+  More verification \emph{latency} therefore forces a strictly smaller safe verification
+  \emph{strength}: the dose--delay tradeoff that the rest of the paper exploits.}
+  \label{fig:dose}
+\end{figure}
+
+\section{Optimal corrector placement}\label{sec:place}
+
+Given a budget of $k$ correctors, \emph{where} should they go? The average truth-tracking error is a
+supermodular function of the placement, so the one-pass greedy rule of Algorithm~\ref{alg:greedy} is
+within a factor $1-1/e$ of optimal (Theorem~\ref{thm:place}) and concentrates correctors on the
+network's amplifier and bridge nodes. This is the actionable half of the title.
+
+The delay drops out of the equilibrium of \eqref{eq:dyn}:
+\begin{equation}\label{eq:ss}
+  (\Lg+\kappa I)\,e_\infty = g \quad\Longrightarrow\quad e_\infty(R)=(\Lg+\kappa I)^{-1}g,
+\end{equation}
+so \emph{stability} is governed by $(\spec\Lg,\kappa,\delta)$ while \emph{truth-tracking error} is
+governed by the resolvent $(\Lg+\kappa I)^{-1}$ acting on the fault forcing, the two decoupled levers
+of the same placement $R$.
+
+\begin{corollary}[bounded steady-state error]\label{cor:bibo}
+Whenever the loop is stable, $e_t\to e_\infty$ and the truth-tracking error obeys the resolvent bound
+\begin{equation}\label{eq:bibo}
+  \|e_\infty\|_2 \;\le\; \frac{\|g\|_2}{\mu_{\min}(\Lg)+\kappa},
+\end{equation}
+independent of the step size $\eta$ and the delay $\delta$. Thus the same $\mu_{\min}(\Lg)$ that the
+dose limit (Corollary~\ref{cor:dose-explicit}) makes the binding stability constraint also controls the
+residual error, and, at fixed $\eta$, \textbf{placing correctors never decreases $\mu_{\min}(\Lg)$
+(Cauchy interlacing), which both relaxes the stability limit and shrinks the error bound.}
+\end{corollary}
+\begin{proof}
+At equilibrium \eqref{eq:dyn} gives $(\Lg+\kappa I)e_\infty=g$; since $\Lg\succ0$ is symmetric,
+$\|(\Lg+\kappa I)^{-1}\|_2=1/(\mu_{\min}(\Lg)+\kappa)$, and submultiplicativity gives \eqref{eq:bibo}.
+\end{proof}
+
+The bound \eqref{eq:bibo} shows that pinning helps, but not \emph{which} nodes to pin: it sees only
+$\mu_{\min}(\Lg)$. Ranking nodes needs the full average-case error. Model a corrector at node $i$ as a
+soft pin of weight $w>0$ (hard grounding is $w\to\infty$), giving the steady-state operator
+\begin{equation}\label{eq:Mop}
+  M(R)=\Lg+W_R+\kappa I,\qquad W_R=w\sum_{i\in R}e_ie_i^\top .
+\end{equation}
+The fault location is unknown, so we average the forcing over it, $g\sim(0,\sigma^2 I)$; the expected
+truth-tracking energy $\sigma^2\tr M(R)^{-2}$ then decreases monotonically with the \emph{coherence}
+$H(R)=\tr M(R)^{-1}$, the standard submodular placement metric \cite{ClarkSubmod}. Choosing where to
+place the budget is therefore the cardinality-constrained problem
+\begin{equation}\label{eq:placeprob}
+  \min_{|R|=k}\ H(R)=\tr M(R)^{-1},
+\end{equation}
+the average truth-tracking error over where faults may strike.
+
+The coherence is supermodular, so its reduction $\rho(R)=H(\varnothing)-H(R)$ is monotone and submodular,
+and a one-pass greedy rule solves \eqref{eq:placeprob} within a factor $1-1/e$ \cite{Nemhauser} (Theorem~\ref{thm:place}).
+The greedy step is cheap and interpretable, because its \emph{marginal gain} has the Sherman--Morrison
+closed form
+\begin{equation}\label{eq:marg}
+  \Delta_i(R):=H(R)-H(R\cup\{i\})=\frac{w\,\|M(R)^{-1}e_i\|^2}{1+w\,e_i^\top M(R)^{-1}e_i}\;\ge\;0,
+\end{equation}
+a \emph{resolvent centrality} that is largest at the \emph{amplifier} and \emph{bridge} nodes whose
+unverified error reaches the most of the network. Greedy pins the node of largest $\Delta_i$, updates
+$M(R)^{-1}$ by one rank-one step, and repeats (Algorithm~\ref{alg:greedy}).
+
+\begin{algorithm}[H]
+\DontPrintSemicolon
+\caption{Greedy corrector placement for problem~\eqref{eq:placeprob}: spend the budget one node at a
+time, each step pinning the node of largest marginal gain.}\label{alg:greedy}
+\KwIn{grounded Laplacian $\Lg$, dose $\kappa>0$, pin weight $w>0$, budget $k$}
+\KwOut{corrector set $R$ with $|R|=k$}
+$R \leftarrow \varnothing$\;
+\For{$j \leftarrow 1$ \KwTo $k$}{
+  \lForEach{$i \notin R$}{$\Delta_i(R) \leftarrow w\,\|M(R)^{-1}e_i\|^2 \big/ \bigl(1+w\,e_i^\top M(R)^{-1}e_i\bigr)$ \tcp*[r]{\eqref{eq:marg}}}
+  $i^\star \leftarrow \arg\max_{i \notin R}\,\Delta_i(R)$ \tcp*[r]{top amplifier / bridge node}
+  $R \leftarrow R \cup \{i^\star\}$\;
+}
+\Return $R$\;
+\end{algorithm}
+
+\begin{theorem}[greedy placement is near-optimal]\label{thm:place}
+The reduction $\rho(R)=H(\varnothing)-H(R)$, equivalently the coherence $H(R)=\tr M(R)^{-1}$, is
+monotone non-decreasing and submodular with $\rho(\varnothing)=0$. Hence the set $R_{\mathrm{greedy}}$
+returned by the greedy rule satisfies, for every budget $k$,
+\begin{equation}\label{eq:greedybound}
+  \rho(R_{\mathrm{greedy}})\;\ge\;\Bigl(1-\bigl(1-\tfrac1k\bigr)^{k}\Bigr)\,\rho(R^\star)\;\ge\;\bigl(1-\tfrac1e\bigr)\,\rho(R^\star),
+\end{equation}
+where $R^\star\in\arg\max_{|R|=k}\rho(R)$ is an optimal size-$k$ set. The bound is worst-case; in
+practice greedy is far closer to optimal (Fig.~\ref{fig:placement}).
+\end{theorem}
+\begin{proof}
+See \ref{app:place}.
+\end{proof}
+
+On a graph of three $5$-cliques chained by bridges (Fig.~\ref{fig:placement}) the rule is well separated
+from naive placement: with $k=8$ correctors greedy cuts the residual error $\tr M(R)^{-1}$ from $9.1$ to
+$2.3$, against $2.9$ for degree-based and $2.5$ for random placement, and its first picks are exactly the
+bridge and cluster-hub nodes. The supermodular structure and the $(1-1/e)$ guarantee are \emph{inherited}
+from leader selection in linear multi-agent systems \cite{ClarkLeader,ClarkSubmod} and hold for the
+diffusion model \eqref{eq:ss}; carrying them to a fully nonlinear error-propagation map is an open
+assumption. Because grounding raises both $\mu_{\min}(\Lg)$ (relaxing the dose) and
+$\mu_{\max}(\Lg)$ (tightening the ceiling at fixed $\eta$), there is a finite optimal budget $k^\star$.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/placement.png}
+  \caption{\textbf{Where to place correctors.} (a)~On three $5$-cliques chained by bridge edges, greedy
+  selection by the resolvent centrality \eqref{eq:marg} lowers the residual error $\tr M(R)^{-1}$ faster
+  than degree-based or random placement (mean over $300$ orders), tracking the near-optimal frontier.
+  (b)~Marginal centrality $\Delta_i$ per node; the first greedy picks (dark) are the high-leverage bridge
+  and hub nodes: the concrete answer to \emph{where}.}
+  \label{fig:placement}
+\end{figure}
+
+\section{Two coupled delays}\label{sec:two}
+
+Let gossip carry latency $d$ and verification latency $\delta$:
+\[
+  e_{t+1}=e_t-\eta\Lg\,e_{t-d}-\eta\kappa\,e_{t-\delta}+\eta g .
+\]
+Lemma~\ref{lem:decouple} still applies, giving per mode
+$x_{t+1}=x_t-\eta\mu\,x_{t-d}-\eta\kappa\,x_{t-\delta}$. A unit-circle root
+$\lambda=e^{i\theta}$ satisfies the pair
+\begin{equation}\label{eq:twodelay}
+  \cos\theta-1+\eta\mu\cos(d\theta)+\eta\kappa\cos(\delta\theta)=0,\quad
+  \sin\theta-\eta\mu\sin(d\theta)-\eta\kappa\sin(\delta\theta)=0.
+\end{equation}
+The stability of this two-delay trinomial is classical \cite{KipnisNigmatullin}; we recover its boundary
+by the D-decomposition method and read off the gossip-versus-verification specializations.
+
+\begin{theorem}[general two-delay boundary]\label{thm:twodelay}
+For $d\ne\delta$, $p=\eta\mu$, $q=\eta\kappa$, the oscillatory boundary of \eqref{eq:twodelay} is
+\[
+  p(\theta)=\frac{\sin(\delta\theta)-\sin((\delta+1)\theta)}{\sin((\delta-d)\theta)},\qquad
+  q(\theta)=\frac{\sin((d+1)\theta)-\sin(d\theta)}{\sin((\delta-d)\theta)},\quad\theta\in(0,\pi),
+\]
+and the stability region is the component of the origin bounded by this oscillatory curve together
+with the real-root line $p(-1)^d+q(-1)^\delta=2$ (the $\lambda=-1$ crossing, which leaves the positive
+quadrant when $d,\delta$ are both odd). It degenerates correctly: at $d=0$ to the single-delay boundary
+of Proposition~\ref{prop:boundary}, and as $d\to\delta$ (where $\sin((\delta-d)\theta)\to0$) to the
+$a=1$ corner of Corollary~\ref{cor:equal}.
+\end{theorem}
+\begin{proof}
+See \ref{app:twodelay}.
+\end{proof}
+
+\begin{corollary}[synchronized delays are worst; a golden ratio]\label{cor:equal}
+If $d=\delta$, the two terms merge into a single lag at $a=1$, $x_{t+1}-x_t+\eta(\mu+\kappa)x_{t-\delta}=0$,
+which is stable iff
+\[
+  \eta(\mu+\kappa)<\beta_c(1,\delta)=\frac{\sin\frac{\pi}{2\delta+1}}{\sin\frac{\delta\pi}{2\delta+1}},
+  \qquad\text{e.g.}\quad \beta_c(1,2)=\frac{\sqrt5-1}{2}=\frac1\varphi .
+\]
+Since $\beta_c$ decreases in $a$ and $a=1$ tops the branch, synchronizing communication and
+verification delays is the least stable configuration. Under Assumption~\ref{ass:reach} a single-delay
+mode has $a=1-\eta\mu_{\min}<1$ strictly, so $a=1$ is the limiting envelope (its $1/\varphi$ ceiling a
+supremum approached as $\mu_{\min}\to0$); it is \emph{attained exactly} here, where both lags act at
+$a=1$ by construction.
+\end{corollary}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.7\linewidth]{figures/twodelay_region.png}
+  \caption{\textbf{A second delay shrinks the safe region.} Stability region (shaded) in the
+  $(p,q)=(\eta\mu,\eta\kappa)$ plane for communication delay $d=1$ and verification delay $\delta=2$,
+  bounded by the oscillatory boundary (Theorem~\ref{thm:twodelay}, dashed) and the $\lambda=-1$ line
+  (red, here non-binding). The dose ceiling on the $q$-axis is the same $1/\varphi\approx0.618$ as in
+  Fig.~\ref{fig:dose}. Synchronizing the two delays ($d=\delta$) collapses the region the most
+  (Corollary~\ref{cor:equal}).}
+  \label{fig:twodelay}
+\end{figure}
+
+\section{Empirical validation}\label{sec:emp}
+
+We ask three questions, each answered by one study below. RQ1: does the nonlinear loop lose stability
+exactly at the predicted dose limit $\kappa_{\max}(\delta)$? RQ2: in a real grounded factual debate,
+does verification \emph{stabilize} the loop, and what happens when correction is too strong or
+ungrounded? RQ3: does the predicted signed dose--delay \emph{oscillation} appear in real agents once the
+belief is a signed continuous quantity?
+
+\subsection{Onset at the predicted dose limit (RQ1)}
+
+We test whether the \emph{linear} dose limit predicts onset in the \emph{nonlinear} system with a
+saturating verifier,
+\[
+  e_{t+1}=(I-\eta\Lg)e_t-\eta\kappa\tanh(e_{t-\delta})+\eta g
+\]
+($\tanh'(0)=1$ matches the linearization), on a random grounded graph ($n_{\mathrm f}=8$, $\eta$ such
+that $\eta\mu\in(0,1)$, a faulty node injecting a small bias). The onset of sustained oscillation
+$\kappa_{\mathrm{crit}}$ tracks the predicted ceiling
+$\kappa_{\max}=\beta_c(1-\eta\mu_{\min},\delta)/\eta$:
+\begin{center}
+\begin{tabular}{cccc}
+\hline
+$\delta$ & $\kappa_{\max}$ (theory) & $\kappa_{\mathrm{crit}}$ (nonlinear) & ratio\\
+\hline
+1 & 16.30 & 16.57 & 1.017\\
+2 & 10.21 & 10.38 & 1.017\\
+3 & \phantom{0}7.45 & \phantom{0}7.57 & 1.017\\
+\hline
+\end{tabular}
+\end{center}
+The $\sim2\%$ overshoot is the expected stabilizing effect of saturation; the $\delta{=}2$ period
+(measured $9.38$) matches $2\pi/\theta_\star=9.72$. A real LLM-debate front-end substitutes for
+$\tanh(\cdot)$ without changing the analysis.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{figures/demo_onset.png}
+  \caption{\textbf{Synthetic onset matches the predicted ceiling.} (a)~oscillation amplitude collapses
+  onto the predicted threshold $\kappa/\kappa_{\max}=1$ for $\delta=1,2,3$; (b)~the $\delta{=}2$
+  trajectory converges below the ceiling and oscillates above it.}
+  \label{fig:synth}
+\end{figure}
+
+\subsection{Grounded verification stabilizes the loop; delay alone does not (RQ2)}
+
+We now replace the synthetic surrogate by real LLM agents. As a reality check we instantiate the loop with a real debate among
+instances of a 35B reasoning model (Qwen3.6-35B) on factual questions it answers \emph{incorrectly}
+when asked cold (the $30$ PsiloQA questions on which it errs most when asked cold, with the Wikipedia passage as evidence): three
+free agents debate against a wrong majority (the forcing $F$) while a verifier ($R$) returns, with
+delay $\delta$, a correction computed on the round-$(t{-}\delta)$ answer; per round we score each
+answer by its natural-language-inference (NLI) distance to gold. All statistics are paired at the
+question level (no pseudoreplication).
+
+The robust, interpretable outcome is \emph{convergence}, and on the theory's stable side it behaves as
+predicted. A grounded verifier of \emph{moderate} strength drives the debate
+to truth (convergence $\approx0.8$); an \emph{over-aggressive} verifier that forces agents to adopt its
+correction wholesale prevents convergence ($\approx0.4$); and removing the grounding entirely, an
+ungrounded contrarian critic, destroys it ($0$ convergence, the majority answer flipping in $91\%$
+of rounds, a \emph{debate collapse} of the kind documented for multi-agent debate \cite{DebateCollapse}). Grounded correctors
+(Section~\ref{sec:place}) are what keep the loop convergent, the empirical counterpart of the
+stabilizing role they play in the theory. To test whether the \emph{delay} itself destabilizes this
+grounded factual loop, we ran a pre-registered sweep over verification delay $\delta\in\{0,1,6\}$, fault
+forcing, and decoding temperature ($2\times180$ debates over TriviaQA and PsiloQA). The consensus-error
+amplitude does \emph{not} grow with $\delta$: under a strong wrong majority it is already present at
+$\delta{=}0$ (an instantaneous verifier), identifying it as forcing-driven churn rather than a delay
+cycle, and it vanishes once the majority is removed. The delay-induced oscillation is therefore confined
+to the signed-belief regime; grounded factual QA is stable in $\delta$ (Remark~\ref{rem:absorb}).
+
+\subsection{Signed dose--delay oscillation across models (RQ3)}
+
+To expose the signed oscillation directly we replace the factual answer by a \emph{numeric estimate}:
+agents debate one of eight author-curated quantity questions with a known true value, so the signed
+error $e_t=(\bar b_t-b^\star)/\mathrm{scale}$ can overshoot through zero, and the delayed corrector
+applies a \emph{graded} relative correction of gain $\alpha$ on the round-$(t{-}\delta)$
+estimate.\footnote{A signed coordinate is needed because the NLI distance used in RQ2 is non-negative,
+so it cannot exhibit the signed overshoot that \emph{is} the oscillation; a sign-change count on such a
+magnitude trajectory is also confounded by answer-rephrasing noise and by a period-versus-window
+artifact, whereby a shorter delay mechanically produces more crossings.} An agent following the
+corrector realizes the scalar delayed recurrence
+\[
+  e_{t+1}=e_t-\alpha\,e_{t-\delta},\qquad\text{stable iff } \alpha<\beta_c(\delta)\quad
+  (\beta_c(1){=}1,\ \ \beta_c(6){\approx}0.24).
+\]
+
+The prediction is fixed \emph{a priori} from $\beta_c(\delta)$ with no fitting: $\alpha{=}0.5$ should be
+stable at $\delta{=}1$ but unstable at $\delta{=}6$. It holds (Fig.~\ref{fig:realexp}), and the evidence
+is the \emph{separation}, not a $p$-value. With the question as the unit ($n{=}8$, seeds averaged) the
+signed amplitude is $\sim\!4.5\times$ larger at $\delta{=}6$ than at $\delta{=}1$ ($0.27$ vs $0.06$). The
+signed overshoot through zero, the actual Hopf signature, occurs in $96\%$ of $(\alpha{=}0.5,\delta{=}6)$
+runs against $0$--$4\%$ at $\delta{=}1$ (a single rephrasing-jitter crossing in Phi-4, none
+elsewhere).\footnote{The one-sided Wilcoxon attains its $n{=}8$ floor $p=1/2^8{=}0.004$, i.e.\ all $8/8$
+questions move as predicted, so the $p$ certifies \emph{unanimity}, not effect size; amplitude is the
+magnitude.} Amplitude grows with both $\alpha$ and $\delta$, and the only stable cell is
+small-$\alpha$/small-$\delta$, exactly the dose--delay region.
+
+\begin{table}[t]
+\centering
+\caption{\textbf{The signed dose--delay oscillation replicates across five open models.} Fraction of
+debates whose signed error overshoots \emph{through} zero (the Hopf signature) in the unstable cell
+($\alpha{=}0.5,\delta{=}6$) against the stable cell ($\delta{=}1$). All five reach $8/8$ question-level
+unanimity (one-sided Wilcoxon floor $p{=}0.004$) and survive a Bonferroni correction.}\label{tab:models}
+\begin{tabular}{llcc}
+\hline
+Model & Developer & overshoot $\delta{=}6$ & overshoot $\delta{=}1$\\
+\hline
+Qwen3.6-35B & Qwen      & $96\%$  & $0\%$\\
+Qwen3-14B   & Qwen      & $100\%$ & $0\%$\\
+Mistral-7B  & Mistral   & $100\%$ & $0\%$\\
+Phi-4       & Microsoft & $96\%$  & $4\%$\\
+Gemma-4-12B & Google    & $100\%$ & $0\%$\\
+\hline
+\end{tabular}
+\end{table}
+
+The result is not model-specific (Table~\ref{tab:models}): the same $8/8$ unanimity and overshoot
+separation hold across five open models spanning four developers, survive a Bonferroni correction, and
+are directionally present in a $12$B Mistral-Nemo ($58\%$ overshoot, $p{=}0.07$).
+
+The instability does require agents that \emph{follow} the correction --- when they instead exert strong
+independent judgment they damp it, so deployed agents are if anything more stable than the linear worst
+case. The agents \emph{follow} the recurrence without \emph{copying} it: the pure linear map diverges
+(tail amplitude ${\sim}8$, $|e|$ reaching $17$) while the real debates saturate at bounded amplitude
+(${\lesssim}1$), so the oscillation is an emergent response, not an arithmetic artifact of a hard-coded
+update.
+
+The synthetic system, whose state genuinely \emph{is} a signed error, remains the cleanest check of the
+\emph{analytic threshold itself} (onset within $2\%$), a self-consistency test of the linearization,
+not an LLM validation.
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/realexp.png}
+  \caption{\textbf{Signed-error oscillation in a real Qwen3.6-35B numeric-estimation debate.}
+  Agents debate a quantity with a known true value under a delayed relative correction of graded gain
+  $\alpha$; the signed error $e_t$ can overshoot through zero. (a)~Representative trajectories: the
+  stable cell ($\alpha{=}0.5,\delta{=}1$) decays to truth without overshoot, while the delayed cells
+  overshoot \emph{through} zero and oscillate: the Hopf signature, present in $96\%$ of
+  $(\alpha{=}0.5,\delta{=}6)$ runs versus $\le4\%$ at $\delta{=}1$. (b)~Signed-error amplitude grows with
+  both delay and gain; the a-priori comparison $\mathrm{amp}(\delta{=}6)>\mathrm{amp}(\delta{=}1)$
+  at $\alpha{=}0.5$ holds ($8/8$ questions; the one-sided Wilcoxon hits its $n{=}8$ floor $p{=}0.004$). The only stable cell is
+  small-gain/small-delay, exactly the dose--delay region of the theory.}
+  \label{fig:realexp}
+\end{figure}
+
+\section{Discussion}
+
+Verification is a control action, and like any delayed negative feedback
+it has a stability budget. Corollary~\ref{cor:dose-explicit} says a verifier can be \emph{too}
+aggressive or \emph{too} slow; Corollary~\ref{cor:equal} says synchronizing communication and
+verification latencies is the worst design. The practical reading is counterintuitive for the cascade
+literature, which treats more verification as strictly better: there is an optimal dose and an
+optimal placement, and the binding constraint is the slowest grounded mode, which placement can
+relax. This complements online cascade \emph{detectors} \cite{CASPIAN,AgentForesight,GUARDIAN} with a
+\emph{controller}-side stability guarantee that detection alone does not provide.
+
+\begin{remark}[grounding removes the delay-induced oscillation]\label{rem:absorb}
+The debates of Section~\ref{sec:emp} oscillate in the numeric-estimation regime yet not in grounded
+factual QA, and the reason is the state space. The instability is a property of the \emph{signed}
+dynamics $x_{t+1}=x_t-\alpha\,\sigma(x_{t-\delta})$ ($\sigma$ saturating): for $\alpha>\beta_c(\delta)$
+the truth equilibrium is an unstable focus and the state runs a bounded limit cycle that crosses
+\emph{through} zero. Grounded factual verification instead lives on a \emph{non-negative} distance with
+truth as an \emph{absorbing} boundary, $p_{t+1}=\max\!\big(0,\,p_t-\alpha\,\sigma(p_{t-\delta})+g\big)$:
+a signed cycle that would overshoot truth is clipped at the boundary, so the delay-induced overshoot has
+nowhere to live. The instability is therefore native to unconstrained signed belief and absent in
+grounded factual QA, where grounding both relaxes the dose limit, by raising $\mu_{\min}(\Lg)$, and
+imposes the absorbing boundary that rules out the limit cycle.
+\end{remark}
+
+\section{Conclusion}
+We modeled the multi-agent LLM verifier loop as a delayed consensus over a graph with grounded
+corrector nodes, and derived closed-form thresholds showing that verification carries a stability
+budget. Correction that is too strong or too delayed destabilizes factual consensus into oscillation.
+The worst case is synchronizing the communication and verification delays, where the ceiling is the
+inverse golden ratio at delay two. A limited corrector budget is best placed greedily on high-influence
+nodes.
+
+The empirics confirm the theory and bound its scope. A synthetic loop matches the predicted onset to
+within $2\%$. An a-priori, theory-derived experiment then reproduces the signed dose--delay oscillation
+in real LLM debates across five open models, with overshoot through truth in $96$--$100\%$ of
+unstable runs versus $0$--$4\%$ when stable. The same model explains why pure factual question answering
+does \emph{not} oscillate: truth acts as an absorbing boundary, so the instability is native to
+signed-belief tasks while grounded factual verification is stabilizing.
+
+The message reverses the field's default that more verification is always better: there is an optimal
+verification dose and an optimal place to apply it, and the binding constraint is the slowest grounded
+mode, which placement can relax.
+
+\section{Limitations}
+
+Several limitations bound the scope. The analysis is linear (local) around the truth-consensus; the nonlinear
+validation (Section~\ref{sec:emp}) supports the local prediction but a global/contraction analysis is open. Unlike the dose limit, the placement rule is so far validated only on the linear surrogate, not with LLM agents.
+We model soft fixed-bias faults and node-level (state-overwriting) correctors; Byzantine faults and
+edge-level (message-filtering) correctors are future work, and the closed-form selection of which
+sub-arc of Theorem~\ref{thm:twodelay} bounds the origin component (the boundary curves themselves,
+the oscillatory curve and the $\lambda=-1$ line, are settled) is a minor remaining detail. The eigen-decoupling assumes a \emph{symmetric} (reciprocal) interaction graph. Strictly directed topologies give a non-normal grounded Laplacian whose modes do not orthogonally separate, and transient growth can then precede the asymptotic threshold. The symmetric thresholds therefore need not stay conservative there, and a real-Schur/pseudospectral treatment is open.
+
+The empirical support is of two kinds and should not be conflated. The signed numeric-estimation
+test (Section~\ref{sec:emp}) is fixed \emph{a priori} from theory and replicates across model families, but its unit
+is the question ($n{=}8$, seeds averaged), so its strength is the near-deterministic overshoot
+separation ($96$--$100\%$ versus $0$--$4\%$) rather than a large-sample effect size. The grounded factual-QA
+study is weaker as a \emph{quantitative} link: the strong-$\kappa$ delay effect is only marginal
+(Wilcoxon $p{=}0.06$) and the $\kappa\!\times\!\delta$ interaction is not significant ($p{=}0.47$), and
+the delayed autoregressive (AR) map identified from the logs recovers the linear coefficients only weakly (precision
+$1.0$, recall $0.24$), consistent with the absorbing boundary (Remark~\ref{rem:absorb}) damping the
+very oscillation that test looks for. A larger numeric study and a tighter identification of the LLM
+update map onto the linear coefficients are the key next steps.
+
+Finally, the same grounded-Laplacian reduction should extend to heterogeneous correction
+gains, stochastic delays, and the coupling of this controller to an online change detector, closing
+the loop between \emph{detecting} a hallucination cascade and \emph{stably correcting} it.
+
+\section*{Acknowledgments}
+The author thanks Ilya Makarov for valuable feedback on the manuscript.
+
+\begin{thebibliography}{99}
+
+\bibitem{YaoLi} L.\ Yao, A.\ Li. Convergence of time-delayed opinion dynamics with complex interaction
+types. arXiv:2501.12219 (2025).
+\bibitem{HallCascade} S.\ Jamshidi, A.\ Moradi Dakhel, K.\,W.\ Nafi, F.\ Khomh. Hallucination
+cascade: analyzing error propagation in multi-agent LLM systems. arXiv:2606.07937 (2026).
+\bibitem{Collective} S.\ Jamshidi. Collective hallucination in multi-agent LLMs: modeling and
+defense. arXiv:2606.07941 (2026).
+\bibitem{SparkFire} Y.\ Xie et al. From spark to fire: modeling and mitigating error cascades in
+LLM-based multi-agent collaboration. arXiv:2603.04474 (2026).
+\bibitem{Contagion} Z.\ Liu. Contagion networks: evaluator bias propagation in multi-agent LLM
+systems. arXiv:2606.20493 (2026).
+\bibitem{PropGuard} B.\ Yan et al. PropGuard: safeguarding LLM-MAS via propagation-aware exploration
+and remediation. arXiv:2605.16346 (2026).
+\bibitem{Snowball} M.\ Zhang, O.\ Press, W.\ Merrill, A.\ Liu, N.\,A.\ Smith. How language model
+hallucinations can snowball. ICML 2024. arXiv:2305.13534.
+\bibitem{SelfRefine} A.\ Madaan et al. Self-Refine: iterative refinement with self-feedback. NeurIPS
+2023. arXiv:2303.17651.
+\bibitem{MARCH} Z.\ Li et al. MARCH: multi-agent reinforced self-check for LLM hallucination.
+arXiv:2603.24579 (2026).
+\bibitem{Du} Y.\ Du, S.\ Li, A.\ Torralba, J.\,B.\ Tenenbaum, I.\ Mordatch. Improving factuality and
+reasoning in language models through multiagent debate. ICML 2024. arXiv:2305.14325.
+\bibitem{ReConcile} J.\,C.-Y.\ Chen, S.\ Saha, M.\ Bansal. ReConcile: round-table conference improves
+reasoning via consensus among diverse LLMs. ACL 2024. arXiv:2309.13007.
+\bibitem{Liang} T.\ Liang et al. Encouraging divergent thinking in LLMs through multi-agent debate.
+EMNLP 2024. arXiv:2305.19118.
+\bibitem{DebateVote} H.\,K.\ Choi, X.\ Zhu, S.\ Li. Debate or vote: which yields better decisions in
+multi-agent LLMs? NeurIPS 2025. arXiv:2508.17536.
+\bibitem{TalkCheap} A.\ Wynn, H.\ Satija, G.\ Hadfield. Talk isn't always cheap: understanding
+failure modes in multi-agent debate. ICML 2025 MAS Workshop. arXiv:2509.05396.
+\bibitem{SparseTopo} Y.\ Li et al. Improving multi-agent debate with sparse communication topology.
+arXiv:2406.11776 (2024).
+\bibitem{AgentHallu} X.\ Liu, X.\ Yang, Z.\ Li, P.\ Li, R.\ He. AgentHallu: benchmarking automated
+hallucination attribution of LLM-based agents. arXiv:2601.06818 (2026).
+\bibitem{WhoWhen} S.\ Zhang et al. Which agent causes task failures and when? On automated failure
+attribution of LLM multi-agent systems. ICML 2025. arXiv:2505.00212.
+\bibitem{TRAIL} D.\ Deshpande et al. TRAIL: trace reasoning and agentic issue localization.
+arXiv:2505.08638 (2025).
+\bibitem{AgentForesight} B.\ Zhang et al. AgentForesight: online auditing for early failure prediction
+in multi-agent systems. arXiv:2605.08715 (2026).
+\bibitem{CASPIAN} K.\ Venkatesh, J.\ Isbarov, S.\ Amin, M.\ Kantarcioglu, J.\ Cui. CASPIAN: online
+detection and attribution of cascade attacks in LLM multi-agent systems via cross-channel causal
+monitoring. arXiv:2605.19240 (2026).
+\bibitem{GUARDIAN} J.\ Zhou, L.\ Wang, X.\ Yang. GUARDIAN: safeguarding LLM multi-agent collaborations
+with temporal graph modeling. NeurIPS 2025. arXiv:2505.19234.
+\bibitem{SemEntropy} L.\ Kuhn, Y.\ Gal, S.\ Farquhar. Semantic uncertainty: linguistic invariances for
+uncertainty estimation in NLG. ICLR 2023. arXiv:2302.09664.
+\bibitem{SelfCheck} P.\ Manakul, A.\ Liusie, M.\,J.\,F.\ Gales. SelfCheckGPT: zero-resource black-box
+hallucination detection for generative LLMs. EMNLP 2023. arXiv:2303.08896.
+\bibitem{HallSurvey} L.\ Huang et al. A survey on hallucination in large language models. ACM TOIS
+(2025). doi:10.1145/3703155. arXiv:2311.05232.
+\bibitem{Page} E.\,S.\ Page. Continuous inspection schemes. \emph{Biometrika} 41 (1954) 100--115.
+\bibitem{Lorden} G.\ Lorden. Procedures for reacting to a change in distribution. \emph{Ann. Math.
+Statist.} 42 (1971) 1897--1908.
+\bibitem{Pollak} M.\ Pollak. Optimal detection of a change in distribution. \emph{Ann. Statist.} 13
+(1985) 206--227.
+\bibitem{Moustakides} G.\,V.\ Moustakides. Optimal stopping times for detecting changes in
+distributions. \emph{Ann. Statist.} 14 (1986) 1379--1387.
+\bibitem{Lai} T.\,L.\ Lai. Information bounds and quick detection of parameter changes in stochastic
+systems. \emph{IEEE Trans. Inf. Theory} 44 (1998) 2917--2929.
+\bibitem{VeeraBanerjee} V.\,V.\ Veeravalli, T.\ Banerjee. Quickest change detection. In \emph{Academic
+Press Library in Signal Processing} 3 (2013) 209--255. arXiv:1210.5552.
+\bibitem{XieQCD} L.\ Xie, S.\ Zou, Y.\ Xie, V.\,V.\ Veeravalli. Sequential (quickest) change detection:
+classical results and new directions. \emph{IEEE J. Sel. Areas Inf. Theory} 2 (2021) 494--514.
+arXiv:2104.04186.
+\bibitem{TNB} A.\ Tartakovsky, I.\ Nikiforov, M.\ Basseville. \emph{Sequential Analysis: Hypothesis
+Testing and Changepoint Detection}. Chapman \& Hall/CRC (2014).
+\bibitem{KipnisNigmatullin} M.\,M.\ Kipnis, R.\,M.\ Nigmatullin. Stability of the trinomial linear
+difference equations with two delays. \emph{Autom. Remote Control} 65(11):1710--1723 (2004).
+\bibitem{Kuruklis} S.\,A.\ Kuruklis. The asymptotic stability of $x_{n+1}-a x_n+b x_{n-k}=0$. \emph{J.
+Math. Anal. Appl.} 188 (1994) 719--731.
+\bibitem{Itkin2026} I.\ Itkin. Delayed repression and emergent instability in adaptive multi-agent
+systems. arXiv:2605.30392 (2026).
+\bibitem{ItkinQCD} I.\ Itkin. Quickest detection of hallucination onset: delay bounds and learned
+CUSUM statistics. arXiv:2606.12476 (2026).
+\bibitem{ClarkLeader} A.\ Clark, B.\ Alomair, L.\ Bushnell, R.\ Poovendran. Minimizing convergence
+error in multi-agent systems via leader selection: a supermodular optimization approach. \emph{IEEE
+Trans. Autom. Control} (2014). arXiv:1306.4949.
+\bibitem{OpinionConsensus} I.\ Yazici, M.\ Kayaalp, S.\ Taga, A.\,H.\ Sayed. Opinion consensus
+formation among networked large language models. ICASSP 2026. arXiv:2601.21540.
+\bibitem{HiddenAnchors} A.\ Pokharel, R.\ Dantu. Hidden anchors in multi-agent LLM deliberation.
+arXiv:2606.19494 (2026).
+\bibitem{SelfCorrFeedback} A.\ Liu, J.\ Meng. Self-correction as feedback control: error dynamics,
+stability thresholds, and prompt interventions in LLMs. arXiv:2604.22273 (2026).
+\bibitem{EntropyCoT} T.\ Xu et al. Unveiling the entropy dynamics of chain-of-thought reasoning. ICML
+2026. arXiv:2606.02020.
+\bibitem{JainKrishnamurthy} A.\ Jain, V.\ Krishnamurthy. Interacting large language model agents:
+interpretable models and social learning. arXiv:2411.01271 (2024).
+\bibitem{Sherlock} Y.\ Ro, H.\ Qiu, \'I.\ Goiri et al. Sherlock: reliable and efficient agentic
+workflow execution. arXiv:2511.00330 (2025).
+\bibitem{ClarkSubmod} A.\ Clark, B.\ Alomair, L.\ Bushnell, R.\ Poovendran. \emph{Submodularity in
+Dynamics and Control of Networked Systems}. Springer (2016).
+\bibitem{PiraniSundaram} M.\ Pirani, S.\ Sundaram. On the smallest eigenvalue of grounded Laplacian
+matrices. \emph{IEEE Trans. Autom. Control} 61 (2016).
+\bibitem{PiraniRobust} M.\ Pirani, E.\ Moradi Shahrivar, B.\ Fidan, S.\ Sundaram. Robustness of
+leader-follower networked dynamical systems. arXiv:1604.08651 (2016).
+\bibitem{Nemhauser} G.\,L.\ Nemhauser, L.\,A.\ Wolsey, M.\,L.\ Fisher. An analysis of approximations
+for maximizing submodular set functions---I. \emph{Math. Program.} 14 (1978).
+\bibitem{FEVER} J.\ Thorne, A.\ Vlachos, C.\ Christodoulopoulos, A.\ Mittal. FEVER: a large-scale
+dataset for fact extraction and verification. NAACL 2018. arXiv:1803.05355.
+\bibitem{RAG} P.\ Lewis et al. Retrieval-augmented generation for knowledge-intensive NLP tasks.
+NeurIPS 2020. arXiv:2005.11401.
+\bibitem{OlfatiSaber} R.\ Olfati-Saber, R.\,M.\ Murray. Consensus problems in networks of agents with
+switching topology and time-delays. \emph{IEEE Trans. Autom. Control} 49 (2004) 1520--1533.
+\bibitem{WangChen} X.\,F.\ Wang, G.\ Chen. Pinning control of scale-free dynamical networks.
+\emph{Physica A} 310 (2002) 521--531.
+\bibitem{ChenConsensus} H.\ Chen, W.\ Ji, L.\ Xu, S.\ Zhao. Multi-agent consensus seeking via large
+language models. arXiv:2310.20151 (2023).
+\bibitem{DebateCollapse} H.\ Zhang et al. Stop overvaluing multi-agent debate: we must rethink
+evaluation and embrace model heterogeneity. arXiv:2502.08788 (2025).
+
+\end{thebibliography}
+
+\appendix
+\renewcommand{\thesection}{Appendix~\Alph{section}}
+\section{Proof of Proposition~\ref{prop:boundary} (oscillatory boundary)}\label{app:proofs}
+Set $\lambda=e^{i\theta}$ in the characteristic equation,
+\[
+  e^{i(\delta+1)\theta}-a\,e^{i\delta\theta}+\beta=0 .
+\]
+Separating imaginary and real parts gives the stability boundary in parametric form,
+\[
+  a(\theta)=\frac{\sin((\delta+1)\theta)}{\sin(\delta\theta)},
+  \qquad
+  \beta(\theta)=a\cos(\delta\theta)-\cos((\delta+1)\theta)=\frac{\sin\theta}{\sin(\delta\theta)} .
+\]
+A root can leave the unit disk in two ways. At $\lambda=+1$, $\beta=a-1\le0$; at $\lambda=-1$,
+$\beta=(-1)^\delta(a+1)$, negative for odd $\delta$ but $a+1>0$ for even $\delta$. The complex-conjugate
+crossing instead carries
+\[
+  \beta_c=\frac{\sin\theta_\star}{\sin(\delta\theta_\star)},
+\]
+and on the binding branch $\beta_c\le1<a+1$ for $a\in(0,1]$ (checked for $\delta\le8$). Hence as $\beta$
+grows from $0$ the complex pair reaches the unit circle first, including the even-$\delta$ case, where
+the real $\lambda=-1$ crossing at $\beta=a+1$ comes strictly later.
+
+\section{Proof of Lemma~\ref{lem:cheb} (monotonicity of the dose)}\label{app:cheb}
+Write $a_\delta(c)=U_\delta/U_{\delta-1}$. The Chebyshev recurrence $U_\delta=2cU_{\delta-1}-U_{\delta-2}$
+gives a continued fraction whose derivative telescopes,
+\[
+  a_\delta=2c-\frac{1}{a_{\delta-1}},
+  \qquad
+  a_\delta'=2+\frac{a_{\delta-1}'}{a_{\delta-1}^2} .
+\]
+Since $a_1'=2$, induction gives $a_\delta'\ge2$ wherever $U_{\delta-1}\ne0$, so
+$\mathrm da/\mathrm dc=a_\delta'>0$. On the branch $c>\cos(\pi/\delta)$ (the largest zero of
+$U_{\delta-1}$), the $\delta-2$ critical points of $U_{\delta-1}$ interlace its $\delta-1$ zeros and so
+lie left of $\cos(\pi/\delta)$; thus $U_{\delta-1}>0$ and $U_{\delta-1}'>0$ there, and
+\[
+  \frac{\mathrm d\beta_c}{\mathrm da}=-\frac{U_{\delta-1}'}{U_{\delta-1}^2\,a_\delta'}<0 ,
+\]
+the strict decrease in the correction strength $a$ for \emph{every} $\delta$. For the integer delay, the
+trigonometric form on the binding branch is strictly decreasing in $\delta$ (verified for $\delta\le8$):
+\[
+  \beta_c(1,\delta)=\frac{\sin\frac{\pi}{2\delta+1}}{\sin\frac{\delta\pi}{2\delta+1}}
+  =1,\;0.618,\;0.445,\;\dots,\;0.185
+  \qquad(\delta=1,\dots,8).
+\]
+The boundary cases $\delta{=}1$ and $a{=}0$ are exact, consistent with Kuruklis \cite{Kuruklis}.
+
+\section{Proof of Theorem~\ref{thm:twodelay} (general two-delay boundary)}\label{app:twodelay}
+Set $\lambda=e^{i\theta}$ in \eqref{eq:twodelay}; it is linear in $(p,q)$ with determinant
+$\sin((\delta-d)\theta)$, so Cramer's rule and the sum-to-product identities give the oscillatory
+boundary curve (the D-decomposition of the two-delay trinomial \cite{KipnisNigmatullin}). Evaluating the
+characteristic equation at $z=-1$ gives the real-root line
+\[
+  p\,(-1)^d+q\,(-1)^\delta=2 .
+\]
+The two degenerations are the substitution $d=0$ and the limit $d\to\delta$.
+
+\section{Proof of Theorem~\ref{thm:place} (greedy placement)}\label{app:place}
+Throughout, write $M(R)=\Lg+\kappa I+w\sum_{i\in R}e_ie_i^\top\succ0$ and $H(R)=\tr M(R)^{-1}$.
+
+\emph{Monotonicity.} For $i\notin R$, pinning is a positive-semidefinite update,
+\[
+  M(R\cup\{i\})=M(R)+w\,e_ie_i^\top\succeq M(R)
+  \;\Longrightarrow\;
+  M(R\cup\{i\})^{-1}\preceq M(R)^{-1},
+\]
+so $H(R\cup\{i\})\le H(R)$. Thus $H$ is non-increasing and $\rho(R)=H(\varnothing)-H(R)$ is non-decreasing
+with $\rho(\varnothing)=0$.
+
+\emph{Marginal gain.} By the Sherman--Morrison identity,
+\[
+  \bigl(M+w\,e_ie_i^\top\bigr)^{-1}=M^{-1}-\frac{w\,M^{-1}e_ie_i^\top M^{-1}}{1+w\,e_i^\top M^{-1}e_i},
+\]
+whose trace is $\tr M^{-1}-w\|M^{-1}e_i\|^2/(1+w\,e_i^\top M^{-1}e_i)$. Subtracting recovers
+\eqref{eq:marg},
+\[
+  \Delta_i(R)=\frac{w\,\|M(R)^{-1}e_i\|^2}{1+w\,e_i^\top M(R)^{-1}e_i}\ \ge\ 0 .
+\]
+
+\emph{Submodularity.} We must show the marginal is non-increasing in the pinned set,
+\[
+  \Delta_i(R)\ge\Delta_i(S)\qquad\text{for } R\subseteq S,\ i\notin S .
+\]
+Here the structure of $\Lg$ is essential. Because $M(R)=\Lg+\kappa I+W_R$ has nonpositive off-diagonal
+entries (from $-A$) and is positive definite, it is a symmetric nonsingular \emph{M-matrix}, so
+\[
+  M(R)^{-1}\ge0\quad\text{entrywise},
+\]
+and adding a nonnegative diagonal pin moves it entrywise toward $M(S)^{-1}\ge0$. This entrywise
+monotonicity, not the Loewner ordering $M(S)^{-1}\preceq M(R)^{-1}$ alone (which does \emph{not} imply the
+claim and indeed fails for general positive-definite $M$), forces $\Delta_i$ to be non-increasing in the
+set; equivalently, the coherence of a grounded Laplacian is supermodular under diagonal pinning
+\cite{ClarkLeader,ClarkSubmod}. A numerical sweep confirms both halves (\texttt{placement\_demo.py
+--sweep}): over $4000$ random grounded Laplacians the marginal is non-increasing in $0/4000$ trials,
+whereas dropping the M-matrix structure (arbitrary positive-definite $M$) violates it in $115/4000$.
+
+\emph{Greedy bound.} For a non-negative monotone submodular $\rho$ with $\rho(\varnothing)=0$, the greedy
+rule of Algorithm~\ref{alg:greedy}, which adds the largest-$\Delta_i$ node at each step, attains the
+Nemhauser--Wolsey--Fisher guarantee \cite{Nemhauser},
+\[
+  \rho(R_{\mathrm{greedy}})\ \ge\ \Bigl(1-\tfrac1e\Bigr)\,\rho(R^\star) .
+\]
+
+\section{Reproducibility}
+Every figure and reported number is reproducible from the accompanying code. Code and data:
+\url{https://github.com/YehudaItkin/delayed-verification-llm}.
+
+\end{document}

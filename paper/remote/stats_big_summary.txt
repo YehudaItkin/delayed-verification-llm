@@ -1,0 +1,16 @@
+n = 30 questions
+
+==== metric: osc ====
+  delta effect @weak  (d4-d1)          mean Δ=+0.000  Wilcoxon p=0.8129  perm p=1.0000  boot95=[-1.100,+1.267]
+  delta effect @strong(d4-d1)          mean Δ=+0.067  Wilcoxon p=0.8539  perm p=1.0000  boot95=[-0.533,+0.667]
+  kappa effect @d1 (strong-weak)       mean Δ=-0.567  Wilcoxon p=0.2207  perm p=0.2529  boot95=[-1.367,+0.067]
+  kappa effect @d4 (strong-weak)       mean Δ=-0.500  Wilcoxon p=0.2087  perm p=0.4631  boot95=[-1.700,+0.533]
+  kappa x delta interaction (DiD)        mean=+0.067  Wilcoxon p=0.7784  perm p=0.9631  boot95=[-1.367,+1.433]
+
+==== metric: final ====
+  delta effect @weak  (d4-d1)          mean Δ=-0.031  Wilcoxon p=0.7150  perm p=0.7547  boot95=[-0.111,+0.027]
+  delta effect @strong(d4-d1)          mean Δ=+0.015  Wilcoxon p=0.8927  perm p=0.8143  boot95=[-0.042,+0.096]
+  kappa effect @d1 (strong-weak)       mean Δ=-0.044  Wilcoxon p=0.2249  perm p=0.3114  boot95=[-0.133,+0.024]
+  kappa effect @d4 (strong-weak)       mean Δ=+0.002  Wilcoxon p=0.2367  perm p=1.0000  boot95=[-0.061,+0.087]
+  kappa x delta interaction (DiD)        mean=+0.046  Wilcoxon p=0.3980  perm p=0.3478  boot95=[-0.051,+0.161]
+
