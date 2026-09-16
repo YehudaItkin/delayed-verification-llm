@@ -1,0 +1,563 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-15T10:35:16.535357+00:00",
+  "numpy_version": "2.4.0",
+  "bootstrap_replicates": 20000,
+  "input_sha256": {
+    "PROTOCOL_RU.md": "e9674f47c32e2c80a5395be4dd16660da1cbc2de97169f0a69349a10c014217e",
+    "analyze.py": "46b21b779c0f43f12dcd5b532f32fb1fb671a4fcc1a139e199932cc9e81830ea",
+    "qwen38/v4_3_snapshot/results/primary/manifest.json": "387ae507d7aa2e43d1b1e0d7919f4a4cb2b2415389d586510dc3b035f6b2eb3b",
+    "semantic_review_20260915/review_frozen.json": "63ec170a5af9374199a64deb0d8a62e4bc94dc0270c96e596a55cba81bd2fbb5",
+    "semantic_review_20260915/results/summary.json": "941ce47f8fa1ad283e9e207c0edb46643531449e1ea9dde8c79dc9a161390bbf",
+    "semantic_review_20260915/results/runs.jsonl": "a97316531af5002ba7bd92344909446abdb3dab7f875d50ac9f5b2270e2b5920",
+    "semantic_review_v2_20260915/review_frozen.json": "d73bdfa5e9a7afc4a8bb4977467908632cec18923475bf2e92a7a8c6efc1d546",
+    "semantic_review_v2_20260915/results/summary.json": "14b5f7a6199f2c14f44064502f859fdefc244945ea054bd50857ef72c513101b",
+    "semantic_review_v2_20260915/results/runs.jsonl": "fa20490437338994520cd3e53608b3faf86b78cc93be27954b50bf5bd5cc31bf"
+  },
+  "datasets": {
+    "v1": {
+      "psilo": {
+        "questions": 200,
+        "clusters": 200,
+        "cluster_size_max": 1,
+        "bootstrap_seed": 20260915,
+        "metrics": {
+          "matches_reference.mean": {
+            "delay0": 0.5834027777777778,
+            "delay5": 0.6019444444444444,
+            "difference": 0.01854166666666666,
+            "bootstrap_percentile_95": [
+              -0.0026388888888888916,
+              0.04131944444444446
+            ],
+            "questions_increased": 98,
+            "questions_decreased": 73,
+            "questions_equal": 29
+          },
+          "matches_reference.sd": {
+            "delay0": 0.17697862924623742,
+            "delay5": 0.18413857714164308,
+            "difference": 0.007159947895405667,
+            "bootstrap_percentile_95": [
+              -0.003511444662106616,
+              0.017939908336510713
+            ],
+            "questions_increased": 93,
+            "questions_decreased": 85,
+            "questions_equal": 22
+          },
+          "contradicts_reference.mean": {
+            "delay0": 0.11486111111111111,
+            "delay5": 0.10819444444444444,
+            "difference": -0.00666666666666667,
+            "bootstrap_percentile_95": [
+              -0.024027777777777776,
+              0.00875173611111096
+            ],
+            "questions_increased": 68,
+            "questions_decreased": 64,
+            "questions_equal": 68
+          },
+          "contradicts_reference.sd": {
+            "delay0": 0.09727796542885674,
+            "delay5": 0.1008428355416444,
+            "difference": 0.0035648701127876468,
+            "bootstrap_percentile_95": [
+              -0.007102784024449992,
+              0.01429019027486162
+            ],
+            "questions_increased": 73,
+            "questions_decreased": 61,
+            "questions_equal": 66
+          },
+          "abstention.mean": {
+            "delay0": 0.2736111111111111,
+            "delay5": 0.2667361111111111,
+            "difference": -0.006874999999999999,
+            "bootstrap_percentile_95": [
+              -0.020763888888888873,
+              0.005694444444444432
+            ],
+            "questions_increased": 84,
+            "questions_decreased": 97,
+            "questions_equal": 19
+          },
+          "abstention.sd": {
+            "delay0": 0.19496596785004233,
+            "delay5": 0.2011386335002857,
+            "difference": 0.006172665650243412,
+            "bootstrap_percentile_95": [
+              -0.0012190790076518226,
+              0.013489382590367784
+            ],
+            "questions_increased": 92,
+            "questions_decreased": 93,
+            "questions_equal": 15
+          },
+          "unresolved.mean": {
+            "delay0": 0.028125,
+            "delay5": 0.023125,
+            "difference": -0.005000000000000002,
+            "bootstrap_percentile_95": [
+              -0.01631944444444445,
+              0.004166666666666662
+            ],
+            "questions_increased": 8,
+            "questions_decreased": 13,
+            "questions_equal": 179
+          },
+          "unresolved.sd": {
+            "delay0": 0.01154415525601217,
+            "delay5": 0.013287133382278372,
+            "difference": 0.0017429781262662013,
+            "bootstrap_percentile_95": [
+              -0.0038692127486216255,
+              0.007800853346014561
+            ],
+            "questions_increased": 11,
+            "questions_decreased": 10,
+            "questions_equal": 179
+          },
+          "invalid_output.mean": {
+            "delay0": 0.0,
+            "delay5": 0.0,
+            "difference": 0.0,
+            "bootstrap_percentile_95": [
+              0.0,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 0,
+            "questions_equal": 200
+          },
+          "invalid_output.sd": {
+            "delay0": 0.0,
+            "delay5": 0.0,
+            "difference": 0.0,
+            "bootstrap_percentile_95": [
+              0.0,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 0,
+            "questions_equal": 200
+          }
+        },
+        "erroneous_response_frequency_difference_outer_bounds": [
+          -0.03479166666666667,
+          0.016458333333333325
+        ]
+      },
+      "tqa": {
+        "questions": 200,
+        "clusters": 151,
+        "cluster_size_max": 11,
+        "bootstrap_seed": 20260916,
+        "metrics": {
+          "matches_reference.mean": {
+            "delay0": 0.708125,
+            "delay5": 0.704861111111111,
+            "difference": -0.0032638888888888882,
+            "bootstrap_percentile_95": [
+              -0.029612188189769014,
+              0.02043760387134619
+            ],
+            "questions_increased": 84,
+            "questions_decreased": 63,
+            "questions_equal": 53
+          },
+          "matches_reference.sd": {
+            "delay0": 0.12460089522380892,
+            "delay5": 0.11384905095831163,
+            "difference": -0.010751844265497277,
+            "bootstrap_percentile_95": [
+              -0.02229192899072261,
+              0.0007125383198392604
+            ],
+            "questions_increased": 63,
+            "questions_decreased": 87,
+            "questions_equal": 50
+          },
+          "contradicts_reference.mean": {
+            "delay0": 0.07048611111111111,
+            "delay5": 0.07347222222222222,
+            "difference": 0.0029861111111111117,
+            "bootstrap_percentile_95": [
+              -0.0043533354469482664,
+              0.01024959857680445
+            ],
+            "questions_increased": 38,
+            "questions_decreased": 20,
+            "questions_equal": 142
+          },
+          "contradicts_reference.sd": {
+            "delay0": 0.03832189766874161,
+            "delay5": 0.04045239415876543,
+            "difference": 0.0021304964900238092,
+            "bootstrap_percentile_95": [
+              -0.004676483448180637,
+              0.009046037954339009
+            ],
+            "questions_increased": 33,
+            "questions_decreased": 25,
+            "questions_equal": 142
+          },
+          "abstention.mean": {
+            "delay0": 0.1279861111111111,
+            "delay5": 0.11576388888888887,
+            "difference": -0.012222222222222223,
+            "bootstrap_percentile_95": [
+              -0.019097222222222213,
+              -0.005504602833147634
+            ],
+            "questions_increased": 62,
+            "questions_decreased": 98,
+            "questions_equal": 40
+          },
+          "abstention.sd": {
+            "delay0": 0.1249236686875276,
+            "delay5": 0.12030487082362676,
+            "difference": -0.004618797863900847,
+            "bootstrap_percentile_95": [
+              -0.011564455286317001,
+              0.0021481040043811136
+            ],
+            "questions_increased": 74,
+            "questions_decreased": 88,
+            "questions_equal": 38
+          },
+          "unresolved.mean": {
+            "delay0": 0.0932638888888889,
+            "delay5": 0.10590277777777779,
+            "difference": 0.012638888888888884,
+            "bootstrap_percentile_95": [
+              -0.010396404707550218,
+              0.038156399291108
+            ],
+            "questions_increased": 34,
+            "questions_decreased": 27,
+            "questions_equal": 139
+          },
+          "unresolved.sd": {
+            "delay0": 0.04169498149597205,
+            "delay5": 0.04288748089230945,
+            "difference": 0.0011924993963374037,
+            "bootstrap_percentile_95": [
+              -0.008565005290604943,
+              0.010030423931891854
+            ],
+            "questions_increased": 33,
+            "questions_decreased": 26,
+            "questions_equal": 141
+          },
+          "invalid_output.mean": {
+            "delay0": 0.0001388888888888889,
+            "delay5": 0.0,
+            "difference": -0.0001388888888888889,
+            "bootstrap_percentile_95": [
+              -0.0003454947484798231,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 2,
+            "questions_equal": 198
+          },
+          "invalid_output.sd": {
+            "delay0": 0.000666087711571211,
+            "delay5": 0.0,
+            "difference": -0.000666087711571211,
+            "bootstrap_percentile_95": [
+              -0.001656934605898535,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 2,
+            "questions_equal": 198
+          }
+        },
+        "erroneous_response_frequency_difference_outer_bounds": [
+          -0.09027777777777776,
+          0.10888888888888895
+        ]
+      }
+    },
+    "v2": {
+      "psilo": {
+        "questions": 200,
+        "clusters": 200,
+        "cluster_size_max": 1,
+        "bootstrap_seed": 20260915,
+        "metrics": {
+          "matches_reference.mean": {
+            "delay0": 0.5975,
+            "delay5": 0.6121527777777778,
+            "difference": 0.014652777777777775,
+            "bootstrap_percentile_95": [
+              -0.0059722222222222295,
+              0.036597222222222225
+            ],
+            "questions_increased": 98,
+            "questions_decreased": 75,
+            "questions_equal": 27
+          },
+          "matches_reference.sd": {
+            "delay0": 0.17889959953989532,
+            "delay5": 0.18495576121734264,
+            "difference": 0.006056161677447298,
+            "bootstrap_percentile_95": [
+              -0.004497771084619744,
+              0.016638161515839585
+            ],
+            "questions_increased": 93,
+            "questions_decreased": 87,
+            "questions_equal": 20
+          },
+          "contradicts_reference.mean": {
+            "delay0": 0.11840277777777777,
+            "delay5": 0.11131944444444443,
+            "difference": -0.007083333333333337,
+            "bootstrap_percentile_95": [
+              -0.02388888888888889,
+              0.007916666666666666
+            ],
+            "questions_increased": 69,
+            "questions_decreased": 65,
+            "questions_equal": 66
+          },
+          "contradicts_reference.sd": {
+            "delay0": 0.09956108953965162,
+            "delay5": 0.10237862409471202,
+            "difference": 0.0028175345550604035,
+            "bootstrap_percentile_95": [
+              -0.007708375905359466,
+              0.013411915400522462
+            ],
+            "questions_increased": 74,
+            "questions_decreased": 63,
+            "questions_equal": 63
+          },
+          "abstention.mean": {
+            "delay0": 0.2736111111111111,
+            "delay5": 0.2667361111111111,
+            "difference": -0.006874999999999999,
+            "bootstrap_percentile_95": [
+              -0.020763888888888873,
+              0.005694444444444432
+            ],
+            "questions_increased": 84,
+            "questions_decreased": 97,
+            "questions_equal": 19
+          },
+          "abstention.sd": {
+            "delay0": 0.19496596785004233,
+            "delay5": 0.2011386335002857,
+            "difference": 0.006172665650243412,
+            "bootstrap_percentile_95": [
+              -0.0012190790076518226,
+              0.013489382590367784
+            ],
+            "questions_increased": 92,
+            "questions_decreased": 93,
+            "questions_equal": 15
+          },
+          "unresolved.mean": {
+            "delay0": 0.010486111111111111,
+            "delay5": 0.009791666666666666,
+            "difference": -0.000694444444444446,
+            "bootstrap_percentile_95": [
+              -0.0027083333333333347,
+              0.0007638888888888875
+            ],
+            "questions_increased": 2,
+            "questions_decreased": 4,
+            "questions_equal": 194
+          },
+          "unresolved.sd": {
+            "delay0": 0.003839086850407654,
+            "delay5": 0.0054540033057190376,
+            "difference": 0.001614916455311383,
+            "bootstrap_percentile_95": [
+              -0.0011397143380814387,
+              0.005108770401014557
+            ],
+            "questions_increased": 4,
+            "questions_decreased": 2,
+            "questions_equal": 194
+          },
+          "invalid_output.mean": {
+            "delay0": 0.0,
+            "delay5": 0.0,
+            "difference": 0.0,
+            "bootstrap_percentile_95": [
+              0.0,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 0,
+            "questions_equal": 200
+          },
+          "invalid_output.sd": {
+            "delay0": 0.0,
+            "delay5": 0.0,
+            "difference": 0.0,
+            "bootstrap_percentile_95": [
+              0.0,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 0,
+            "questions_equal": 200
+          }
+        },
+        "erroneous_response_frequency_difference_outer_bounds": [
+          -0.017569444444444457,
+          0.0027083333333333287
+        ]
+      },
+      "tqa": {
+        "questions": 200,
+        "clusters": 151,
+        "cluster_size_max": 11,
+        "bootstrap_seed": 20260916,
+        "metrics": {
+          "matches_reference.mean": {
+            "delay0": 0.7809027777777777,
+            "delay5": 0.7906249999999999,
+            "difference": 0.009722222222222226,
+            "bootstrap_percentile_95": [
+              -0.003753949261761757,
+              0.021620338033423458
+            ],
+            "questions_increased": 86,
+            "questions_decreased": 61,
+            "questions_equal": 53
+          },
+          "matches_reference.sd": {
+            "delay0": 0.12179799003281323,
+            "delay5": 0.11445947071368572,
+            "difference": -0.007338519319127482,
+            "bootstrap_percentile_95": [
+              -0.01744594829637214,
+              0.00236186928106236
+            ],
+            "questions_increased": 66,
+            "questions_decreased": 87,
+            "questions_equal": 47
+          },
+          "contradicts_reference.mean": {
+            "delay0": 0.0775,
+            "delay5": 0.078125,
+            "difference": 0.0006249999999999995,
+            "bootstrap_percentile_95": [
+              -0.006849398882921306,
+              0.008448036505802066
+            ],
+            "questions_increased": 39,
+            "questions_decreased": 22,
+            "questions_equal": 139
+          },
+          "contradicts_reference.sd": {
+            "delay0": 0.04052890866852774,
+            "delay5": 0.04264214568679067,
+            "difference": 0.002113237018262938,
+            "bootstrap_percentile_95": [
+              -0.00484614812366452,
+              0.009149309091909941
+            ],
+            "questions_increased": 35,
+            "questions_decreased": 27,
+            "questions_equal": 138
+          },
+          "abstention.mean": {
+            "delay0": 0.1279861111111111,
+            "delay5": 0.11576388888888887,
+            "difference": -0.012222222222222223,
+            "bootstrap_percentile_95": [
+              -0.019097222222222213,
+              -0.005504602833147634
+            ],
+            "questions_increased": 62,
+            "questions_decreased": 98,
+            "questions_equal": 40
+          },
+          "abstention.sd": {
+            "delay0": 0.1249236686875276,
+            "delay5": 0.12030487082362676,
+            "difference": -0.004618797863900847,
+            "bootstrap_percentile_95": [
+              -0.011564455286317001,
+              0.0021481040043811136
+            ],
+            "questions_increased": 74,
+            "questions_decreased": 88,
+            "questions_equal": 38
+          },
+          "unresolved.mean": {
+            "delay0": 0.01347222222222222,
+            "delay5": 0.015486111111111112,
+            "difference": 0.002013888888888887,
+            "bootstrap_percentile_95": [
+              -0.00617993437818553,
+              0.011095603341834664
+            ],
+            "questions_increased": 17,
+            "questions_decreased": 8,
+            "questions_equal": 175
+          },
+          "unresolved.sd": {
+            "delay0": 0.011394426346519443,
+            "delay5": 0.013158565727573672,
+            "difference": 0.001764139381054229,
+            "bootstrap_percentile_95": [
+              -0.005459395196181343,
+              0.008446741408905348
+            ],
+            "questions_increased": 16,
+            "questions_decreased": 9,
+            "questions_equal": 175
+          },
+          "invalid_output.mean": {
+            "delay0": 0.0001388888888888889,
+            "delay5": 0.0,
+            "difference": -0.0001388888888888889,
+            "bootstrap_percentile_95": [
+              -0.0003454947484798231,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 2,
+            "questions_equal": 198
+          },
+          "invalid_output.sd": {
+            "delay0": 0.000666087711571211,
+            "delay5": 0.0,
+            "difference": -0.000666087711571211,
+            "bootstrap_percentile_95": [
+              -0.001656934605898535,
+              0.0
+            ],
+            "questions_increased": 0,
+            "questions_decreased": 2,
+            "questions_equal": 198
+          }
+        },
+        "erroneous_response_frequency_difference_outer_bounds": [
+          -0.012847222222222223,
+          0.016111111111111104
+        ]
+      }
+    }
+  },
+  "validation": {
+    "runs_per_version": 800,
+    "questions_per_version": 400,
+    "tail_states_per_version": 57600,
+    "tail_counts_match_semantic_reports": true,
+    "absence_metrics_identical_across_versions": true
+  },
+  "interpretation": "Post-hoc pointwise cluster-bootstrap sensitivity; not multiplicity-adjusted or confirmatory. Conditioned on frozen labels and observed generation trajectories. All questions retained; unknown, abstention, format separate. C is recognised erroneous-response share, not the original unidentified binary truth-error amplitude.",
+  "derived_sha256": {
+    "pairs.jsonl": "287d60e5a62c1f7d176c931b073399f14679fef9fd664b6fe855178e475da1fe",
+    "bootstrap_samples.npz": "405f40a909dbfd16f0b80df143f9c777e03f562fec0f7803513da914444d17e7"
+  }
+}

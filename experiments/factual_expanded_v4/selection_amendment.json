@@ -1,0 +1,11 @@
+{
+  "stage": "before any new primary answers",
+  "reason": "complete selected PsiloQA excerpt review identified four source/question problems",
+  "excluded_psilo_source_rows": {
+    "544": "Excerpt establishes Dominican nationality but does not establish country of birth; question asks birthplace.",
+    "1654": "Passage describes distance of a different station from Tambaram and Chennai Beach; question binds the distance to Tambaram itself.",
+    "4288": "Iranian-born describes birthplace, not nationality at birth; question conflates the two.",
+    "73": "Selected excerpt mentions the band in another collaboration, not the requested 2008 remix; insufficient provided evidence for this question."
+  },
+  "previous_primary_sha256": "f994c28443a70d8841ec0cb85eb31b06a4a4c311a338eed9e3d4a38bb891694b"
+}

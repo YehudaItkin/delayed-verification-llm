@@ -30,7 +30,13 @@ def chebU(n, c):
     return U
 
 def beta_c(a, delta):
-    """beta_c = 1/U_{delta-1}(c), c the branch root of U_delta(c)/U_{delta-1}(c)=a."""
+    """Positive-branch threshold for 0 <= a <= 1 (a=1 is the limit)."""
+    if not isinstance(delta, (int, np.integer)) or isinstance(delta, (bool, np.bool_)) or delta < 1:
+        raise ValueError("delta must be a positive integer")
+    if not np.isfinite(a) or not 0 <= a <= 1:
+        raise ValueError("This boundary formula requires 0 <= a <= 1")
+    if a == 0:
+        return 1.0
     if delta == 1:
         return 1.0
     lo, hi = np.cos(np.pi / (delta + 1)), np.cos(np.pi / (2 * delta + 1))  # branch in c
@@ -87,16 +93,30 @@ g = np.zeros(len(free)); g[1] = 0.04          # a faulty agent injects small bia
 print(f"grounded Laplacian: n_free={len(free)}, mu in [{mu_min:.3f},{mu_max:.3f}], eta={eta:.4f}")
 print(f"{'delta':>5} {'a_bind':>7} {'kappa_max(theory)':>18} {'kappa_crit(nonlin)':>19} {'ratio':>7}")
 
+ratios = np.linspace(0.35, 1.65, 40)
+amplitude_threshold = 1e-3
 results = {}
 for delta in [1, 2, 3]:
     a_bind = 1 - eta * mu_min                  # slowest grounded mode binds the dose
     kmax = beta_c(a_bind, delta) / eta
-    grid = np.linspace(0.35, 1.65, 40) * kmax
+    grid = ratios * kmax
     amps = np.array([late_amplitude(simulate(Lg, eta, k, delta, g)) for k in grid])
-    onset_idx = np.argmax(amps > 1e-3)
-    kcrit = grid[onset_idx] if amps[onset_idx] > 1e-3 else np.nan
+    detected = np.flatnonzero(amps > amplitude_threshold)
+    onset_idx = int(detected[0]) if detected.size else None
+    kcrit = grid[onset_idx] if onset_idx is not None else np.nan
     results[delta] = (grid, amps, kmax, kcrit, a_bind)
     print(f"{delta:>5} {a_bind:>7.3f} {kmax:>18.4f} {kcrit:>19.4f} {kcrit/kmax:>7.3f}")
+    if onset_idx is not None and onset_idx > 0:
+        print(f"      sampled onset bracket: ({ratios[onset_idx-1]:.6f}, "
+              f"{ratios[onset_idx]:.6f}] times theory; "
+              f"late-amplitude threshold={amplitude_threshold:g}")
+    elif onset_idx == 0:
+        print("      first grid point is already oscillatory; no lower bracket")
+    else:
+        print("      no oscillatory sample found on this grid")
+
+print(f"Ratio-grid spacing: {ratios[1]-ratios[0]:.6f}. "
+      "The first detected sample does not resolve a separate saturation-induced shift.")
 
 # frequency check for delta=2 (single binding mode)
 d2 = 2; _, _, kmax2, _, a2 = results[d2]

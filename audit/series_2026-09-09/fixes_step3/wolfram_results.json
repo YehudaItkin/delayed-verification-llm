@@ -1,0 +1,17 @@
+{
+	"engine":"15.0.0 for Mac OS X ARM (64-bit) (May 26, 2026)",
+	"checks":{
+		"negative_a_factorization":true,
+		"negative_a_other_roots_inside":true,
+		"delta_one_boundary_constant":true,
+		"zero_a_all_roots_on_circle":true,
+		"phase_derivative":true,
+		"phase_derivative_positive":true,
+		"radial_crossing_identity":true,
+		"radial_crossing_positive":true,
+		"radial_lower_bound_factorization":true,
+		"delta_two_formula":true,
+		"limit_a_one_sine_identity":true,
+		"zero_a_modulus_identity":true
+	}
+}

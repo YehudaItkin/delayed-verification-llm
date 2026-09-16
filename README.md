@@ -1,54 +1,49 @@
-# Delayed Verification Destabilizes Multi-Agent LLM Belief: Instability Thresholds and Optimal Corrector Placement
+# Delayed Verification in Multi-Agent LLM Systems
 
-Code and paper for a control-theoretic study of **delayed verification** in multi-agent LLM
-systems: modeling the generator–verifier–critic loop as a delayed consensus over a graph with
-grounded *corrector* nodes, deriving when verification stabilizes vs. destabilizes factual
-consensus, and where to place correctors.
+Code, reviewed manuscript and research records for **Stability of a Consensus Model and Coherence-Based Corrector Placement**, a revision of [arXiv:2606.27409](https://arxiv.org/abs/2606.27409).
 
-## Contents
+The updated [manuscript source](paper/main.tex) and [28-page PDF](paper/main.pdf) contain the corrected mathematical scope, historical experimental reanalysis, and the expanded factual study below. Publishing this repository does not replace the arXiv article; that is a separate submission. `paper/arxiv_submission.tar.gz` and `paper/skeleton.*` are historical artifacts, not the current replacement package or authoritative revised manuscript.
 
-```
-paper/
-  main.tex            full paper (compiles to main.pdf, ~11pp)
-  skeleton.tex        math-only skeleton (theorems + proofs)
-  validate.py         numerical validation of the stability theory (NumPy, no GPU)
-  demo.py             synthetic nonlinear (tanh) onset/frequency demo
-  figures/            generated figures
-  remote/             real LLM-debate experiment (runs against a vLLM OpenAI endpoint)
-    debate_exp.py     debate harness + PsiloQA calibration
-    debate_expA.py    variant A: wrong-majority + (kappa, delta) sweep
-    plot_*.py         figure generation
-    *_results.json    experiment outputs
-```
+## Expanded factual study: 400 questions
 
-## Key results
+Collected September 13-15, 2026: 200 PsiloQA questions, 200 TruthfulQA questions, 800 trajectories and 226800 requests. Three agents and four fixed erroneous peers were tested with verifier lags 0 and 5, using the recorded server artifact tagged `qwen3.8:latest`. The tag is an operational identifier; its digest is frozen in the manifest.
 
-- **Reduction.** The grounded Laplacian eigen-decouples the closed loop into scalar delay
-  recurrences `x_{t+1}=a x_t - eta*kappa x_{t-delta}`.
-- **Verification dose.** Closed-form critical gain `kappa_max(delta)` (Chebyshev form; exact at
-  `delta=2`); too-strong or too-delayed correction destabilizes truth into oscillation. Synchronized
-  gossip/verification delays are the worst case (inverse golden ratio at `delta=2`).
-- **Placement.** Corrector placement is supermodular ⇒ greedy `(1-1/e)` (inherited from
-  Clark–Bushnell–Poovendran leader selection).
-- **Empirics.** A synthetic `tanh` loop matches the predicted onset within ~2%; a real Qwen3.6-35B
-  debate reproduces the `(kappa, delta)` dose tradeoff (strong verification: best when fresh, worst
-  when delayed), with threshold and variance caveats detailed in the paper.
+The complete study records are in [experiments/factual_expanded_v4](experiments/factual_expanded_v4/README.md), including:
 
-## Reproduce
+- Full prompts, responses, request seeds, parsed outputs and agent trajectories.
+- Frozen questions, source evidence, model digest and executed code.
+- Both post-hoc semantic review versions, including decisions, reasons and selected sources.
+- Paired outcome analysis, question clusters, all bootstrap replicates and verification reports.
 
-Theory (no GPU):
-```bash
-python paper/validate.py     # stability boundary, dose curve, steady state
-python paper/demo.py         # nonlinear onset/frequency
+Large JSON/JSONL files are gzip-compressed without changing their original contents. There are no Git LFS pointers or external data downloads in the offline reproduction path. [RESEARCH_MANIFEST.json](RESEARCH_MANIFEST.json) records original and stored checksums. Restoring the complete data uses about 0.8 GB of disk space, with additional space needed for derived analyses.
+
+## Reproduce from this checkout
+
+Use Python 3.11 or later. From the repository root:
+
+```sh
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-reproduce.txt
+python reproduce.py
 ```
 
-Real LLM experiment (needs a vLLM OpenAI-compatible endpoint + an NLI model):
-```bash
-export VLLM_API_KEY=...                       # never commit this
-python paper/remote/debate_exp.py calibrate   # select movable questions
-python paper/remote/debate_expA.py            # (kappa, delta) sweep
-```
+The command restores and verifies compressed files, replays all 226800 saved requests without calling a model, reapplies both frozen semantic reviews, and recomputes the outcome statistics and bootstrap arrays. Outputs go into a fresh ignored `reproduction-*` directory. To restore data without running the analysis, use `python restore_data.py` (standard library only).
 
-## Status
+[REPRODUCIBILITY.md](REPRODUCIBILITY.md) documents further historical and mathematical checks. These calculations reproduce the preserved trajectories and labels; they are not a new independent run or independent factual adjudication.
 
-Published as [arXiv:2606.27409](https://arxiv.org/abs/2606.27409). Methodological predecessor: *Delayed Repression and Emergent Instability in Adaptive Multi-Agent Systems* (arXiv:2605.30392).
+## What the results establish
+
+The linear stability threshold is exact for the stated symmetric consensus recurrence. Greedy placement guarantees a fraction of the optimal coherence reduction, not optimal static mean-square error. Signed numeric LLM experiments use an externally imposed correction law; they do not identify the dynamics of ordinary factual verification.
+
+In the expanded factual study, conservative completion bounds still permit either sign of the change in binary error amplitude. Abstentions dominate the remaining unscored cells. A separate post-hoc cluster-bootstrap analysis finds lower TruthfulQA abstention frequency at lag 5; it does not establish improved accuracy or a change in error variability. Both semantic scoring versions are preserved, and neither constitutes independent human validation.
+
+## Layout
+
+- `paper/`: reviewed manuscript, figures, numerical checks and historical experiment drivers/data.
+- `paper/lean/`: selected algebraic certificates, using Lean 4.32.2 and Std.
+- `experiments/factual_expanded_v4/`: expanded study and all preserved analyses.
+- `audit/`: supporting mathematical and historical reanalysis records.
+- `restore_data.py`, `reproduce.py`: offline restoration and replay entry points.
+
+Historical raw generations were not saved for some old experiments. The complete new study does not repair those missing historical responses. The full external PsiloQA candidate export and pilot history are not bundled; the frozen selected study is.

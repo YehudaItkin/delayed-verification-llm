@@ -1,0 +1,33 @@
+{
+	"engine":"15.0.0 for Mac OS X ARM (64-bit) (May 26, 2026)",
+	"checks":{
+		"positive_forcing_leaves_zero":true,
+		"unforced_step_nonincreasing":true,
+		"exact_period_six":true,
+		"grid_spacing":true,
+		"grid_lower":true,
+		"grid_upper":true
+	},
+	"periodic_sequence":[
+		0,
+		0,
+		1,
+		2,
+		2,
+		1,
+		0,
+		0,
+		1,
+		2,
+		2,
+		1,
+		0,
+		0,
+		1,
+		2,
+		2,
+		1,
+		0,
+		0
+	]
+}

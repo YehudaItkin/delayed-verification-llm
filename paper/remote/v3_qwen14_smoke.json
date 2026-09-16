@@ -1,0 +1,113 @@
+{
+ "meta": {
+  "T": 10,
+  "alphas": [
+   0.5,
+   1.5
+  ],
+  "deltas": [
+   1,
+   6
+  ],
+  "seeds": 1,
+  "n_free": 3,
+  "n_faulty": 3,
+  "model": "Qwen/Qwen3-14B",
+  "n_items": 1,
+  "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+ },
+ "runs": [
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 0.5,
+   "delta": 1,
+   "seed": 0,
+   "e": [
+    -0.7,
+    -0.35,
+    -0.175,
+    -0.087,
+    -0.044,
+    -0.023,
+    -0.011,
+    -0.005,
+    -0.002,
+    -0.001
+   ],
+   "amp": 0.029,
+   "zc": 1,
+   "rng": 0.086,
+   "moved": 0,
+   "final": -0.001
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 0.5,
+   "delta": 6,
+   "seed": 0,
+   "e": [
+    -0.7,
+    -0.35,
+    0.0,
+    0.35,
+    0.7,
+    1.05,
+    1.4,
+    1.575,
+    1.575,
+    1.4
+   ],
+   "amp": 0.437,
+   "zc": 1,
+   "rng": 1.225,
+   "moved": 1,
+   "final": 1.4
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 1.5,
+   "delta": 1,
+   "seed": 0,
+   "e": [
+    -0.7,
+    0.35,
+    -0.175,
+    0.087,
+    -0.044,
+    0.023,
+    -0.011,
+    0.005,
+    -0.002,
+    0.001
+   ],
+   "amp": 0.037,
+   "zc": 3,
+   "rng": 0.131,
+   "moved": 0,
+   "final": 0.001
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 1.5,
+   "delta": 6,
+   "seed": 0,
+   "e": [
+    -0.7,
+    0.35,
+    1.4,
+    2.45,
+    3.5,
+    4.55,
+    5.6,
+    5.075,
+    2.975,
+    -0.7
+   ],
+   "amp": 1.959,
+   "zc": 2,
+   "rng": 6.3,
+   "moved": 1,
+   "final": -0.7
+  }
+ ]
+}

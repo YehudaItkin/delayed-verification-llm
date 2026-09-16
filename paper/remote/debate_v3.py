@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Variant V3: NUMERIC-ESTIMATION debate -- the proper signed-belief oscillation test.
+"""Variant V3: numeric estimation under an externally computed delayed controller.
 
 The fix the validity audit demanded: a SIGNED, truth-centred state that can overshoot through zero,
 and a GRADED gain (not 'copy verbatim'). Agents output a NUMBER; the signed error
@@ -9,8 +9,10 @@ round-(t-delta) estimate. If agents follow V, in error coords eps_{t+1} = eps_t 
 -- the scalar delayed recurrence -- which is STABLE iff alpha < beta_c(delta). Since beta_c(1)=1 and
 beta_c(6)~=0.24, alpha=0.5 should be stable at delta=1 but OSCILLATE at delta=6: a clean dose-delay
 prediction. We measure amplitude + zero-crossings on the SIGNED series, conditioned on movement.
-PRE-REGISTERED primary comparison: amplitude (std of signed e) at alpha=0.5, delta=6 vs delta=1,
-on runs that moved; one-sided prediction amp(d6) > amp(d1). Everything else is exploratory.
+The original script specified a movement-conditioned comparison, whereas the paper's cross-model
+summary used all runs. Both must be reported separately. Legacy stored delay labels 1 and 6 have
+effective lags 0 and 5 because their history index was t-delta. The default convention below fixes
+that index; --delay-convention legacy reproduces the old indexing and is recorded in metadata.
 """
 import os, json, time, argparse, sys, re
 import requests, numpy as np
@@ -85,8 +87,13 @@ QUESTIONS = [
 ]
 
 def parse_num(text):
-    m = re.findall(r"-?\d[\d,]*\.?\d*", text.replace(",", ""))
-    return float(m[-1]) if m else None
+    """Accept a finite numeric ANSWER (or bare number), without mining other numbers."""
+    number = r"[+-]?(?:(?:\d{1,3}(?:,\d{3})+|\d+)(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?"
+    match = re.fullmatch(r"\s*(?:ANSWER:\s*)?(" + number + r")\s*", text, re.IGNORECASE)
+    if not match:
+        return None
+    value = float(match.group(1).replace(",", ""))
+    return value if np.isfinite(value) else None
 
 def cold_estimate(q, temp):
     return parse_num(llm([{"role": "system", "content": "Estimate the numeric answer to the question with your single best NUMBER. Reply exactly 'ANSWER: <number>'."},
@@ -97,12 +104,17 @@ def estimate(q, prev, peers, suggestion, temp):
                        {"role": "user", "content": f"Question: {q}\nYour current estimate: {prev}\nPeers' estimates: {peers}\nVerifier suggests the value is about: {suggestion}\nReply: ANSWER: <number>"}], temperature=temp))
     return v if v is not None else prev
 
-def run_v3(item, alpha, delta, n_free=3, n_faulty=1, T=22, temp=0.7):
+def run_v3(item, alpha, delta, n_free=3, n_faulty=1, T=22, temp=0.7, delay_convention="theory"):
+    if delay_convention not in ("theory", "legacy"):
+        raise ValueError("Unknown delay convention")
+    if type(delta) is not int or delta < (1 if delay_convention == "legacy" else 0):
+        raise ValueError("Invalid delay for the selected convention")
     q, T_, W, sc = item["q"], item["truth"], item["wrong"], item["scale"]
     cur = [float(W) for _ in range(n_free)]   # start perturbed from truth (at the wrong anchor)
     buf = [cur[:]]; e = [(float(np.mean(cur)) - T_) / sc]
     for t in range(1, T):
-        stale = buf[max(0, t - delta)]
+        # cur is x[t-1]; theory x[t] uses x[t-1-delta].
+        stale = buf[max(0, t - delta - (delay_convention == "theory"))]
         new = []
         for i in range(n_free):
             V = cur[i] - alpha * (stale[i] - T_)        # relative delayed correction, graded gain alpha
@@ -130,6 +142,8 @@ if __name__ == "__main__":
     ap.add_argument("--alphas", type=str, default="0.5,1.5")
     ap.add_argument("--deltas", type=str, default="1,6")
     ap.add_argument("--nq", type=int, default=10)
+    ap.add_argument("--n-faulty", type=int, default=1)
+    ap.add_argument("--delay-convention", choices=["theory", "legacy"], default="theory")
     ap.add_argument("--backend", default="vllm", choices=["vllm", "hf"])
     ap.add_argument("--model", default=None)
     ap.add_argument("--device", default="cuda:1")
@@ -140,14 +154,21 @@ if __name__ == "__main__":
     alphas = [float(x) for x in a.alphas.split(",")]; deltas = [int(x) for x in a.deltas.split(",")]
     qs = QUESTIONS[:a.nq]
     res = {"meta": {"T": a.T, "alphas": alphas, "deltas": deltas, "seeds": a.seeds, "n_free": 3,
-                    "n_faulty": 3, "model": MODEL, "n_items": len(qs),
-                    "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"}, "runs": []}
+                    "n_faulty": a.n_faulty, "model": MODEL, "n_items": len(qs),
+                    "delay_convention": a.delay_convention,
+                    "effective_delays": [d if a.delay_convention == "theory" else d-1 for d in deltas],
+                    "parser": "strict finite ANSWER or bare number; decimal/scientific notation",
+                    "seed_role": "replicate index; no RNG seed passed to the backend",
+                    "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1",
+                    "amp_definition": "std(e[3:]), finite-window variability",
+                    "zc_definition": "crossings of the centred e[3:] series, not truth"}, "runs": []}
     for it in qs:
         for al in alphas:
             for d in deltas:
                 for s in range(a.seeds):
                     t0 = time.time()
-                    e = run_v3(it, al, d, T=a.T, temp=0.7)
+                    e = run_v3(it, al, d, n_faulty=a.n_faulty, T=a.T, temp=0.7,
+                               delay_convention=a.delay_convention)
                     m = metrics(e)
                     rec = {"q": it["q"], "alpha": al, "delta": d, "seed": s, "e": [round(v, 3) for v in e], **m}
                     res["runs"].append(rec)

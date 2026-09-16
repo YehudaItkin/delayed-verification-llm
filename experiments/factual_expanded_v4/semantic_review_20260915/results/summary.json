@@ -1,0 +1,101 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-15T07:58:46.605755+00:00",
+  "review_sha256": "63ec170a5af9374199a64deb0d8a62e4bc94dc0270c96e596a55cba81bd2fbb5",
+  "analysis_code_sha256": "eeceb66b235d6d510d656668c8818391abb9437bbee49daaa1b91bd8368c20fd",
+  "source_files_sha256": {
+    "manifest.json": "387ae507d7aa2e43d1b1e0d7919f4a4cb2b2415389d586510dc3b035f6b2eb3b",
+    "requests.jsonl": "78d785c8cc0fbdd742e6061d14533ddeb24e69ff5b37e788df6e9e5c20ba6b00",
+    "runs.jsonl": "aea1ba012e14e75b10cb1c02f214b620186b60d9fade9dfb627b0dc8d17c9cd8"
+  },
+  "questions": 400,
+  "runs": 800,
+  "reviewed_unique_pairs": 3604,
+  "unique_pair_decisions": {
+    "matches_reference": 1915,
+    "contradicts_reference": 662,
+    "unresolved": 1027
+  },
+  "all_state_label_counts": {
+    "psilo": {
+      "abstention": 16504,
+      "contradicts_reference": 7255,
+      "matches_reference": 32350,
+      "unresolved": 1491
+    },
+    "tqa": {
+      "matches_reference": 39812,
+      "abstention": 7646,
+      "unresolved": 5827,
+      "contradicts_reference": 4313,
+      "invalid_output": 2
+    }
+  },
+  "tail_state_label_counts": {
+    "psilo": {
+      "contradicts_reference": 3212,
+      "abstention": 7781,
+      "matches_reference": 17069,
+      "unresolved": 738
+    },
+    "tqa": {
+      "matches_reference": 20347,
+      "abstention": 3510,
+      "unresolved": 2868,
+      "contradicts_reference": 2073,
+      "invalid_output": 2
+    }
+  },
+  "label_transitions": {
+    "psilo": {
+      "abstention -> abstention": 16504,
+      "unresolved -> contradicts_reference": 3652,
+      "matches_reference -> matches_reference": 24819,
+      "contradicts_reference -> contradicts_reference": 3603,
+      "unresolved -> matches_reference": 7531,
+      "unresolved -> unresolved": 1491
+    },
+    "tqa": {
+      "matches_reference -> matches_reference": 10151,
+      "abstention -> abstention": 7646,
+      "unresolved -> unresolved": 5827,
+      "unresolved -> contradicts_reference": 3508,
+      "unresolved -> matches_reference": 29661,
+      "contradicts_reference -> contradicts_reference": 805,
+      "invalid_output -> invalid_output": 2
+    }
+  },
+  "datasets": {
+    "psilo": {
+      "questions": 200,
+      "mean_difference_outer_bounds": [
+        -0.21964247367256454,
+        0.22103437033533535
+      ],
+      "original_mean_difference_outer_bounds": [
+        -0.313359818778244,
+        0.3079985366971805
+      ],
+      "fully_labelled_question_tails": 3,
+      "clusters": 200
+    },
+    "tqa": {
+      "questions": 200,
+      "mean_difference_outer_bounds": [
+        -0.18397320071157,
+        0.1787514295288669
+      ],
+      "original_mean_difference_outer_bounds": [
+        -0.41625265818696067,
+        0.42361928531052245
+      ],
+      "fully_labelled_question_tails": 13,
+      "clusters": 151
+    }
+  },
+  "interpretation": "All questions retained. Same reviewed answer receives same label in all occurrences. Remaining unknowns/abstentions have conservative independent-cell completion outer bounds, not confidence intervals or sharp bounds under repeated-answer truth constraints. No imputed-label significance test; no independent-human validation claim.",
+  "derived_files_sha256": {
+    "runs.jsonl": "a97316531af5002ba7bd92344909446abdb3dab7f875d50ac9f5b2270e2b5920",
+    "pairs.jsonl": "17e867a5e06b00ca87c85f86fc498a062b7917220bd9d80350e37b115baeb582"
+  }
+}

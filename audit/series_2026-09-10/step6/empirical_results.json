@@ -1,0 +1,362 @@
+{
+  "expA_v3.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.05491666666666666,
+        0.26479166666666665
+      ],
+      "p": 0.00390625
+    },
+    "moved_only": {
+      "pairs": 6,
+      "means": [
+        0.06911111111111111,
+        0.33649999999999997
+      ],
+      "p": 0.015625
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.05491666666666667,
+        "moved": 13,
+        "n": 24,
+        "overshoot": 0.0
+      },
+      "(0.5, 6)": {
+        "amp": 0.2647916666666667,
+        "moved": 20,
+        "n": 24,
+        "overshoot": 0.9583333333333334
+      },
+      "(1.5, 1)": {
+        "amp": 0.008208333333333333,
+        "moved": 2,
+        "n": 24,
+        "overshoot": 0.7083333333333334
+      },
+      "(1.5, 6)": {
+        "amp": 0.530875,
+        "moved": 22,
+        "n": 24,
+        "overshoot": 0.9166666666666666
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "qwen3.6-35b-a3b",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  },
+  "expA_v3_gemma4.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.071125,
+        0.6824166666666667
+      ],
+      "p": 0.00390625
+    },
+    "moved_only": {
+      "pairs": 7,
+      "means": [
+        0.07861904761904762,
+        0.7254285714285713
+      ],
+      "p": 0.0078125
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.07112500000000001,
+        "moved": 17,
+        "n": 24,
+        "overshoot": 0.0
+      },
+      "(0.5, 6)": {
+        "amp": 0.6824166666666667,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      },
+      "(1.5, 1)": {
+        "amp": 0.011166666666666667,
+        "moved": 2,
+        "n": 24,
+        "overshoot": 0.7916666666666666
+      },
+      "(1.5, 6)": {
+        "amp": 3.7370416666666664,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "google/gemma-4-12B-it",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  },
+  "expA_v3_mistral.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.02525,
+        1.1267916666666669
+      ],
+      "p": 0.00390625
+    },
+    "moved_only": {
+      "pairs": 0,
+      "means": null,
+      "p": null
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.025249999999999998,
+        "moved": 0,
+        "n": 24,
+        "overshoot": 0.0
+      },
+      "(0.5, 6)": {
+        "amp": 1.1267916666666666,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      },
+      "(1.5, 1)": {
+        "amp": 0.0145,
+        "moved": 2,
+        "n": 24,
+        "overshoot": 0.875
+      },
+      "(1.5, 6)": {
+        "amp": 26.16154166666667,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "mistralai/Mistral-7B-Instruct-v0.1",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  },
+  "expA_v3_nemo.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.08270833333333334,
+        0.15770833333333334
+      ],
+      "p": 0.07421875
+    },
+    "moved_only": {
+      "pairs": 7,
+      "means": [
+        0.10916666666666668,
+        0.19976190476190478
+      ],
+      "p": 0.0546875
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.08270833333333333,
+        "moved": 18,
+        "n": 24,
+        "overshoot": 0.0
+      },
+      "(0.5, 6)": {
+        "amp": 0.15770833333333334,
+        "moved": 17,
+        "n": 24,
+        "overshoot": 0.5833333333333334
+      },
+      "(1.5, 1)": {
+        "amp": 0.015125,
+        "moved": 4,
+        "n": 24,
+        "overshoot": 0.5
+      },
+      "(1.5, 6)": {
+        "amp": 0.6931666666666666,
+        "moved": 23,
+        "n": 24,
+        "overshoot": 0.8333333333333334
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "mistralai/Mistral-Nemo-Instruct-2407",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  },
+  "expA_v3_phi4.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.38958333333333334,
+        2.534375
+      ],
+      "p": 0.00390625
+    },
+    "moved_only": {
+      "pairs": 5,
+      "means": [
+        1.4238666666666666,
+        3.5815333333333337
+      ],
+      "p": 0.03125
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.38958333333333334,
+        "moved": 9,
+        "n": 24,
+        "overshoot": 0.041666666666666664
+      },
+      "(0.5, 6)": {
+        "amp": 2.5343750000000003,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 0.9583333333333334
+      },
+      "(1.5, 1)": {
+        "amp": 1.2499166666666666,
+        "moved": 15,
+        "n": 24,
+        "overshoot": 1.0
+      },
+      "(1.5, 6)": {
+        "amp": 5.424041666666667,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 0.9583333333333334
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "microsoft/phi-4",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  },
+  "expA_v3_qwen14.json": {
+    "all_runs": {
+      "pairs": 8,
+      "means": [
+        0.0225,
+        1.5984166666666666
+      ],
+      "p": 0.00390625
+    },
+    "moved_only": {
+      "pairs": 0,
+      "means": null,
+      "p": null
+    },
+    "cells": {
+      "(0.5, 1)": {
+        "amp": 0.022500000000000003,
+        "moved": 0,
+        "n": 24,
+        "overshoot": 0.0
+      },
+      "(0.5, 6)": {
+        "amp": 1.5984166666666668,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      },
+      "(1.5, 1)": {
+        "amp": 0.024625000000000005,
+        "moved": 6,
+        "n": 24,
+        "overshoot": 1.0
+      },
+      "(1.5, 6)": {
+        "amp": 32.80704166666667,
+        "moved": 24,
+        "n": 24,
+        "overshoot": 1.0
+      }
+    },
+    "meta": {
+      "T": 22,
+      "alphas": [
+        0.5,
+        1.5
+      ],
+      "deltas": [
+        1,
+        6
+      ],
+      "seeds": 3,
+      "n_free": 3,
+      "n_faulty": 3,
+      "model": "Qwen/Qwen3-14B",
+      "n_items": 8,
+      "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+    }
+  }
+}

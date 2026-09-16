@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "runs": 800,
+  "requests": 226800,
+  "semantic_versions_reproduced": [
+    "v1",
+    "v2"
+  ],
+  "all_bootstrap_arrays_identical": true,
+  "network_calls": 0,
+  "checked_utc": "2026-09-16T05:15:50.826546+00:00",
+  "numpy_version": "2.4.0",
+  "scipy_version": "1.17.1",
+  "research_manifest_sha256": "ee9aea4b7e89c7db15b3bf763debb43db627d00f25b42b2653bda9783a49b498",
+  "scope": "Offline replay of preserved responses and frozen semantic labels; not new model generations or independent human adjudication."
+}

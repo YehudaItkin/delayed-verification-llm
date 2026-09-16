@@ -9,6 +9,7 @@ kappa and delta are large -- the regime documented empirically as 'debate collap
 measured only for the trajectory, never used in the dynamics.
 """
 import os, json, time, argparse, sys
+from history_index import history_index, effective_delay
 import requests, numpy as np, torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
@@ -68,12 +69,14 @@ def agent_update_B(q, prev, peers, crit, kappa, temp):
     return parse_ans(llm([{"role": "system", "content": sysmsg},
                           {"role": "user", "content": f"Question: {q}\nYour previous answer: {prev}\nPeers' latest answers: {peers}{note}\nReply: ANSWER: <answer>"}], max_tokens=50, temperature=temp))
 
-def _maj(lst): return max(set(lst), key=lst.count)
+def _maj(lst):
+    # Stable tie break: first answer in agent order. Historical ties were hash-order dependent.
+    return max(dict.fromkeys(lst), key=lst.count)
 def _norm(s): return s.lower().strip()
 
 def answer_metrics(majs):
-    """Oscillation in ANSWER space (not error-to-gold): flip-flop = A->B->A period-2 returns,
-    the discrete signature of delayed negative feedback. Warmup of 2 rounds dropped."""
+    """Normalized string changes and A->B->A returns after two warmup states.
+    These do not distinguish rephrasing from semantic changes or identify a mechanism."""
     m = [_norm(x) for x in majs[2:]]
     if len(m) < 3:
         return dict(flip_rate=0.0, flipflop=0, returns=0, ndistinct=len(set(m)))
@@ -87,13 +90,13 @@ def answer_metrics(majs):
     return dict(flip_rate=round(flips / (len(m) - 1), 3), flipflop=flipflop,
                 returns=returns, ndistinct=len(set(m)))
 
-def run_debate_B(item, kappa, delta, n_free=3, T=36, temp=0.7):
+def run_debate_B(item, kappa, delta, n_free=3, T=36, temp=0.7, delay_convention="theory"):
     q, gold = item["q"], item["gold"]
     cur = [cold_answer(q, temp) for _ in range(n_free)]
     buf = [cur[:]]; traj = [[err(a, gold) for a in cur]]; majs = [_maj(cur)]
     for t in range(1, T):
-        stale = buf[max(0, t - delta)]
-        smaj = max(set(stale), key=stale.count)        # lagged majority of the free agents
+        stale = buf[history_index(t, delta, delay_convention)]
+        smaj = _maj(stale)        # lagged majority of the free agents
         crit = contrarian(smaj, temp)                  # ungrounded anti-signal
         new = [agent_update_B(q, cur[i], [cur[j] for j in range(n_free) if j != i], crit, kappa, temp)
                for i in range(n_free)]
@@ -106,6 +109,7 @@ def osc_index(mt):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+    ap.add_argument("--delay-convention", choices=["theory", "legacy"], default="theory")
     ap.add_argument("--sel", default="selected_big.json")
     ap.add_argument("--out", default="expA_B_results.json")
     ap.add_argument("--T", type=int, default=36)
@@ -119,14 +123,17 @@ if __name__ == "__main__":
     if a.nq:
         sel = sel[:a.nq]
     kappas = a.kappas.split(","); deltas = [int(x) for x in a.deltas.split(",")]
-    res = {"meta": {"T": a.T, "kappas": kappas, "deltas": deltas, "seeds": a.seeds, "n_free": 3,
-                    "grounded": False, "model": MODEL, "n_items": len(sel)}, "runs": []}
+    res = {"meta": {"delay_convention": a.delay_convention,
+                    "effective_delays": [effective_delay(d, a.delay_convention) for d in deltas],
+                    "seed_role": "replicate index; no RNG seed passed to backend",
+                    "T": a.T, "kappas": kappas, "deltas": deltas, "seeds": a.seeds, "n_free": 3,
+                    "grounded": False, "majority_tie_break": "first agent order", "model": MODEL, "n_items": len(sel)}, "runs": []}
     for it in sel:
         for kappa in kappas:
             for delta in deltas:
                 for s in range(a.seeds):
                     t0 = time.time()
-                    mt, majs = run_debate_B(it, kappa, delta, T=a.T, temp=0.7)
+                    mt, majs = run_debate_B(it, kappa, delta, T=a.T, temp=0.7, delay_convention=a.delay_convention)
                     am = answer_metrics(majs)
                     rec = {"q": it["q"], "kappa": kappa, "delta": delta, "seed": s,
                            "mean_traj": mt, "majs": majs, "osc": osc_index(mt),

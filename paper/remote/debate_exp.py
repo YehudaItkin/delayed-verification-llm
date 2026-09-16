@@ -12,6 +12,7 @@ Pipeline:
 Backend: vLLM Qwen3.6-35B OpenAI API :8001.  NLI: microsoft/deberta-large-mnli on cuda:0.
 """
 import os, json, time, argparse, sys, re
+from history_index import history_index, effective_delay
 import requests, numpy as np, torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
@@ -72,12 +73,12 @@ def agent_update(q, prev, peers, vnote):
     return parse_ans(llm([{"role": "system", "content": "You are debating a factual question. Give your best CURRENT short answer, weighing your peers and the verifier note but thinking for yourself. Reply exactly 'ANSWER: <answer>'."},
                           {"role": "user", "content": f"Question: {q}\nYour previous answer: {prev}\nPeers' latest answers: {peers}{note}\nReply: ANSWER: <answer>"}], max_tokens=60))
 
-def run_debate(item, n_free=3, n_faulty=2, T=18, delta=1, verbose=False):
+def run_debate(item, n_free=3, n_faulty=2, T=18, delta=1, verbose=False, delay_convention="theory"):
     q, gold, ev, wrong = item["q"], item["gold"], item["evidence"], item["wrong"]
     cur = [cold_answer(q) for _ in range(n_free)]
     buf = [cur[:]]; traj = [[err(a, gold) for a in cur]]
     for t in range(1, T):
-        stale = buf[max(0, t - delta)]
+        stale = buf[history_index(t, delta, delay_convention)]
         verdicts = [verifier(stale[i], ev) for i in range(n_free)]
         new = []
         for i in range(n_free):
@@ -94,6 +95,7 @@ def osc_index(mt):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+    ap.add_argument("--delay-convention", choices=["theory", "legacy"], default="theory")
     ap.add_argument("mode", choices=["calibrate", "run"])
     ap.add_argument("--ncand", type=int, default=40)
     ap.add_argument("--keep", type=int, default=8)
@@ -150,10 +152,13 @@ if __name__ == "__main__":
 
     else:
         sel = json.load(open(a.sel)); deltas = [int(x) for x in a.deltas.split(",")]
-        res = {"meta": {"T": a.T, "deltas": deltas, "model": MODEL, "n_items": len(sel)}, "runs": []}
+        res = {"meta": {"delay_convention": a.delay_convention,
+                    "effective_delays": [effective_delay(d, a.delay_convention) for d in deltas],
+                    "seed_role": "replicate index; no RNG seed passed to backend",
+                    "T": a.T, "deltas": deltas, "model": MODEL, "n_items": len(sel)}, "runs": []}
         for it in sel:
             for delta in deltas:
-                t0 = time.time(); r = run_debate(it, T=a.T, delta=delta, verbose=True)
+                t0 = time.time(); r = run_debate(it, T=a.T, delta=delta, verbose=True, delay_convention=a.delay_convention)
                 r["osc"] = osc_index(r["mean_traj"]); res["runs"].append(r)
                 print(f"  q={it['q'][:34]!r} d={delta} osc={r['osc']} "
                       f"e0={r['mean_traj'][0]:.2f}->ef={r['mean_traj'][-1]:.2f} ({time.time()-t0:.0f}s)")

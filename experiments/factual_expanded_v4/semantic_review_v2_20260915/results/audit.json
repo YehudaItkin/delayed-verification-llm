@@ -1,0 +1,40 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-15T10:25:27.742163+00:00",
+  "v1_review_sha256": "63ec170a5af9374199a64deb0d8a62e4bc94dc0270c96e596a55cba81bd2fbb5",
+  "v2_review_sha256": "d73bdfa5e9a7afc4a8bb4977467908632cec18923475bf2e92a7a8c6efc1d546",
+  "rows_compared": 800,
+  "states_compared": 115200,
+  "all_prior_decided_pairs_preserved": true,
+  "all_original_absence_and_format_labels_preserved": true,
+  "every_v2_trajectory_bound_nested_in_v1": true,
+  "unique_pair_transitions_v1_to_v2": {
+    "matches_reference -> matches_reference": 1915,
+    "contradicts_reference -> contradicts_reference": 662,
+    "unresolved -> matches_reference": 734,
+    "unresolved -> unresolved": 180,
+    "unresolved -> contradicts_reference": 113
+  },
+  "state_transitions_v1_to_v2": {
+    "psilo": {
+      "abstention -> abstention": 16504,
+      "contradicts_reference -> contradicts_reference": 7255,
+      "matches_reference -> matches_reference": 32350,
+      "unresolved -> contradicts_reference": 232,
+      "unresolved -> unresolved": 571,
+      "unresolved -> matches_reference": 688
+    },
+    "tqa": {
+      "matches_reference -> matches_reference": 39812,
+      "abstention -> abstention": 7646,
+      "unresolved -> matches_reference": 4447,
+      "unresolved -> unresolved": 950,
+      "contradicts_reference -> contradicts_reference": 4313,
+      "unresolved -> contradicts_reference": 430,
+      "invalid_output -> invalid_output": 2
+    }
+  },
+  "tail_unknown_cells": 12002,
+  "tail_abstention_share_of_unknown_cells": 0.9407598733544409,
+  "audit_code_sha256": "533645d0fcd0205460c703fd55dcf3ff078ae1412c7675ee1e45d93702db8781"
+}

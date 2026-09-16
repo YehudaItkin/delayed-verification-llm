@@ -1,32 +1,54 @@
-"""F1 decision-rule analysis (PREREG_factual_oscillation.md). A = std(mean_traj tail) = r['amp']."""
-import json, numpy as np
+"""Exploratory F1 analysis from trajectories, paired by question.
+
+The archived experiment deviates from PREREG_factual_oscillation.md. Labels
+0 and 1 both have lag 0, and label 6 has lag 5. No confirmatory decision is made.
+"""
+from pathlib import Path
+import argparse
+import json
+import numpy as np
 from scipy.stats import wilcoxon
-def med(x): return float(np.median(x)) if len(x) else float('nan')
-for fname in ['f1_tqa.json','f1_psilo.json']:
-    d=json.load(open(fname))['runs']
-    def A(nf,dl,tp): return [r['amp'] for r in d if r['n_faulty']==nf and r['delta']==dl and abs(r['temp']-tp)<1e-9]
-    def As(nf,dl,tp): return [r['amp_s'] for r in d if r['n_faulty']==nf and r['delta']==dl and abs(r['temp']-tp)<1e-9]
-    print('\n'+'='*80); print(fname.upper()); print('='*80)
-    print(f"{'nf':>3}{'δ':>4}{'temp':>6}{'medA':>9}{'medA_s':>9}{'n':>4}")
-    for nf in [0,4]:
-        for tp in [0.7,0.0]:
-            for dl in [0,1,6]:
-                a=A(nf,dl,tp); print(f"{nf:>3}{dl:>4}{tp:>6.1f}{med(a):>9.4f}{med(As(nf,dl,tp)):>9.4f}{len(a):>4}")
-    # noise floor: forcing OFF (nf=0), all cells
-    N=[r['amp'] for r in d if r['n_faulty']==0]; Nmed,Nsd=med(N),float(np.std(N)); floor=Nmed+2*Nsd
-    print(f"\nNOISE FLOOR N (nf=0): median={Nmed:.4f} sd={Nsd:.4f}  -> threshold N+2sd = {floor:.4f}")
-    print("\n--- PRE-REGISTERED DECISION RULE ---")
-    for tp in [0.7,0.0]:
-        a0,a6=A(4,0,tp),A(4,6,tp); 
-        # paired by question order
-        m=min(len(a0),len(a6)); x0,x6=np.array(a0[:m]),np.array(a6[:m])
-        try: p=wilcoxon(x6,x0,alternative='greater').pvalue if np.any(x6!=x0) else 1.0
-        except: p=float('nan')
-        win=int(np.sum(x6>x0))
-        c1 = med(a6)>med(a0)  # monotone-ish (delta scaling)
-        c2 = med(a6)>floor    # above noise floor
-        print(f"  temp={tp}: A(nf4,δ0)={med(a0):.4f} -> A(nf4,δ6)={med(a6):.4f}  (δ6>δ0 in {win}/{m}, Wilcoxon p={p:.4f})"
-              f"  | δ6>floor? {c2}")
-    # placebo: nf=4 delta=0 vs floor ; forcing-gating: nf=0 delta scaling
-    print(f"  PLACEBO δ=0 (nf4,temp0.7) medA={med(A(4,0,0.7)):.4f} vs floor {floor:.4f}  (should be ~floor)")
-    print(f"  FORCING-GATE: nf=0 δ0->δ6 (temp0.7): {med(A(0,0,0.7)):.4f}->{med(A(0,6,0.7)):.4f} (should be flat)")
+
+
+def analyze(data):
+    cells, seen = {}, set()
+    for r in data['runs']:
+        key = (r['n_faulty'], r['temp'], r['delta'])
+        ident = (*key, r['q'], r['seed'])
+        if ident in seen:
+            raise ValueError(f'duplicate run: {ident}')
+        seen.add(ident)
+        vals = []
+        for field in ('mean_traj', 'mean_s_traj'):
+            x = np.asarray(r[field], float)
+            if len(x) != data['meta']['T'] or not np.isfinite(x).all():
+                raise ValueError(f'invalid trajectory: {ident}')
+            vals.append(float(x[len(x)//2:].std()))
+        cells.setdefault(key, {}).setdefault(r['q'], []).append(vals)
+    qcells = {k: {q: np.mean(v, axis=0) for q, v in qs.items()} for k, qs in cells.items()}
+    result = {'analysis': 'exploratory; unadjusted one-sided Wilcoxon, greater',
+              'delay_convention': data['meta'].get('delay_convention', 'legacy'),
+              'cells': {}, 'contrasts': {}}
+    for key, qs in sorted(qcells.items()):
+        x = np.array(list(qs.values()))
+        result['cells'][str(key)] = {'n_questions': len(x), 'mean': x.mean(0).tolist(),
+                                    'median': np.median(x, axis=0).tolist(), 'max': x.max(0).tolist()}
+    for nf, temp in sorted({(k[0], k[1]) for k in cells}):
+        if (nf,temp,0) not in qcells or (nf,temp,6) not in qcells:
+            raise ValueError('both delay labels 0 and 6 are required')
+        c0, c6 = qcells[nf,temp,0], qcells[nf,temp,6]
+        if c0.keys() != c6.keys():
+            raise ValueError('unmatched questions in the delay contrast')
+        x = np.array([c6[q][0]-c0[q][0] for q in sorted(c0)])
+        p = float(wilcoxon(x, alternative='greater').pvalue) if np.any(x) else 1.
+        result['contrasts'][str((nf,temp))] = {'n_questions': len(x), 'mean_difference': float(x.mean()),
+                                             'positive': int(sum(x>0)), 'p_unadjusted': p}
+    return result
+
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser()
+    ap.add_argument('files', nargs='*', type=Path)
+    a = ap.parse_args()
+    files = a.files or [Path(__file__).with_name(n) for n in ('f1_psilo.json', 'f1_tqa.json')]
+    print(json.dumps({p.name: analyze(json.loads(p.read_text())) for p in files}, indent=2))

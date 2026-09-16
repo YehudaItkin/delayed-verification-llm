@@ -1,0 +1,23 @@
+{
+  "paper/remote/v3_mistral_smoke.json": "0750ab19ab1809d281c985b4111b2cf525db1a40ed17bfa81a91d392c7c634dd",
+  "paper/remote/expA_push_results.json": "6a99e6de2329b733da990a92a829624f79db49023d0cb937e1ce2522aeb2eafc",
+  "paper/remote/expA_B2_results.json": "2ff6d598ae8a1e349303eb842119cb3cde8d333613d6d1185cf75f04f31e13a3",
+  "paper/remote/v3_gemma4_smoke.json": "9adbeed21e90e9ad54b61205be9a5b2ba5f1ad3c1ef9ad1cfa46d268b7197748",
+  "paper/remote/expA_B_results.json": "13904dd70954003e08a3920cf70be62d861ecec07f308282a90384182ebfc6d0",
+  "paper/remote/selected_big.json": "ac9b22618591031309638783a54bfb3626683ea8d7110c1a5c76eb44eb38f4e4",
+  "paper/remote/expA_v3_phi4.json": "42aef5fa90d20bb93731dbf1ecc829256502216d296c53fcbab3705a2bd31aa1",
+  "paper/remote/selected_tqa.json": "96318a188b4adbae200f0721c1c9c78319a413fd9b242ccd0c7915d801df5382",
+  "paper/remote/debate_exp_results.json": "f345753c372577d41ae31aa9d211320f270bbfafd542891a73c30872c78bcf07",
+  "paper/remote/f1_psilo.json": "f0bfd98a47748577ae287b00bb28822579a4b68002f14d0c047f13c3d3cc12d3",
+  "paper/remote/expA_v3_gemma4.json": "4a8b67d7b5125a6cd4a0706bbb8c897b40669f13d9433d346d0becd532a8786d",
+  "paper/remote/v3_qwen14_smoke.json": "95acb12d37e74bfaad8fd0bac6bb01c9006ba2d6b68c90361933a7857b3f7eac",
+  "paper/remote/expA_big_results.json": "9bc21e4bb2aabbcaf71627cb3338e65e258d16480cc7f910abf69376c77692fa",
+  "paper/remote/expA_push_tqa.json": "3b2ff26ada49fbbf7676c07cc277d341f90f7d79a7dc70f63f7168d68e0d78b3",
+  "paper/remote/f1_tqa.json": "52bbc062d38552a06dc0e3a5545756ecaef89e1cf865b476a437415ec2ddebeb",
+  "paper/remote/expA_v3.json": "03f0bf9e342bebf105937179bbde2f342852768dbee8fa7558fdc2e1620e7074",
+  "paper/remote/expA_v3_qwen14.json": "ab0f1ecaa36885a457a0b89c6a9843fdea3e166a4bd4fd1889313e9e64fea87b",
+  "paper/remote/expA_v3_mistral.json": "cc0ac6ea1f3ac7a2d71ea96a95ad2a4371a3221369dc170e892e48d9289532a7",
+  "paper/remote/expA_results.json": "99f12c2b3428e595f385e8d1cb977f569144208edfb271230294db30adc62742",
+  "paper/remote/expA_v3_nemo.json": "bd7ae7d1a8141f789ed89fd582932195c9e27569288678e3a91596ecf7ddfd40",
+  "paper/remote/v3_smoke.json": "ec531c1a3abb3db04c8cf6f379c951fe30eff837b530987263c11fc45753e646"
+}

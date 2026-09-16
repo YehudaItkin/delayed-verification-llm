@@ -1,0 +1,7 @@
+{
+  "backend": "ollama",
+  "api": "http://127.0.0.1:11434/api/chat",
+  "model": "qwen3.8:latest",
+  "model_digest": "22130167c4c20e20c7b71454612966ca8e8171e9b3cc8ab6ce8aa6cbfec79643",
+  "out": "/home/itkin/factual-expanded-v4-3-20260913/results"
+}

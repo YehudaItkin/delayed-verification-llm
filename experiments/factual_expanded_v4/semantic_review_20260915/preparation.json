@@ -1,0 +1,61 @@
+{
+  "questions": 358,
+  "unique_pairs": 3604,
+  "packet_sha256": "73c0f85d4ed2d0db2c9dd5ecf16e2fab171b8409d2673311aa34e6a1a9407acf",
+  "source_verification": {
+    "status": "passed",
+    "phase": "primary",
+    "runs": 800,
+    "requests": 226800,
+    "technical_status_counts": {
+      "abstention": 26733,
+      "valid": 200065,
+      "invalid_answer": 2
+    },
+    "max_prompt_tokens": 498,
+    "manifest_sha256": "5dfb2e171efb4c7879e8bd59fbe3c851f8385a7483ca946fba33d079cdc39a26",
+    "verifier_sha256": "13fee7377e7d182bdafaa54ab6502d3c221632cb1f8674d58bc44a317726a492",
+    "files_sha256": {
+      "manifest.json": "387ae507d7aa2e43d1b1e0d7919f4a4cb2b2415389d586510dc3b035f6b2eb3b",
+      "requests.jsonl": "78d785c8cc0fbdd742e6061d14533ddeb24e69ff5b37e788df6e9e5c20ba6b00",
+      "runs.jsonl": "aea1ba012e14e75b10cb1c02f214b620186b60d9fade9dfb627b0dc8d17c9cd8"
+    },
+    "reference_label_counts": {
+      "psilo": {
+        "abstention": 16504,
+        "unresolved": 12674,
+        "matches_reference": 24819,
+        "contradicts_reference": 3603
+      },
+      "tqa": {
+        "matches_reference": 10151,
+        "abstention": 7646,
+        "unresolved": 38996,
+        "contradicts_reference": 805,
+        "invalid_output": 2
+      }
+    },
+    "datasets": {
+      "psilo": {
+        "questions": 200,
+        "clusters": 200,
+        "mean_difference_outer_bounds": [
+          -0.313359818778244,
+          0.3079985366971805
+        ],
+        "mean_availability_amplitude_difference": 0.006172665650243413
+      },
+      "tqa": {
+        "questions": 200,
+        "clusters": 151,
+        "mean_difference_outer_bounds": [
+          -0.41625265818696067,
+          0.42361928531052245
+        ],
+        "mean_availability_amplitude_difference": -0.004638099529007604
+      }
+    },
+    "interpretation": "Complete fixed grid. Conservative bounds for unresolved reference labels; no imputed factual labels, no point-estimate significance test, no independence claim for shared templates."
+  },
+  "blinding": "No model, dataset label, condition, step, agent, frequency, or amplitude in review packet. Reviewer previously saw aggregate results and selected examples; not independent fully blinded human adjudication."
+}

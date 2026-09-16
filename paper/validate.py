@@ -33,12 +33,14 @@ def grounded_laplacian(L, R):
 
 def companion(A, kappa, eta, delta):
     """Lifted matrix C for x_{t+1} = A x_t - eta*kappa x_{t-delta}; state stacks delta+1 blocks."""
+    if type(delta) is not int or delta < 0:
+        raise ValueError("delta must be a non-negative integer")
     nf = A.shape[0]
     B = -eta * kappa * np.eye(nf)
     N = nf * (delta + 1)
     C = np.zeros((N, N))
     C[:nf, :nf] = A
-    C[:nf, delta * nf:(delta + 1) * nf] = B
+    C[:nf, delta * nf:(delta + 1) * nf] += B
     for k in range(1, delta + 1):              # shift rows: block k <- block k-1
         C[k * nf:(k + 1) * nf, (k - 1) * nf:k * nf] = np.eye(nf)
     return C
@@ -48,14 +50,24 @@ def rho(M):
 
 def mode_stable(a, kappa, eta, delta):
     """All roots of z^{delta+1} - a z^delta + eta*kappa inside open unit disk?"""
-    coeffs = [1.0, -a] + [0.0] * (delta - 1) + [eta * kappa]
+    if type(delta) is not int or delta < 0:
+        raise ValueError("delta must be a non-negative integer")
+    coeffs = np.zeros(delta + 2)
+    coeffs[0] = 1.0
+    coeffs[1] -= a
+    coeffs[-1] += eta * kappa
     return np.max(np.abs(np.roots(coeffs))) < 1.0 - 1e-9
 
 def kappa_max(a, eta, delta, hi=40.0):
-    """Largest kappa with mode stable, via bisection."""
-    lo, hi = 0.0, hi
-    if not mode_stable(a, lo + 1e-6, eta, delta):
-        return 0.0
+    """Positive-branch ceiling for 0 <= a < 1 and eta > 0; bracket then bisect."""
+    if not (np.isfinite(a) and 0 <= a < 1 and np.isfinite(eta) and eta > 0
+            and np.isfinite(hi) and hi > 0):
+        raise ValueError("requires 0 <= a < 1, finite eta > 0, and finite hi > 0")
+    lo = 0.0
+    while mode_stable(a, hi, eta, delta):
+        hi *= 2
+        if not np.isfinite(hi):
+            raise OverflowError("could not bracket the stability boundary")
     for _ in range(60):
         mid = 0.5 * (lo + hi)
         lo, hi = (mid, hi) if mode_stable(a, mid, eta, delta) else (lo, mid)
@@ -100,6 +112,8 @@ traj_modes_back = traj_modes @ Q.T
 err = np.max(np.abs(traj_full - traj_modes_back))
 print(f"    max |full - decoupled| over {T} steps = {err:.2e}   ->  {'PASS' if err < 1e-9 else 'FAIL'}")
 
+assert err < 1e-9
+
 # =========================================================================
 print("=" * 70)
 print("C2  delta=1 stability boundary (Theorem 1):  rho(C)<1  <=>  eta*kappa<1 AND mu_max<2/eta+kappa")
@@ -122,6 +136,7 @@ for eta in [0.05, 0.1, 0.2, 0.35, 0.5]:
 print(f"    mu_max(L_g) = {mu_max:.3f}")
 print(f"    agreement empirical vs Theorem-1 prediction: {agree}/{tot} = {100*agree/tot:.1f}%"
       f"   ->  {'PASS' if agree == tot else 'FAIL'}")
+assert agree == tot, mismatches
 if mismatches:
     print(f"    sample mismatches (eta,kappa,emp,pred): {mismatches}")
 
@@ -132,6 +147,7 @@ eta = 0.1
 for a in [0.9, 0.5, 0.0]:                      # a = 1 - eta*mu, representative modes
     row = [kappa_max(a, eta, d) for d in range(1, 7)]
     dec = all(row[k] <= row[k - 1] + 1e-6 for k in range(1, len(row)))
+    assert dec, row
     print(f"    a={a:+.1f}: kappa_max(delta=1..6) = "
           + " ".join(f"{v:6.3f}" for v in row)
           + f"   ->  {'decreasing PASS' if dec else 'FAIL'}")
@@ -155,4 +171,5 @@ e_pred = np.linalg.solve(Lg + kappa * np.eye(nf), g)
 err = np.max(np.abs(e_sim - e_pred))
 print(f"    max |sim_inf - (L_g+kI)^-1 g| = {err:.2e}   ->  {'PASS' if err < 1e-6 else 'FAIL'}")
 print("=" * 70)
+assert err < 1e-6
 print("done.")

@@ -1,0 +1,9 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Out[1]= <|\"nonsymmetric\" -> True, \"normal\" -> True, \"gram\" -> {{5, -2, -2}, {-2, 5, -2}, {-2, -2, 5}}, \"characteristic\" -> -((-1 + z)*(7 - 5*z + z^2)), \"fixedPeerExpansion\" -> e - eta*h*kappa - e*eta*w + eta*f*w, \"missingTerm\" -> -(e*eta*w)|>"
+    }
+  ],
+  "isError": false
+}

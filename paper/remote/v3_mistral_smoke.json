@@ -1,0 +1,113 @@
+{
+ "meta": {
+  "T": 10,
+  "alphas": [
+   0.5,
+   1.5
+  ],
+  "deltas": [
+   1,
+   6
+  ],
+  "seeds": 1,
+  "n_free": 3,
+  "n_faulty": 3,
+  "model": "mistralai/Mistral-7B-Instruct-v0.1",
+  "n_items": 1,
+  "primary": "amp @alpha=0.5, delta=6 vs 1, moved runs, one-sided d6>d1"
+ },
+ "runs": [
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 0.5,
+   "delta": 1,
+   "seed": 0,
+   "e": [
+    -0.7,
+    -0.35,
+    -0.175,
+    -0.087,
+    -0.044,
+    -0.023,
+    -0.011,
+    -0.005,
+    -0.002,
+    -0.001
+   ],
+   "amp": 0.029,
+   "zc": 1,
+   "rng": 0.086,
+   "moved": 0,
+   "final": -0.001
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 0.5,
+   "delta": 6,
+   "seed": 0,
+   "e": [
+    -0.7,
+    -0.35,
+    0.0,
+    0.35,
+    0.7,
+    1.05,
+    1.283,
+    1.458,
+    1.458,
+    1.283
+   ],
+   "amp": 0.387,
+   "zc": 1,
+   "rng": 1.108,
+   "moved": 1,
+   "final": 1.283
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 1.5,
+   "delta": 1,
+   "seed": 0,
+   "e": [
+    -0.7,
+    0.35,
+    -0.125,
+    0.062,
+    -0.031,
+    0.016,
+    -0.008,
+    0.004,
+    -0.002,
+    0.001
+   ],
+   "amp": 0.027,
+   "zc": 3,
+   "rng": 0.094,
+   "moved": 0,
+   "final": 0.001
+  },
+  {
+   "q": "How many bones are in the adult human body?",
+   "alpha": 1.5,
+   "delta": 6,
+   "seed": 0,
+   "e": [
+    -0.7,
+    0.35,
+    1.321,
+    2.371,
+    3.421,
+    4.471,
+    5.521,
+    4.996,
+    3.015,
+    -0.542
+   ],
+   "amp": 1.886,
+   "zc": 2,
+   "rng": 6.062,
+   "moved": 1,
+   "final": -0.542
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "questions": 400,
+  "historical_overlap": 0,
+  "unique_psilo_articles": 200,
+  "reference_catalogs_checked": 400,
+  "source_hashes_verified": {
+    "psilo": "314b2b8d9f76eb929d4471d4d4b0ae1f2d171101bc0b84e74bf1ec331f5e22e9",
+    "tqa": "dfb1004b8ab83b22e8e476c76d5ac6074ff35c43946a724e810de3d83c3e21a5"
+  },
+  "primary_frozen_sha256": "70d84b49d04d9e85f22a58630860ef93e495c22b56f4216923be3c4bc9115865",
+  "selection_and_analysis_sha256": "1abeec0fd36ce2c2a4c8951edd0270be02317c7ea3f31c59e477476a9ea0b761"
+}

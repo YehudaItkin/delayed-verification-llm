@@ -37,7 +37,7 @@ for a in (0.25, 0.5, 0.75):           # faint family of other binding modes
     ax.annotate(f"$a={a}$", (dd[j], bb[j]), color="0.55", fontsize=7,
                 xytext=(2, 0), textcoords="offset points", va="center")
 ax.plot(dd, bc1, "o-", color="#0b5394", lw=1.6, ms=4.5, zorder=3,
-        label=r"$a=1$ (slowest grounded mode)")
+        label=r"$a\to 1$ (limiting threshold)")
 ax.plot([2], [PHI_INV], "s", color="#cc0000", ms=7, zorder=4)
 ax.annotate(r"$\beta_c(1,2)=\frac{\sqrt{5}-1}{2}=1/\varphi\approx0.618$",
             (2, PHI_INV), xytext=(18, 14), textcoords="offset points",
@@ -79,11 +79,11 @@ pc = (np.sin(dl * th) - np.sin((dl + 1) * th)) / np.sin((dl - d) * th)
 qc = (np.sin((d + 1) * th) - np.sin(d * th)) / np.sin((dl - d) * th)
 m = (pc >= -0.05) & (qc >= -0.05) & (pc <= 2.6) & (qc <= 2.6)
 ax.plot(pc[m], qc[m], color="#0b5394", lw=1.0, ls="--", zorder=3,
-        label="oscillatory boundary")
+        label="unit-circle locus")
 # lambda=-1 real-root line: p(-1)^d + q(-1)^dl = 2  ->  -p + q = 2
 ax.plot(P, P + 2, color="#cc0000", lw=1.1, zorder=3, label=r"$\lambda=-1$ line")
 ax.fill_between([], [], [], color="#cfe2f3", label="stable region")
-ax.set_xlabel(r"consensus/forcing $p=\eta\mu$")
+ax.set_xlabel(r"consensus gain $p=\eta\mu$")
 ax.set_ylabel(r"verification dose $q=\eta\kappa$")
 ax.set_xlim(0, 2.6); ax.set_ylim(0, 2.6)
 ax.legend(frameon=False, fontsize=7.5, loc="lower right")

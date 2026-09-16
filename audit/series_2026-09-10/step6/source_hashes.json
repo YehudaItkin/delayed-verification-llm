@@ -1,0 +1,8 @@
+{
+  "expA_v3.json": "03f0bf9e342bebf105937179bbde2f342852768dbee8fa7558fdc2e1620e7074",
+  "expA_v3_gemma4.json": "4a8b67d7b5125a6cd4a0706bbb8c897b40669f13d9433d346d0becd532a8786d",
+  "expA_v3_mistral.json": "cc0ac6ea1f3ac7a2d71ea96a95ad2a4371a3221369dc170e892e48d9289532a7",
+  "expA_v3_nemo.json": "bd7ae7d1a8141f789ed89fd582932195c9e27569288678e3a91596ecf7ddfd40",
+  "expA_v3_phi4.json": "42aef5fa90d20bb93731dbf1ecc829256502216d296c53fcbab3705a2bd31aa1",
+  "expA_v3_qwen14.json": "ab0f1ecaa36885a457a0b89c6a9843fdea3e166a4bd4fd1889313e9e64fea87b"
+}

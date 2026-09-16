@@ -21,3 +21,21 @@ paper/remote/*_smoke.json
 
 # local scratch, not part of the published artifact
 paper2/
+
+# Restored research logs remain generated; compressed originals are tracked.
+/reproduction-*/
+/.venv/
+/experiments/factual_expanded_v4/outcome_analysis_20260915/results/pairs.jsonl
+/experiments/factual_expanded_v4/primary_frozen.json
+/experiments/factual_expanded_v4/qwen38/v4_3_snapshot/code/study.json
+/experiments/factual_expanded_v4/qwen38/v4_3_snapshot/results/primary/manifest.json
+/experiments/factual_expanded_v4/qwen38/v4_3_snapshot/results/primary/requests.jsonl
+/experiments/factual_expanded_v4/qwen38/v4_3_snapshot/results/primary/runs.jsonl
+/experiments/factual_expanded_v4/semantic_review_20260915/results/runs.jsonl
+/experiments/factual_expanded_v4/semantic_review_20260915/review_frozen.json
+/experiments/factual_expanded_v4/semantic_review_v2_20260915/results/runs.jsonl
+/experiments/factual_expanded_v4/semantic_review_v2_20260915/review_frozen.json
+/experiments/factual_expanded_v4/study_primary_v4_3.json
+
+# Historical integrity fixtures used by the offline archive check.
+!paper/remote/*_smoke.json

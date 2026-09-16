@@ -13,6 +13,7 @@ limit kappa_max(delta)).
 Reads selected.json (movable questions with pre-generated wrong answers) from debate_exp.py calibrate.
 """
 import os, json, time, argparse, sys
+from history_index import history_index, effective_delay
 import requests, numpy as np, torch
 from transformers import AutoTokenizer, AutoModelForSequenceClassification
 
@@ -72,12 +73,12 @@ def agent_update(q, prev, peers, verdict, kappa, temp):
     return parse_ans(llm([{"role": "system", "content": sysmsg},
                           {"role": "user", "content": f"Question: {q}\nYour previous answer: {prev}\nPeers' latest answers: {peers}{note}\nReply: ANSWER: <answer>"}], max_tokens=60, temperature=temp))
 
-def run_debate(item, kappa, delta, n_free=3, n_faulty=4, T=18, temp=0.7):
+def run_debate(item, kappa, delta, n_free=3, n_faulty=4, T=18, temp=0.7, delay_convention="theory"):
     q, gold, ev, wrong = item["q"], item["gold"], item["evidence"], item["wrong"]
     cur = [cold_answer(q, temp) for _ in range(n_free)]
     buf = [cur[:]]; traj = [[err(a, gold) for a in cur]]
     for t in range(1, T):
-        stale = buf[max(0, t - delta)]
+        stale = buf[history_index(t, delta, delay_convention)]
         verds = [verifier(stale[i], ev) for i in range(n_free)]
         new = []
         for i in range(n_free):
@@ -92,6 +93,7 @@ def osc_index(mt):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
+    ap.add_argument("--delay-convention", choices=["theory", "legacy"], default="theory")
     ap.add_argument("--sel", default="selected.json")
     ap.add_argument("--out", default="expA_results.json")
     ap.add_argument("--T", type=int, default=18)
@@ -106,14 +108,17 @@ if __name__ == "__main__":
         sel = sel[:a.nq]
     kappas = a.kappas.split(",")
     deltas = [int(x) for x in a.deltas.split(",")]
-    res = {"meta": {"T": a.T, "kappas": kappas, "deltas": deltas, "seeds": a.seeds,
+    res = {"meta": {"delay_convention": a.delay_convention,
+                    "effective_delays": [effective_delay(d, a.delay_convention) for d in deltas],
+                    "seed_role": "replicate index; no RNG seed passed to backend",
+                    "T": a.T, "kappas": kappas, "deltas": deltas, "seeds": a.seeds,
                     "n_free": 3, "n_faulty": 4, "model": MODEL, "n_items": len(sel)}, "runs": []}
     for it in sel:
         for kappa in kappas:
             for delta in deltas:
                 for s in range(a.seeds):
                     t0 = time.time()
-                    mt = run_debate(it, kappa, delta, T=a.T, temp=0.7)
+                    mt = run_debate(it, kappa, delta, T=a.T, temp=0.7, delay_convention=a.delay_convention)
                     rec = {"q": it["q"], "kappa": kappa, "delta": delta, "seed": s,
                            "mean_traj": mt, "osc": osc_index(mt), "final": mt[-1],
                            "conv": int(mt[-1] < 0.1)}

@@ -1,0 +1,14 @@
+{
+  "counts": {
+    "psilo": 200,
+    "tqa": 200
+  },
+  "trajectories": 800,
+  "requests": 226800,
+  "primary_frozen_sha256": "70d84b49d04d9e85f22a58630860ef93e495c22b56f4216923be3c4bc9115865",
+  "cluster_counts": {
+    "psilo": 200,
+    "tqa": 151
+  },
+  "new_primary_answers_seen": false
+}

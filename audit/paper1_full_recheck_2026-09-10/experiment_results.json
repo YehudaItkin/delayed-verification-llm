@@ -1,0 +1,909 @@
+{
+  "integrity": {
+    "debate_exp_results.json": {
+      "runs": 16,
+      "questions": 8,
+      "states": 18,
+      "cells": 2,
+      "replicates": 1
+    },
+    "expA_B2_results.json": {
+      "runs": 80,
+      "questions": 20,
+      "states": 36,
+      "cells": 4,
+      "replicates": 1
+    },
+    "expA_B_results.json": {
+      "runs": 80,
+      "questions": 20,
+      "states": 36,
+      "cells": 4,
+      "replicates": 1
+    },
+    "expA_big_results.json": {
+      "runs": 120,
+      "questions": 30,
+      "states": 18,
+      "cells": 4,
+      "replicates": 1
+    },
+    "expA_push_results.json": {
+      "runs": 80,
+      "questions": 20,
+      "states": 36,
+      "cells": 4,
+      "replicates": 1
+    },
+    "expA_push_tqa.json": {
+      "runs": 80,
+      "questions": 20,
+      "states": 36,
+      "cells": 4,
+      "replicates": 1
+    },
+    "expA_results.json": {
+      "runs": 64,
+      "questions": 8,
+      "states": 18,
+      "cells": 4,
+      "replicates": 2
+    },
+    "expA_v3.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "expA_v3_gemma4.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "expA_v3_mistral.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "expA_v3_nemo.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "expA_v3_phi4.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "expA_v3_qwen14.json": {
+      "runs": 96,
+      "questions": 8,
+      "states": 22,
+      "cells": 4,
+      "replicates": 3
+    },
+    "f1_psilo.json": {
+      "runs": 180,
+      "questions": 15,
+      "states": 20,
+      "cells": 12,
+      "replicates": 1
+    },
+    "f1_tqa.json": {
+      "runs": 180,
+      "questions": 15,
+      "states": 20,
+      "cells": 12,
+      "replicates": 1
+    },
+    "v3_gemma4_smoke.json": {
+      "runs": 4,
+      "questions": 1,
+      "states": 10,
+      "cells": 4,
+      "replicates": 1
+    },
+    "v3_mistral_smoke.json": {
+      "runs": 4,
+      "questions": 1,
+      "states": 10,
+      "cells": 4,
+      "replicates": 1
+    },
+    "v3_qwen14_smoke.json": {
+      "runs": 4,
+      "questions": 1,
+      "states": 10,
+      "cells": 4,
+      "replicates": 1
+    },
+    "v3_smoke.json": {
+      "runs": 4,
+      "questions": 1,
+      "states": 18,
+      "cells": 4,
+      "replicates": 1
+    }
+  },
+  "f1": {
+    "f1_psilo.json": {
+      "analysis": "exploratory; unadjusted one-sided Wilcoxon, greater",
+      "delay_convention": "legacy",
+      "cells": {
+        "(0, 0.0, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.027228447727192122,
+            0.0270859632830999
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.23164078712484196,
+            0.23161778124930815
+          ]
+        },
+        "(0, 0.0, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.03201134061329709,
+            0.03197737796318619
+          ],
+          "median": [
+            0.0,
+            5.421010862427522e-20
+          ],
+          "max": [
+            0.3138272596666931,
+            0.31348447044097405
+          ]
+        },
+        "(0, 0.0, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.010851417772182135,
+            0.010830411363894723
+          ],
+          "median": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.16273437031430882,
+            0.16239142657059302
+          ]
+        },
+        "(0, 0.7, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.03166538999827124,
+            0.0271765054503342
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.2644935803293122,
+            0.26803882678864877
+          ]
+        },
+        "(0, 0.7, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.06984695656692629,
+            0.06814651924369922
+          ],
+          "median": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.4250457541790844,
+            0.44210474664328386
+          ]
+        },
+        "(0, 0.7, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.052765360093230275,
+            0.04852045518768828
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.36845068203265235,
+            0.37000801808689937
+          ]
+        },
+        "(4, 0.0, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.011090174317359919,
+            0.011081320661320133
+          ],
+          "median": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.1663456211487452,
+            0.16617063834957796
+          ]
+        },
+        "(4, 0.0, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.021908636455985016,
+            0.05503917862088696
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.16562468310197195,
+            0.33064120799487157
+          ]
+        },
+        "(4, 0.0, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.006652836799621582,
+            0.01329177709273097
+          ],
+          "median": [
+            0.0,
+            0.0
+          ],
+          "max": [
+            0.09979255199432373,
+            0.19937665639096389
+          ]
+        },
+        "(4, 0.7, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.031038146464446137,
+            0.05175849598660432
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.21930905870979783,
+            0.33064120799487157
+          ]
+        },
+        "(4, 0.7, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.04770205714945256,
+            0.06833689639298222
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.2990076720714569,
+            0.3967694495938459
+          ]
+        },
+        "(4, 0.7, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.03333911982858918,
+            0.06195960356150161
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.22064963455813622,
+            0.44083837413629406
+          ]
+        }
+      },
+      "contrasts": {
+        "(0, 0.0)": {
+          "n_questions": 15,
+          "mean_difference": -0.01637702995500999,
+          "positive": 1,
+          "p_unadjusted": 0.9626322508470587
+        },
+        "(0, 0.7)": {
+          "n_questions": 15,
+          "mean_difference": 0.02109997009495904,
+          "positive": 5,
+          "p_unadjusted": 0.24948114930188053
+        },
+        "(4, 0.0)": {
+          "n_questions": 15,
+          "mean_difference": -0.004437337517738337,
+          "positive": 1,
+          "p_unadjusted": 0.7035099509912867
+        },
+        "(4, 0.7)": {
+          "n_questions": 15,
+          "mean_difference": 0.0023009733641430395,
+          "positive": 3,
+          "p_unadjusted": 0.4328861874963107
+        }
+      }
+    },
+    "f1_tqa.json": {
+      "analysis": "exploratory; unadjusted one-sided Wilcoxon, greater",
+      "delay_convention": "legacy",
+      "cells": {
+        "(0, 0.0, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.08529566451084541,
+            0.15351758790963774
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.44792704588574506,
+            0.8469992181028956
+          ]
+        },
+        "(0, 0.0, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.06435177489723115,
+            0.10638438434762483
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.44589238244863866,
+            0.8838330227323956
+          ]
+        },
+        "(0, 0.0, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.07854002196459926,
+            0.09269302164160473
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.4778821774535387,
+            0.47700113571846053
+          ]
+        },
+        "(0, 0.7, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.0638327777165444,
+            0.09916379509913732
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.22670649836972226,
+            0.4951580889175505
+          ]
+        },
+        "(0, 0.7, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.07549802398426994,
+            0.11137261673027428
+          ],
+          "median": [
+            0.0,
+            1.1102230246251565e-16
+          ],
+          "max": [
+            0.23406083930259375,
+            0.42025523917841556
+          ]
+        },
+        "(0, 0.7, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.10040408420448332,
+            0.17331535844480433
+          ],
+          "median": [
+            0.00036483108997344973,
+            0.000733176992167095
+          ],
+          "max": [
+            0.34954718667857376,
+            0.7225704214068422
+          ]
+        },
+        "(4, 0.0, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.15999196158053847,
+            0.27781699813248173
+          ],
+          "median": [
+            0.16607391834259033,
+            0.3317213261093142
+          ],
+          "max": [
+            0.4970541298389435,
+            0.9720800506926125
+          ]
+        },
+        "(4, 0.0, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.1476680555839751,
+            0.2501231829625057
+          ],
+          "median": [
+            0.16330687568828425,
+            0.3317213261093142
+          ],
+          "max": [
+            0.47194907038837985,
+            0.9453320919987802
+          ]
+        },
+        "(4, 0.0, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.1916778502805436,
+            0.3439073289278684
+          ],
+          "median": [
+            0.21269198602250586,
+            0.2940850933705988
+          ],
+          "max": [
+            0.45470176294576986,
+            0.890107364531298
+          ]
+        },
+        "(4, 0.7, 0)": {
+          "n_questions": 15,
+          "mean": [
+            0.16799893070907468,
+            0.29567743147722697
+          ],
+          "median": [
+            0.22023840939416703,
+            0.30595020787115057
+          ],
+          "max": [
+            0.3039329955413977,
+            0.5967467134411516
+          ]
+        },
+        "(4, 0.7, 1)": {
+          "n_questions": 15,
+          "mean": [
+            0.18094356324001531,
+            0.30648585115001264
+          ],
+          "median": [
+            0.21088269572783921,
+            0.3454727633622387
+          ],
+          "max": [
+            0.31667161984529474,
+            0.5916545267938571
+          ]
+        },
+        "(4, 0.7, 6)": {
+          "n_questions": 15,
+          "mean": [
+            0.20296092122353065,
+            0.36300101051218064
+          ],
+          "median": [
+            0.16792480283385064,
+            0.4077390188939198
+          ],
+          "max": [
+            0.3627194912163386,
+            0.6668128003196196
+          ]
+        }
+      },
+      "contrasts": {
+        "(0, 0.0)": {
+          "n_questions": 15,
+          "mean_difference": -0.006755642546246161,
+          "positive": 4,
+          "p_unadjusted": 0.6102827357863625
+        },
+        "(0, 0.7)": {
+          "n_questions": 15,
+          "mean_difference": 0.03657130648793891,
+          "positive": 6,
+          "p_unadjusted": 0.0693203169066093
+        },
+        "(4, 0.0)": {
+          "n_questions": 15,
+          "mean_difference": 0.031685888700005174,
+          "positive": 8,
+          "p_unadjusted": 0.12387310295603599
+        },
+        "(4, 0.7)": {
+          "n_questions": 15,
+          "mean_difference": 0.03496199051445597,
+          "positive": 11,
+          "p_unadjusted": 0.09381103515625
+        }
+      }
+    }
+  },
+  "rq2": {
+    "expA_B2_results.json": {
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.0,
+        "string_flip_rate": 0.9772727272727273
+      },
+      "(('kappa', 'strong'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.0,
+        "string_flip_rate": 0.8090909090909092
+      },
+      "(('kappa', 'forceful'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.0,
+        "string_flip_rate": 0.9818181818181818
+      },
+      "(('kappa', 'forceful'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.0,
+        "string_flip_rate": 0.8636363636363636
+      }
+    },
+    "expA_B_results.json": {
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.0
+      },
+      "(('kappa', 'strong'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.0
+      },
+      "(('kappa', 'forceful'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.0
+      },
+      "(('kappa', 'forceful'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.0
+      }
+    },
+    "expA_big_results.json": {
+      "(('kappa', 'weak'), ('delta', 1))": {
+        "n": 30,
+        "endpoint_success": 0.7666666666666667
+      },
+      "(('kappa', 'weak'), ('delta', 4))": {
+        "n": 30,
+        "endpoint_success": 0.7666666666666667
+      },
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 30,
+        "endpoint_success": 0.8
+      },
+      "(('kappa', 'strong'), ('delta', 4))": {
+        "n": 30,
+        "endpoint_success": 0.8
+      }
+    },
+    "expA_push_results.json": {
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.8
+      },
+      "(('kappa', 'strong'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.8
+      },
+      "(('kappa', 'forceful'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.4
+      },
+      "(('kappa', 'forceful'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.4
+      }
+    },
+    "expA_push_tqa.json": {
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.2
+      },
+      "(('kappa', 'strong'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.2
+      },
+      "(('kappa', 'forceful'), ('delta', 1))": {
+        "n": 20,
+        "endpoint_success": 0.15
+      },
+      "(('kappa', 'forceful'), ('delta', 6))": {
+        "n": 20,
+        "endpoint_success": 0.1
+      }
+    },
+    "expA_results.json": {
+      "(('kappa', 'weak'), ('delta', 1))": {
+        "n": 16,
+        "endpoint_success": 0.8125
+      },
+      "(('kappa', 'weak'), ('delta', 4))": {
+        "n": 16,
+        "endpoint_success": 0.8125
+      },
+      "(('kappa', 'strong'), ('delta', 1))": {
+        "n": 16,
+        "endpoint_success": 0.875
+      },
+      "(('kappa', 'strong'), ('delta', 4))": {
+        "n": 16,
+        "endpoint_success": 0.875
+      }
+    }
+  },
+  "v3": {
+    "expA_v3.json": {
+      "max_amp_discrepancy": 0.0005894195107169937,
+      "movement_ambiguous_after_rounding": [
+        [
+          "How many chemical elements are on the periodic table?",
+          0.5,
+          1,
+          1
+        ]
+      ],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.05491666666666666,
+            0.26479166666666665
+          ],
+          "p": 0.00390625
+        },
+        "stored_moved": {
+          "n_questions": 6,
+          "means": [
+            0.06911111111111111,
+            0.33649999999999997
+          ],
+          "p": 0.015625
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.05494701606462261,
+            0.26484553360487434
+          ],
+          "p": 0.00390625
+        },
+        "trajectory_moved": {
+          "n_questions": 6,
+          "means": [
+            0.06917769834812154,
+            0.33654437533957465
+          ],
+          "p": 0.015625
+        }
+      }
+    },
+    "expA_v3_gemma4.json": {
+      "max_amp_discrepancy": 0.0006008373006573323,
+      "movement_ambiguous_after_rounding": [
+        [
+          "What is the population of Australia, in millions?",
+          1.5,
+          1,
+          2
+        ]
+      ],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.071125,
+            0.6824166666666667
+          ],
+          "p": 0.00390625
+        },
+        "stored_moved": {
+          "n_questions": 7,
+          "means": [
+            0.07861904761904762,
+            0.7254285714285713
+          ],
+          "p": 0.0078125
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.07110531778181259,
+            0.6824963149607125
+          ],
+          "p": 0.00390625
+        },
+        "trajectory_moved": {
+          "n_questions": 7,
+          "means": [
+            0.07856294836902333,
+            0.7254851653197604
+          ],
+          "p": 0.0078125
+        }
+      }
+    },
+    "expA_v3_mistral.json": {
+      "max_amp_discrepancy": 0.0006460768374538413,
+      "movement_ambiguous_after_rounding": [],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.02525,
+            1.1267916666666669
+          ],
+          "p": 0.00390625
+        },
+        "stored_moved": {
+          "n_questions": 0,
+          "means": null,
+          "p": null
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.025233455682026635,
+            1.1267281541106902
+          ],
+          "p": 0.00390625
+        },
+        "trajectory_moved": {
+          "n_questions": 0,
+          "means": null,
+          "p": null
+        }
+      }
+    },
+    "expA_v3_nemo.json": {
+      "max_amp_discrepancy": 0.0006904003510974852,
+      "movement_ambiguous_after_rounding": [],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.08270833333333334,
+            0.15770833333333334
+          ],
+          "p": 0.07421875
+        },
+        "stored_moved": {
+          "n_questions": 7,
+          "means": [
+            0.10916666666666668,
+            0.19976190476190478
+          ],
+          "p": 0.0546875
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.08271132183786177,
+            0.15770231396309617
+          ],
+          "p": 0.07421875
+        },
+        "trajectory_moved": {
+          "n_questions": 7,
+          "means": [
+            0.10922872584851398,
+            0.1998325923291012
+          ],
+          "p": 0.0546875
+        }
+      }
+    },
+    "expA_v3_phi4.json": {
+      "max_amp_discrepancy": 0.0005945900029358242,
+      "movement_ambiguous_after_rounding": [],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.38958333333333334,
+            2.534375
+          ],
+          "p": 0.00390625
+        },
+        "stored_moved": {
+          "n_questions": 5,
+          "means": [
+            1.4238666666666666,
+            3.5815333333333337
+          ],
+          "p": 0.03125
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.3895304308955911,
+            2.5343345952609377
+          ],
+          "p": 0.00390625
+        },
+        "trajectory_moved": {
+          "n_questions": 5,
+          "means": [
+            1.4238494334819722,
+            3.581517715595369
+          ],
+          "p": 0.03125
+        }
+      }
+    },
+    "expA_v3_qwen14.json": {
+      "max_amp_discrepancy": 0.0006056497033792817,
+      "movement_ambiguous_after_rounding": [],
+      "contrasts": {
+        "stored_all": {
+          "n_questions": 8,
+          "means": [
+            0.0225,
+            1.5984166666666666
+          ],
+          "p": 0.00390625
+        },
+        "stored_moved": {
+          "n_questions": 0,
+          "means": null,
+          "p": null
+        },
+        "trajectory_all": {
+          "n_questions": 8,
+          "means": [
+            0.02256920345335897,
+            1.5986308842836023
+          ],
+          "p": 0.00390625
+        },
+        "trajectory_moved": {
+          "n_questions": 0,
+          "means": null,
+          "p": null
+        }
+      }
+    }
+  }
+}

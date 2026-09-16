@@ -1,8 +1,9 @@
 """Optimal corrector placement -- the concrete 'where'.
 Greedy corrector selection on a grounded Laplacian: at each step add the node of maximal marginal
 coherence reduction  Delta_i = w||M^{-1}e_i||^2 / (1 + w e_i^T M^{-1} e_i)  (a resolvent centrality).
-We show it (i) beats degree- and random-placement and (ii) concentrates on the high-leverage
-bridge/hub nodes. Writes ../figures/placement.png   (run from paper/)."""
+We compare it with degree- and random-placement and mark its first four sequential picks.
+This compares coherence, not static mean-square error or an exact optimum.
+Writes figures/placement.png (run from paper/)."""
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -64,15 +65,15 @@ x = range(K + 1)
 ax[0].plot(x, greedy_curve, "o-", color="#0b5394", lw=1.6, ms=4, label="greedy (resolvent centrality)")
 ax[0].plot(x, deg_curve, "s--", color="#cc7700", lw=1.2, ms=3.5, label="degree")
 ax[0].plot(x, rnd, "^:", color="#888888", lw=1.2, ms=3.5, label="random (mean)")
-ax[0].set_xlabel("number of correctors $k$"); ax[0].set_ylabel(r"residual error $\mathrm{tr}\,M(R)^{-1}$")
-ax[0].set_title("(a) greedy is near-optimal", fontsize=9); ax[0].legend(frameon=False, fontsize=7)
+ax[0].set_xlabel("number of correctors $k$"); ax[0].set_ylabel(r"coherence $\mathrm{tr}\,M(R)^{-1}$")
+ax[0].set_title("(a) coherence by placement", fontsize=9); ax[0].legend(frameon=False, fontsize=7)
 # (b) per-node leverage; greedy's first picks marked
 order = np.argsort(-np.array([cent0[i] for i in range(n)]))
 bars = ax[1].bar(range(n), [cent0[i] for i in range(n)], color="#cfe2f3", edgecolor="0.6", lw=0.4)
 for r in gr[:4]:
     bars[r].set_color("#0b5394")
 ax[1].set_xlabel("node"); ax[1].set_ylabel("marginal centrality $\\Delta_i$")
-ax[1].set_title("(b) where: high-leverage nodes", fontsize=9)
+ax[1].set_title("(b) initial marginal gains", fontsize=9)
 ax[1].annotate("first 4\ngreedy picks", xy=(gr[0], cent0[gr[0]]), xytext=(n*0.45, max(cent0.values())*0.7),
                fontsize=7, color="#0b5394", arrowprops=dict(arrowstyle="->", color="#0b5394", lw=0.8))
 fig.tight_layout(); fig.savefig("figures/placement.png", bbox_inches="tight")
