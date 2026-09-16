@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-16T11:35:27.162161+00:00",
+  "source_sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c",
+  "pdf_sha256": "158cdc9c23dfc88b7e92653034ffb87527570af0cc1b4b51a27d7461e3cd11db",
+  "pdf": "../../paper/main.pdf",
+  "pages": 29,
+  "figures": 5,
+  "numbered_tables": 3,
+  "bibliographic_entries": 57,
+  "mathematical_statements_reviewed": 12,
+  "numeric_checks": "numeric_verification.json",
+  "repeated_analysis": "recheck_results.json",
+  "claim_review": "claim_review.json",
+  "visual_review": {
+    "all_29_pages_reviewed_on_final_contact_sheets": true,
+    "final_page_individually_reviewed": true,
+    "overfull": 0,
+    "underfull": 1,
+    "visible_layout_defects": false
+  },
+  "complete_lean_formalization": false,
+  "arxiv_submitted": false,
+  "submission_zip_rebuilt": true,
+  "submission_zip_sha256": "715f5166b1e1bdcd0b7b57887ca2406f422ed1c337c2567391e4caec71b483c0",
+  "submission_zip_bytes": 586928,
+  "submission_zip_payload_files": 6,
+  "isolated_package_build_text_identical": true
+}

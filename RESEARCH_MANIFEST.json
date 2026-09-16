@@ -1897,10 +1897,24 @@
       "restore_path": "paper/main.tex",
       "source": "paper/main.tex",
       "encoding": "identity",
-      "bytes": 93521,
-      "sha256": "2cecca0b75c9f2a1aa450dc3de722de481d13753d9c62b699b5a2d9e83f5af9a",
-      "stored_bytes": 93521,
-      "stored_sha256": "2cecca0b75c9f2a1aa450dc3de722de481d13753d9c62b699b5a2d9e83f5af9a"
+      "bytes": 100193,
+      "sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c",
+      "stored_bytes": 100193,
+      "stored_sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c"
+    }
+  ],
+  "editorial_updates": [
+    {
+      "date": "2026-09-16",
+      "review": "audit/paper1_readability_20260916/verification.json",
+      "files": [
+        {
+          "path": "paper/main.tex",
+          "previous_sha256": "2cecca0b75c9f2a1aa450dc3de722de481d13753d9c62b699b5a2d9e83f5af9a",
+          "sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c"
+        }
+      ],
+      "note": "source_package_sha256 identifies the initial import; this reviewed manuscript supersedes its original manuscript. Experimental payloads are unchanged."
     }
   ]
 }

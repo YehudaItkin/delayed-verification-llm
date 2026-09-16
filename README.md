@@ -2,7 +2,9 @@
 
 Code, reviewed manuscript and research records for **Stability of a Consensus Model and Coherence-Based Corrector Placement**, a revision of [arXiv:2606.27409](https://arxiv.org/abs/2606.27409).
 
-The updated [manuscript source](paper/main.tex) and [28-page PDF](paper/main.pdf) contain the corrected mathematical scope, historical experimental reanalysis, and the expanded factual study below. Publishing this repository does not replace the arXiv article; that is a separate submission. `paper/arxiv_submission.tar.gz` and `paper/skeleton.*` are historical artifacts, not the current replacement package or authoritative revised manuscript.
+The updated [manuscript source](paper/main.tex) and [29-page PDF](paper/main.pdf) contain the corrected mathematical scope, historical experimental reanalysis, and the expanded factual study below. Publishing this repository does not replace the arXiv article; that is a separate submission. `paper/arxiv_submission.tar.gz` and `paper/skeleton.*` are historical artifacts, not the current replacement package or authoritative revised manuscript.
+
+The September 16 editorial review clarifies definitions, proof steps, hard and soft correctors, and the distinct experimental metrics. See the [review report](audit/paper1_readability_20260916/REPORT_RU.md) and [verification](audit/paper1_readability_20260916/verification.json). Experimental records and numerical conclusions are unchanged.
 
 ## Expanded factual study: 400 questions
 

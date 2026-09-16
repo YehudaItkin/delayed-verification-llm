@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "runs": 800,
+  "requests": 226800,
+  "semantic_versions_reproduced": [
+    "v1",
+    "v2"
+  ],
+  "all_bootstrap_arrays_identical": true,
+  "network_calls": 0,
+  "checked_utc": "2026-09-16T14:26:07.562154+00:00",
+  "research_manifest_sha256": "28615e8f05ce5fbd8a79b018997c4b36f9770df6cc9bedeb61d35db1daaa71ce",
+  "source_sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c"
+}

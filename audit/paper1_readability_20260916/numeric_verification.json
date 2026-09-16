@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-16T11:36:53.155132+00:00",
+  "manuscript_sha256": "d8fbffb852b0a71434243f1765703d20e82e9eaec172540101a3b4c55dba398c",
+  "source_report_sha256": {
+    "experiments/factual_expanded_v4/primary_v4_3_verification.json": "8df5a56d4dc0c9764c82a82104ee0c1e19d0ac96defae46fa9b7c141865afd5d",
+    "experiments/factual_expanded_v4/semantic_review_20260915/results/summary.json": "941ce47f8fa1ad283e9e207c0edb46643531449e1ea9dde8c79dc9a161390bbf",
+    "experiments/factual_expanded_v4/semantic_review_v2_20260915/results/summary.json": "14b5f7a6199f2c14f44064502f859fdefc244945ea054bd50857ef72c513101b",
+    "experiments/factual_expanded_v4/outcome_analysis_20260915/results/summary.json": "36fefdd0b9d692e857d48524dcea1f0c0425629e9cf2d3ed7f1628faf321f643",
+    "experiments/factual_expanded_v4/semantic_review_v2_20260915/review_frozen.json": "d73bdfa5e9a7afc4a8bb4977467908632cec18923475bf2e92a7a8c6efc1d546"
+  },
+  "checks": [
+    "completion bounds: psilo",
+    "completion bounds: tqa",
+    "all ten frequency rows, units, signed differences and CIs",
+    "labelled-error SD contrasts and invariance of abstention results",
+    "sample sizes, review transitions and tail denominators",
+    "publication abstract sync and all citation keys resolved",
+    "all cross references resolved and labels unique"
+  ]
+}

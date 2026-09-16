@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "created_utc": "2026-09-16T11:29:37.998097+00:00",
+  "normal_directed_gram": [
+    [
+      5,
+      -2,
+      -2
+    ],
+    [
+      -2,
+      5,
+      -2
+    ],
+    [
+      -2,
+      -2,
+      5
+    ]
+  ],
+  "numerical_root_comparisons": 480,
+  "binary_completion_oracle_cases": 829,
+  "historical_archive_results_identical": true,
+  "both_scoring_versions_outcomes_identical": true,
+  "all_frozen_bootstrap_arrays_identical": true,
+  "scope": "Finite numerical checks support the reread; they do not prove general theorems or validate factual labels."
+}

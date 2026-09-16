@@ -1,0 +1,21 @@
+{
+  "checked_utc": "2026-09-16T11:33:03.139026+00:00",
+  "scope": "Targeted primary-source check of mathematical and bootstrap precedents; not full rereading of all 57 references.",
+  "sources": [
+    {
+      "url": "https://www.sciencedirect.com/science/article/pii/S0022247X84714570",
+      "access": "Publisher abstract and metadata via search; direct full page returned 403.",
+      "supports": "General real-coefficient discrete delay equation and necessary/sufficient stability precedent."
+    },
+    {
+      "url": "https://arxiv.org/html/1712.08212v1",
+      "access": "Primary full-text HTML.",
+      "supports": "Noise-corrupted leader selection and submodular optimization precedent, distinct from constant-forcing squared error."
+    },
+    {
+      "url": "https://cameron.econ.ucdavis.edu/research/Cameron_Miller_JHR_2015.pdf",
+      "access": "Primary author-hosted PDF, selected cluster bootstrap sections.",
+      "supports": "Whole-cluster resampling and cluster-independence assumptions; does not validate this dataset or frozen labels."
+    }
+  ]
+}

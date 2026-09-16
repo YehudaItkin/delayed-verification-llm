@@ -1,0 +1,89 @@
+{
+  "scope": "All numbered mathematical statements, supporting unnumbered derivations and empirical interpretation reread; no complete formal verification.",
+  "claims": [
+    {
+      "label": "ass:reach",
+      "claim": "Grounding and positive definiteness",
+      "source_line": 283,
+      "assessment": "Complete short argument added using zero extension and weighted graph energy; failure of reachability gives a nonzero zero-energy vector.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "lem:decouple",
+      "claim": "Orthogonal modal reduction",
+      "source_line": 304,
+      "assessment": "Direct multiplication proof added; applies because the grounded Laplacian is real symmetric and the delayed gain is scalar.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "prop:delta1",
+      "claim": "One-step Jury region",
+      "source_line": 327,
+      "assessment": "Checked all three real-quadratic Schur inequalities and positivity assumptions; strict inequalities exclude marginal roots.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "thm:main",
+      "claim": "Network stability",
+      "source_line": 337,
+      "assessment": "Direct-sum argument valid; the unit-disk set is now defined explicitly. General characterization is a reduction, not a new closed-form solution for negative modes.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "prop:boundary",
+      "claim": "First crossing for 0<a<1",
+      "source_line": 358,
+      "assessment": "Appendix A: increasing phase, increasing crossing modulus, simple unit roots and positive radial derivative imply first complex pair and no stable re-entry. a=0 and negative a are separate cases.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "lem:cheb",
+      "claim": "Algebraic threshold and monotonicity",
+      "source_line": 391,
+      "assessment": "Appendix B: nonzero continued-fraction denominators; positive derivative of Chebyshev ratio; decreasing first phase angle as integer delay grows. Endpoints separately treated.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "cor:dose-explicit",
+      "claim": "Slowest binding mode and hard-pin comparison",
+      "source_line": 421,
+      "assessment": "Proof added: monotonicity in a combined with Cauchy interlacing, including preservation of step-size condition.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "cor:bibo",
+      "claim": "Equilibrium error bound",
+      "source_line": 473,
+      "assessment": "Resolvent spectral norm checked; convergence justified by centering the stable recurrence and forcing-norm comparison under coordinate restriction.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "thm:place",
+      "claim": "Coherence supermodularity and greedy bound",
+      "source_line": 567,
+      "assessment": "Appendix D: Neumann-series inverse positivity added; mixed derivative 2 Qij (Q squared)ij is nonnegative; integration gives diminishing returns; finite-k residual-gap recursion checked. Guarantee is only for coherence reduction.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "thm:twodelay",
+      "claim": "Two-delay unit-circle locus",
+      "source_line": 637,
+      "assessment": "Appendix C: real/imaginary linear equations, nonsingular Cramer parametrization, rank-one singular consistency, real-root lines and constant root count off the locus. Does not classify all stable cells.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "cor:equal",
+      "claim": "Equal-delay gain ceiling",
+      "source_line": 665,
+      "assessment": "Small positive gain enters the unit disk; first phase crossing and outward derivative exclude re-entry. Largest grounded eigenvalue binds.",
+      "formalized_in_lean_in_this_pass": false
+    },
+    {
+      "label": "rem:absorb",
+      "claim": "Projected nonnegative dynamics",
+      "source_line": 1113,
+      "assessment": "Unforced monotonic convergence argument and exact forced clipped period-six example valid. Numerical tanh recurrence is no longer called a proved periodic orbit.",
+      "formalized_in_lean_in_this_pass": false
+    }
+  ]
+}

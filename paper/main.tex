@@ -9,6 +9,7 @@
 \usepackage{amsmath,amssymb,amsthm,mathtools}
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
+\usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 \hypersetup{pdftitle={Delayed Verification in Multi-Agent LLM Systems: Stability of a Consensus Model and Coherence-Based Corrector Placement},pdfauthor={Igor Itkin}}
 \usepackage{microtype}
@@ -39,7 +40,7 @@ Stability of a Consensus Model and Coherence-Based Corrector Placement}
 \small Independent Researcher, Tel Aviv, Israel\\
 \small \texttt{ig.itkin@gmail.com}\\
 \small ORCID: \href{https://orcid.org/0009-0004-9513-8463}{0009-0004-9513-8463}}
-\date{June 2026; revised September 15, 2026}
+\date{June 2026; revised September 16, 2026}
 
 \begin{document}
 \maketitle
@@ -48,7 +49,7 @@ Stability of a Consensus Model and Coherence-Based Corrector Placement}
 Multi-agent large language model (LLM) systems often rely on verifier and critic agents to suppress hallucinations, but
 verification is delayed. During this delay, false claims can propagate through the agent network. We
 model this process as delayed consensus on a graph with grounded corrector nodes. Spectral decomposition
-by the grounded Laplacian yields a closed-form stability threshold for the verification dose: correction
+by the grounded Laplacian yields an exact stability threshold for the verification dose: correction
 that is too strong or too delayed can destabilize this linear model through an oscillatory mode.
 This does not establish a bounded nonlinear cycle. When communication and
 verification have the same delay, their gains add; at delay two the threshold for the dimensionless
@@ -116,7 +117,7 @@ this mechanism explains those failures.
   \item \textbf{A model and a reduction.} We cast the corrected multi-agent loop as a delayed consensus
         with grounded correctors that the grounded Laplacian decouples into independent scalar delay
         recurrences (Lemma~\ref{lem:decouple}; Sections~\ref{sec:model}--\ref{sec:stab}).
-  \item \textbf{A closed-form verification-dose limit.} On the branch $0<a<1$, increasing the
+  \item \textbf{An exact verification-dose limit.} On the branch $0<a<1$, increasing the
         dimensionless dose $\beta=\eta\kappa$ first destabilizes the linear loop through a complex
         pair. The threshold decreases with delay and approaches the inverse golden ratio at
         delay two as $a\uparrow1$; it is not a theorem of bounded nonlinear oscillation (Theorem~\ref{thm:main},
@@ -146,10 +147,13 @@ The project contains numerical checks, archived trajectories and reanalysis scri
 archives lack raw responses for some experiments, preventing independent reconstruction of their
 factual scores. The expanded study instead preserves full request/response logs, a frozen manifest,
 versioned semantic decisions and checksummed analyses (Section~\ref{sec:expanded}).
-Its local reproducibility records are under \path{experiments/factual_expanded_v4/}, including
-\path{primary_v4_3_verification.json}, the two semantic-review directories and
-\path{outcome_analysis_20260915/}. The frozen manifest records model digest
-\path{22130167c4c20e20c7b71454612966ca8e8171e9b3cc8ab6ce8aa6cbfec79643}.
+The data layout and offline reproduction commands are given in Appendix~\ref{app:repro}.
+
+The theoretical argument has three steps: define the recurrence (Section~\ref{sec:model}),
+derive its scalar stability threshold (Section~\ref{sec:stab}), and distinguish the placement
+objective from stability (Section~\ref{sec:place}). Section~\ref{sec:two} adds communication
+delay. Section~\ref{sec:emp} then asks what synthetic and LLM experiments can establish about
+these models; its observed variability measures are not tests of asymptotic stability.
 
 \section{Related work}\label{sec:related}
 
@@ -184,23 +188,15 @@ Its conjugate roots have squared modulus $10/9>1$, whereas instantaneous gossip 
 $7/27$. Thus delayed gossip alone can destabilize our model. Sections~\ref{sec:stab} and
 \ref{sec:two} distinguish instantaneous gossip from coupled communication and verification delays.
 
-Finally, where we analyze the
-controller, a parallel effort builds \emph{detectors}: post-hoc attribution of which step failed remains
-hard in existing benchmarks \cite{AgentHallu,WhoWhen,TRAIL}, and the field
-is pivoting to online monitoring through trajectory-prefix auditing \cite{AgentForesight}, cross-channel
-causal-influence monitoring of cascade onset \cite{CASPIAN}, and temporal-graph anomaly detection
-\cite{GUARDIAN}.
-
-Related detection theory includes sequential change detection (the cumulative-sum statistic, CUSUM
-\cite{Page}, the Shiryaev--Roberts and minimax theory \cite{Lorden,Pollak,Moustakides,Lai}, and the
-standard surveys and monograph \cite{VeeraBanerjee,XieQCD,TNB}). Our stability boundary instead
-specializes the discrete delay-stability result of Kuruklis \cite{Kuruklis}; no detection-delay
-theorem is proved here. Single-LLM signals that could feed detectors include semantic entropy \cite{SemEntropy},
-SelfCheckGPT \cite{SelfCheck}, and methods surveyed in \cite{HallSurvey}.
-Xu et al.\ use CUSUM for confidence convergence and early exit \cite{EntropyCoT};
-Jain and Krishnamurthy study social learning and interventions on herding
-\cite{JainKrishnamurthy}. These objectives differ from the delayed correcting recurrence studied here.
-We do not infer a priority claim for all uses of change detection in LLM systems from this comparison.
+Detection and control address different questions. Failure attribution benchmarks
+\cite{AgentHallu,WhoWhen,TRAIL} and online monitoring methods \cite{AgentForesight,CASPIAN,GUARDIAN}
+locate or anticipate failures; we analyze a specified correcting action. Sequential detection
+provides related tools, including CUSUM and minimax delay criteria
+\cite{Page,Lorden,Pollak,Moustakides,Lai,VeeraBanerjee,XieQCD,TNB}, but no detection-delay
+result is proved here. Potential LLM monitoring signals include semantic uncertainty and
+self-consistency \cite{SemEntropy,SelfCheck,HallSurvey}; confidence-based early exit
+\cite{EntropyCoT} and social-learning interventions \cite{JainKrishnamurthy} have different objectives.
+Our stability boundary specializes the discrete delay equation studied by Kuruklis \cite{Kuruklis}.
 
 The placement
 results adapt established network-control objectives. Clark et al.\ study supermodular
@@ -232,12 +228,18 @@ converge to its generally biased equilibrium, and when does it lose stability, a
 budget of correctors be placed to reduce a specified coherence surrogate? The rest of this section makes the model
 precise; Sections~\ref{sec:stab}--\ref{sec:two} answer~(a) and Section~\ref{sec:place} answers~(b).
 
-Let $G=(V,E)$ be a graph on $V=\{1,\dots,n\}$ with symmetric Laplacian $L=D-A\succeq 0$. Agent $i$
+Let $\mathcal G=(V,E)$ be a finite undirected weighted graph on $V=\{1,\dots,n\}$.
+Its adjacency matrix has $A_{ij}=A_{ji}\ge0$, $A_{ii}=0$, and an edge exactly when $A_{ij}>0$;
+$D=\diag(A\mathbf1)$ and $L=D-A\succeq0$ are its degree matrix and Laplacian.
+Here $\mathbf1$ denotes the all-ones vector, $I$ the identity of the relevant dimension,
+and $B\succeq0$ ($B\succ0$) means that the symmetric matrix $B$ is positive semidefinite
+(positive definite). We use $\tr$ for matrix trace and $\|\cdot\|_2$ for the Euclidean
+vector norm or its induced matrix norm. Agent $i$
 holds a scalar belief $b_{i,t}\in\R$ about a claim with ground truth $b^\star$; the error is
 $e_{i,t}=b_{i,t}-b^\star$. A \emph{corrector} set $R\subseteq V$ ($|R|=m$) consists of agents with
 access to verified evidence, held at truth ($e_{i,t}=0$, $i\in R$), an ideal hard-pinning abstraction related to pinning control
 \cite{WangChen}. The remaining \emph{free} agents
-$V_{\mathrm f}=V\setminus R$ ($n_{\mathrm f}=n-m$) carry error $e_t\in\R^{n_{\mathrm f}}$; a faulty
+$V_{\mathrm f}=V\setminus R$ ($n_{\mathrm f}=n-m\ge1$) carry error $e_t\in\R^{n_{\mathrm f}}$; a faulty
 subset injects a constant bias collected as a forcing $g\in\R^{n_{\mathrm f}}$.
 Symmetry means reciprocal weights, a modeling assumption rather than a property inferred from
 the exchange of peer text in our experiments. It enables the real orthogonal decoupling of
@@ -262,6 +264,14 @@ $\kappa$ and \emph{delay} $\delta$ (it acts on the $\delta$-step-old error); and
 constant pull of the faulty agents. The verification strength $\kappa$ and delay $\delta$ are the two
 control knobs, and everything that follows analyses \eqref{eq:dyn} as a function of them.
 
+The initial history $e_{-\delta},\ldots,e_0$ is arbitrary and finite, and updates start at $t=0$.
+We call the homogeneous loop \emph{asymptotically stable} if every such history converges to zero;
+for this finite-dimensional linear recurrence this is equivalent to every characteristic root
+lying strictly inside $|z|<1$. With constant $g$, stability instead means convergence to the
+equilibrium after subtracting its constant history. A nonzero equilibrium error is therefore
+compatible with stability. At update $t\to t+1$, delay $\delta$ means feedback from state
+$t-\delta$; the empirical immediate-feedback condition uses the extension $\delta=0$.
+
 The additive fault abstraction is not identical to eliminating fixed erroneous peers from a
 consensus graph. If external peers have fixed error vector $f$ and weights $B\ge0$ into the free
 nodes, their contribution is $\eta Bf-\eta\diag(B\mathbf1)e_t$. Thus exact elimination replaces
@@ -273,8 +283,15 @@ To make the grounded Laplacian positive definite, we impose the following anchor
 \begin{assumption}[grounding reachability]\label{ass:reach}
 Every connected component of the subgraph induced by $V_{\mathrm f}$ contains a node adjacent to $R$.
 \end{assumption}
-\noindent This condition is equivalent to $\Lg\succ0$ and is assumed throughout the grounded-network
-analysis. It is not necessary for stability of every corrected loop: the uniform verification term
+\noindent This condition is equivalent to $\Lg\succ0$. To see this, extend a free-node vector
+$v$ by zeros on $R$ to obtain $\tilde v$. Then
+\[
+ v^\top\Lg v=\sum_{\{i,j\}\in E} A_{ij}(\tilde v_i-\tilde v_j)^2.
+\]
+Under the condition, zero energy forces $v=0$; without it, a nonzero constant on an unanchored
+free component has zero energy. We assume the condition for the hard-grounded stability results;
+Section~\ref{sec:place} states separately when an ungrounded baseline is allowed.
+It is not necessary for stability of every corrected loop: the uniform verification term
 in \eqref{eq:dyn} can also stabilize a zero Laplacian mode. For example, at $\delta=1$ and
 $\eta\kappa=1/2$, that mode has characteristic polynomial $z^2-z+1/2$, with roots
 $(1\pm i)/2$ of modulus $1/\sqrt2<1$. Moreover, for $\kappa>0$, the operator $\Lg+\kappa I$
@@ -285,7 +302,8 @@ conditions below.
 \section{Stability and the verification dose}\label{sec:stab}
 
 \begin{lemma}[grounded-Laplacian decoupling]\label{lem:decouple}
-Let $\Lg = Q\diag(\mu_1,\dots,\mu_{n_{\mathrm f}})Q^\top$ ($0<\mu_1\le\cdots\le\mu_{n_{\mathrm f}}$).
+Let $\Lg = Q\diag(\mu_1,\dots,\mu_{n_{\mathrm f}})Q^\top$, where $Q$ is orthogonal and
+$0<\mu_1\le\cdots\le\mu_{n_{\mathrm f}}$ are the eigenvalues.
 Put $x_t = Q^\top e_t$, $\hat g=Q^\top g$. Since $\kappa I$ is scalar (hence commutes with $\Lg$),
 \eqref{eq:dyn} decouples into independent scalar recurrences
 \begin{equation}\label{eq:mode}
@@ -293,10 +311,16 @@ Put $x_t = Q^\top e_t$, $\hat g=Q^\top g$. Since $\kappa I$ is scalar (hence com
   \qquad a_i \coloneqq 1-\eta\mu_i .
 \end{equation}
 \end{lemma}
+\begin{proof}
+Multiply \eqref{eq:dyn} by $Q^\top$ and use $Q^\top Q=I$ and
+$Q^\top\Lg Q=\diag(\mu_i)$. Both the instantaneous and delayed terms are then diagonal
+in the same coordinates, giving \eqref{eq:mode}.
+\end{proof}
 
 The decoupling is the crux of the analysis. An $n_{\mathrm f}$-dimensional \emph{delayed} network,
 ordinarily an awkward object, collapses into independent scalar modes, so the entire stability
-question reduces to a single scalar delay recurrence $x_{t+1}-a_i x_t+\beta\,x_{t-\delta}=0$ (with
+question reduces, after subtracting $x_{i,\infty}=\hat g_i/(\mu_i+\kappa)$, to the homogeneous
+scalar delay recurrence $x_{t+1}-a_i x_t+\beta\,x_{t-\delta}=0$ (with
 $\beta=\eta\kappa$), one copy per eigenvalue $\mu_i$ of $\Lg$. We analyse this scalar recurrence once
 and then quantify the result over the spectrum.
 
@@ -312,8 +336,13 @@ $\mu_i<2/\eta+\kappa$, and $\eta\kappa<1$.
 
 \begin{theorem}[networked stability]\label{thm:main}
 Under Assumption~\ref{ass:reach}, the homogeneous part of \eqref{eq:dyn} is asymptotically stable iff
-$(a_i,\eta\kappa)\in\mathcal D_\delta$ for every $\mu_i\in\spec(\Lg)$, where $\mathcal D_\delta$ is the
-unit-disk region of $z^{\delta+1}-az^\delta+\eta\kappa$. For $\delta=1$ this is
+$(a_i,\eta\kappa)\in\mathcal D_\delta$ for every $\mu_i\in\spec(\Lg)$, where $\spec$ denotes the
+eigenvalue set and
+\[
+ \mathcal D_\delta=\{(a,\beta)\in\R\times(0,\infty):
+       \text{all roots of }z^{\delta+1}-az^\delta+\beta\text{ have }|z|<1\}.
+\]
+For $\delta=1$ this is
 $\eta\kappa<1$ and $\mu_{\max}(\Lg)<2/\eta+\kappa$. The positive-mode branch for larger delays is treated separately below.
 \end{theorem}
 \begin{proof}
@@ -338,7 +367,8 @@ complex-conjugate pair $e^{\pm i\theta_\star}$. The critical dose is
 where the branch contains a unique $\theta=\theta_\star$ for each $a\in(0,1)$.
 The mode is asymptotically stable iff $0<\beta<\beta_c$, so
 $\kappa_{\max}(a,\delta)=\beta_c/\eta$. The critical pair has angular frequency
-$\theta_\star$ (period $2\pi/\theta_\star$).
+$\theta_\star$ radians per round (nominal period $2\pi/\theta_\star$ rounds).
+The sampled mode need not have an integer period.
 \end{proposition}
 \begin{proof}
 See \ref{app:proofs}.
@@ -355,13 +385,13 @@ The first crossing is at $z=-1$; the other roots $(1\pm i\sqrt7)/4$ have modulus
 For $0<\beta<1/2$, stability follows from $|z^2(z+1/2)|\ge1/2>\beta$ on $|z|=1$
 and Rouch\'e's theorem. This case is outside Proposition~\ref{prop:boundary}.
 
-The boundary \eqref{eq:boundary} is opaque as written. Re-expressing it through Chebyshev polynomials
-makes both its closed form and its monotonicity transparent, and it is the monotonicity that turns the
-boundary into a usable design rule.
+Equation~\eqref{eq:boundary} specifies the boundary parametrically. Chebyshev polynomials give
+an equivalent algebraic equation and a direct proof of the monotonicity needed for a design rule.
 
 \begin{lemma}[Chebyshev form; the dose is monotone]\label{lem:cheb}
-With $c=\cos\theta$ and $\sin(\delta\theta)/\sin\theta=U_{\delta-1}(c)$ ($U$ = Chebyshev second
-kind), the boundary \eqref{eq:boundary} is algebraic,
+Let $U_0(c)=1$, $U_1(c)=2c$ and $U_{j+1}(c)=2cU_j(c)-U_{j-1}(c)$ be the Chebyshev
+polynomials of the second kind. With $c=\cos\theta$ and
+$\sin(\delta\theta)/\sin\theta=U_{\delta-1}(c)$, the boundary \eqref{eq:boundary} is algebraic,
 \[
   a=\frac{U_\delta(c)}{U_{\delta-1}(c)},\qquad \beta_c=\frac{1}{U_{\delta-1}(c)},
   \qquad c\in\Big(\cos\tfrac{\pi}{\delta+1},\,\cos\tfrac{\pi}{2\delta+1}\Big)\ (a\in(0,1)),
@@ -377,7 +407,7 @@ $\beta_c(1,\delta)=2\sin(\pi/(4\delta+2))$.
 See \ref{app:cheb}.
 \end{proof}
 
-This monotonicity is what gives the dose limit its bite: on the branch $a=1-\eta\mu\in[0,1)$,
+On the branch $a=1-\eta\mu\in[0,1)$,
 the ceiling does not increase as the delay $\delta$ grows and does not decrease as $\mu$ grows. Thus the slowest
 mode attains the binding constraint (all modes share the same ceiling when $\delta=1$),
 which the corollary now pins down. Two remarks sharpen the claim. First, because \eqref{eq:boundary}
@@ -402,6 +432,13 @@ linear mode. Increasing delay can also cross the ceiling when the binding $a$ is
 The oscillatory loss of stability is the regime we call
 \emph{verification-induced oscillation}.
 \end{corollary}
+\begin{proof}
+The largest $a_i=1-\eta\mu_i$ corresponds to $\mu_{\min}$, and Lemma~\ref{lem:cheb}
+makes its threshold no larger than any other mode's. Proposition~\ref{prop:boundary}
+and the $a=0$ case give the network criterion. Interlacing of the nested principal
+submatrices gives the two eigenvalue inequalities and preserves $\eta\mu_{\max}\le1$.
+Applying the same threshold monotonicity proves the placement comparison.
+\end{proof}
 
 \begin{figure}[t]
   \centering
@@ -416,9 +453,11 @@ The oscillatory loss of stability is the regime we call
   \label{fig:dose}
 \end{figure}
 
-\section{Optimal corrector placement}\label{sec:place}
+\section{Corrector placement for a coherence objective}\label{sec:place}
 
-Given a budget of $k$ correctors, \emph{where} should they go? We optimize a coherence surrogate,
+Given a budget of $k$ correctors, \emph{where} should they go? This section first bounds the
+equilibrium error for the hard-grounded model, then defines a separate soft-pin placement
+problem on a fixed state space. We optimize a coherence surrogate,
 whose reduction is submodular. The greedy rule of Algorithm~\ref{alg:greedy} achieves a fraction
 $1-1/e$ of the optimal reduction (Theorem~\ref{thm:place}). This is a guarantee for the chosen
 placement metric; it is not a guarantee for every measure of truth-tracking error.
@@ -445,31 +484,39 @@ step-size condition of Corollary~\ref{cor:dose-explicit}, the dose ceiling also 
 \begin{proof}
 At equilibrium \eqref{eq:dyn} gives $(\Lg+\kappa I)e_\infty=g$; since $\Lg\succ0$ is symmetric,
 $\|(\Lg+\kappa I)^{-1}\|_2=1/(\mu_{\min}(\Lg)+\kappa)$, and submultiplicativity gives \eqref{eq:bibo}.
+Subtracting $e_\infty$ gives the stable homogeneous recurrence, proving convergence for every
+initial history. Restricting an unchanged forcing to fewer free nodes cannot increase its norm.
 \end{proof}
 
 The bound \eqref{eq:bibo} shows that pinning helps, but not \emph{which} nodes to pin: it sees only
 $\mu_{\min}(\Lg)$. For the placement objective, fix a baseline hard-corrector set $R_0$ and
 $G=L[V\setminus R_0,V\setminus R_0]$. The set $R_0$ may be empty, as in the numerical example;
 $\kappa>0$ still makes $G+\kappa I$ positive definite. In the rest of this section, $R$ denotes
-additional \emph{soft} pins on this fixed state space, each of weight $w>0$. Their steady-state
+additional \emph{soft} pins on this fixed state space, each applying a finite restoring term
+$-w e_i$ in the steady-state equation rather than imposing $e_i=0$. We write $u_i$ for the
+standard coordinate vector at node $i$, to distinguish it from a node's error. Their steady-state
 operator is
 \begin{equation}\label{eq:Mop}
-  M(R)=G+W_R+\kappa I,\qquad W_R=w\sum_{i\in R}e_ie_i^\top .
+  M(R)=G+W_R+\kappa I,\qquad W_R=w\sum_{i\in R}u_iu_i^\top .
 \end{equation}
 If $g$ is sampled once, held constant in time, and has mean zero and covariance $\sigma^2 I$, then
 \[
   \mathbb E\|M(R)^{-1}g\|_2^2=\sigma^2\tr M(R)^{-2}.
 \]
 This differs from the \emph{coherence} $H(R)=\tr M(R)^{-1}$ used in leader-selection objectives
-\cite{ClarkSubmod}. For the separate, continuous-time, delay-free surrogate
-$\mathrm dx=-M(R)x\,\mathrm dt+\mathrm dW_t$ with unit isotropic Brownian noise, the stationary
-covariance solves $M P+P M=I$, hence $P=\tfrac12 M^{-1}$ and the stationary energy is $H(R)/2$.
+\cite{ClarkSubmod,MackinPatterson}. For the separate, continuous-time, delay-free surrogate
+$\mathrm dx=-M(R)x\,\mathrm dt+\mathrm dW_t$, where $W_t$ is standard vector Brownian motion
+with independent unit-variance components, the stationary covariance $P$ solves
+$M P+P M=I$. Hence $P=\tfrac12 M^{-1}$ and the stationary energy $\mathbb E\|x\|_2^2$ is $H(R)/2$.
 This noise model is not the constant forcing in \eqref{eq:dyn}, nor does it give the stochastic
 variance of the delayed discrete-time loop.
 
-Both traces decrease under added pins, but they need not rank two non-nested placements alike.
+Both traces are non-increasing under added pins: each ordered eigenvalue of $M$ is
+non-decreasing under the positive-semidefinite update, so both $\sum_j\lambda_j(M)^{-1}$
+and $\sum_j\lambda_j(M)^{-2}$ are non-increasing. They need not rank two non-nested placements alike.
 For example, take the six-node graph with edges
-$\{02,03,04,05,12,25,34,35\}$, $R_0=\varnothing$, $\kappa=1/2$, and $w=2$:
+$\{02,03,04,05,12,25,34,35\}$ (unit weights; nodes $0,\ldots,5$, with $ij$ denoting
+$\{i,j\}$), $R_0=\varnothing$, $\kappa=1/2$, and $w=2$:
 \begin{center}
 \begin{tabular}{c|cc}
 Placement $R$ & $H(R)=\tr M^{-1}$ & $\tr M^{-2}$\\\hline
@@ -482,7 +529,10 @@ state the optimization problem explicitly for the coherence surrogate:
 \begin{equation}\label{eq:placeprob}
   \min_{|R|=k}\ H(R)=\tr M(R)^{-1},
 \end{equation}
-with a fixed candidate set and $1\le k\le |V\setminus R_0|$.
+where every node in the fixed set $V\setminus R_0$ is eligible and $1\le k\le |V\setminus R_0|$.
+The optimization is over this static objective; it does not impose a delayed-loop stability
+constraint. Implementing the selected soft pins in a dynamic controller requires a separate
+stability check for that controller.
 
 The coherence is supermodular, so its reduction $\rho(R)=H(\varnothing)-H(R)$ is monotone and submodular,
 and greedy achieves at least a fraction $1-1/e$ of the optimal \emph{reduction} \cite{Nemhauser}
@@ -490,11 +540,14 @@ and greedy achieves at least a fraction $1-1/e$ of the optimal \emph{reduction} 
 The greedy step is cheap and interpretable, because its \emph{marginal gain} has the Sherman--Morrison
 closed form
 \begin{equation}\label{eq:marg}
-  \Delta_i(R):=H(R)-H(R\cup\{i\})=\frac{w\,\|M(R)^{-1}e_i\|^2}{1+w\,e_i^\top M(R)^{-1}e_i}\;\ge\;0,
+  \Delta_i(R):=H(R)-H(R\cup\{i\})=\frac{w\,\|M(R)^{-1}u_i\|^2}{1+w\,u_i^\top M(R)^{-1}u_i}\;\ge\;0,
 \end{equation}
 a \emph{resolvent centrality} that measures the coherence reduction from one additional pin and
 depends on the full inverse, rather than node degree alone. Greedy pins the node of largest $\Delta_i$, updates
 $M(R)^{-1}$ by one rank-one step, and repeats (Algorithm~\ref{alg:greedy}).
+Here \emph{submodular reduction} means diminishing returns:
+$\Delta_i(R)\ge\Delta_i(S)$ whenever $R\subseteq S$ and $i\notin S$.
+Equivalently, the decreasing cost $H$ is supermodular.
 
 \begin{algorithm}[H]
 \DontPrintSemicolon
@@ -504,7 +557,7 @@ time, each step pinning the node of largest marginal gain.}\label{alg:greedy}
 \KwOut{corrector set $R$ with $|R|=k$}
 $R \leftarrow \varnothing$\;
 \For{$j \leftarrow 1$ \KwTo $k$}{
-  \lForEach{$i \notin R$}{$\Delta_i(R) \leftarrow w\,\|M(R)^{-1}e_i\|^2 \big/ \bigl(1+w\,e_i^\top M(R)^{-1}e_i\bigr)$ \tcp*[r]{\eqref{eq:marg}}}
+  \lForEach{$i \notin R$}{$\Delta_i(R) \leftarrow w\,\|M(R)^{-1}u_i\|^2 \big/ \bigl(1+w\,u_i^\top M(R)^{-1}u_i\bigr)$ \tcp*[r]{\eqref{eq:marg}}}
   $i^\star \leftarrow \arg\max_{i \notin R}\,\Delta_i(R)$ \tcp*[r]{largest coherence reduction}
   $R \leftarrow R \cup \{i^\star\}$\;
 }
@@ -532,7 +585,8 @@ for $\tr M(R)^{-2}$.
 See \ref{app:place}.
 \end{proof}
 
-On a graph of three $5$-cliques chained by bridges (Fig.~\ref{fig:placement}) the rule is well separated
+On a graph of three $5$-cliques chained by unit-weight bridges, with $R_0=\varnothing$,
+$\kappa=0.3$ and $w=12$ (Fig.~\ref{fig:placement}), the rule is well separated
 from the two baselines at $k=8$: greedy cuts the coherence $\tr M(R)^{-1}$ from $9.1$ to
 $2.3$, against $2.9$ for degree-based and $2.5$ for random placement. Its first four picks are
 $4,13,8,0$ in the code's zero-based indexing. The supermodular structure and the $(1-1/e)$ guarantee are \emph{inherited}
@@ -573,9 +627,9 @@ $\lambda=e^{i\theta}$ satisfies the pair
   \cos\theta-1+\eta\mu\cos(d\theta)+\eta\kappa\cos(\delta\theta)=0,\quad
   \sin\theta-\eta\mu\sin(d\theta)-\eta\kappa\sin(\delta\theta)=0.
 \end{equation}
-With $m=\max(d,\delta)$, the characteristic polynomial is
+With $h=\max(d,\delta)$ and a supplied history $e_{-h},\ldots,e_0$, the characteristic polynomial is
 \[
- P(z)=z^{m+1}-z^m+pz^{m-d}+qz^{m-\delta},\qquad p=\eta\mu,\quad q=\eta\kappa.
+ P(z)=z^{h+1}-z^h+pz^{h-d}+qz^{h-\delta},\qquad p=\eta\mu,\quad q=\eta\kappa.
 \]
 It generally has four terms when $d,\delta>0$ are distinct. Related trinomial delay equations are
 studied in \cite{KipnisNigmatullin}; we derive the unit-circle locus for the polynomial above directly.
@@ -592,7 +646,7 @@ At angles with $\sin((\delta-d)\theta)=0$, the original two linear equations
 lines in the $(p,q)$ plane. The real-root loci are $p+q=0$ for $z=1$ and
 $p(-1)^d+q(-1)^\delta=2$ for $z=-1$. These sets comprise the unit-circle locus, not a selection
 of its stability-bounding arcs. In each connected open cell of its complement, the number of roots
-inside the unit disk is constant; stable cells are those with all $m+1$ roots inside.
+inside the unit disk is constant; stable cells are those with all $h+1$ roots inside.
 The origin itself is marginal, with a root at $z=1$.
 \end{theorem}
 \begin{proof}
@@ -617,6 +671,7 @@ $x_{t+1}-x_t+\eta(\mu+\kappa)x_{t-\tau}=0$. For positive combined gain, it is st
 \]
 For the network, this becomes $\eta(\mu_{\max}(\Lg)+\kappa)<\beta_c(1,\tau)$: the largest
 grounded eigenvalue binds, unlike the instantaneous-gossip case of Corollary~\ref{cor:dose-explicit}.
+Here $\varphi=(1+\sqrt5)/2$ is the golden ratio.
 \end{corollary}
 \begin{proof}
 See \ref{app:twodelay}.
@@ -659,6 +714,14 @@ how do final-step error and finite-window variability differ across verifier pro
 RQ3: do LLM agents transmit an externally computed delayed correction signal, and how does their
 finite-window signed-error variability change with its lag?
 
+The studies use different outcomes. RQ1 measures the late half peak-to-peak range of a simulated
+real-valued error. Historical RQ2 uses an automated entailment score; expanded RQ2 separates
+binary factual labels from abstentions and unresolved answers. RQ3 measures the temporal
+standard deviation of a normalized signed numeric error. We retain the original name
+``amplitude'' where used in the records, but give its definition for each study; values are
+not directly comparable across these outcomes. Unless stated otherwise, temporal standard
+deviations are population standard deviations, dividing by the number of observed states.
+
 \subsection{Onset at the predicted dose limit (RQ1)}
 
 We test whether the \emph{linear} dose limit predicts onset in the \emph{nonlinear} system with a
@@ -666,8 +729,13 @@ saturating verifier,
 \[
   e_{t+1}=(I-\eta\Lg)e_t-\eta\kappa\tanh(e_{t-\delta})+\eta g
 \]
-($\tanh'(0)=1$ matches the linearization), on a random grounded graph ($n_{\mathrm f}=8$, $\eta$ such
-that $\eta\mu\in(0,1)$, a faulty node injecting a small bias). The onset of sustained oscillation
+($\tanh$ acts componentwise and $\tanh'(0)=1$ matches the zero-state linearization).
+The ten-node graph has two hard pins (nodes $0,5$ in zero-based code indexing), leaving
+$n_{\mathrm f}=8$; it uses a random spanning tree with additional independent edges of probability
+$0.3$ and seed $20260621$. We set $\eta=0.5/\mu_{\max}$ and a forcing $0.04$ at the second
+free node, zero elsewhere, starting from an all-zero history. Each run has $4000$ updates.
+Its late amplitude is half the largest nodewise peak-to-peak range over the final $400$ states.
+The observed onset
 $\kappa_{\mathrm{crit}}$ tracks the predicted ceiling
 $\kappa_{\max}=\beta_c(1-\eta\mu_{\min},\delta)/\eta$:
 \begin{center}
@@ -687,8 +755,12 @@ The reported $\kappa_{\mathrm{crit}}$ is the first sampled dose whose late ampli
 The sweep uses $40$ equally spaced ratios $\kappa/\kappa_{\max}$ from $0.35$ to $1.65$: its spacing is
 $0.0333$, and the samples bracketing the predicted boundary are $0.9833$ and $1.0167$. Thus the common
 ratio $1.017$ is consistent with onset at the theoretical boundary at this resolution; it does not
-resolve a separate stabilizing shift due to saturation. The $\delta{=}2$ period
-(measured $9.38$) is close to $2\pi/\theta_\star=9.72$. An LLM front-end requires its own identification and cannot be assumed to preserve this update map.
+resolve a separate stabilizing shift due to saturation. At $\delta=2$ and
+$\kappa=1.25\kappa_{\max}$, the dominant nonzero Fourier bin of the first free node's
+final $600$ states gives a nominal period $9.38$, compared with $2\pi/\theta_\star=9.72$
+at the linear boundary. This finite-window frequency estimate is not an exact period or a
+measurement at the threshold. An LLM front-end requires its own identification and cannot
+be assumed to preserve this update map.
 \begin{figure}[t]
   \centering
   \includegraphics[width=0.9\linewidth]{figures/demo_onset.png}
@@ -703,7 +775,7 @@ resolve a separate stabilizing shift due to saturation. The $\delta{=}2$ period
 We reanalyze archived debates among instances of Qwen3.6-35B on selected PsiloQA
 \cite{PsiloQA} and TruthfulQA \cite{TruthfulQA} questions. The archived filename suffix \texttt{tqa} refers to TruthfulQA: all $30$ selected
 questions and gold answers match that dataset; the earlier TriviaQA label was erroneous.
-Selection used high cold-answer NLI error
+Selection used high cold-answer natural-language-inference (NLI) error
 within a candidate set, so these are difficulty-selected subsets rather than representative samples.
 Three free agents receive peer answers and a verifier note; grounded variants also supply four fixed
 wrong answers. Evidence is a Wikipedia passage for PsiloQA and a supplied gold-answer/alias statement
@@ -819,13 +891,17 @@ recalculations. Together the reviews classify $50149$ of the $51670$ initially u
 agent states ($97.1\%$), leaving $1521$ U. This percentage measures scoring coverage, not accuracy.
 
 \paragraph{Binary-amplitude contrast.}
-For a fully binary trajectory let
+For one question, let $y_{i,t,\delta}=0$ for label M and $1$ for label C; this binary
+outcome is distinct from the real-valued belief error $e_{i,t}$ in the model.
+It is undefined for A, U and F. For a fully scored or hypothetically completed trajectory let
 \[
  A_\delta=\operatorname{SD}_{t=24,\ldots,47}
-       \left(\frac{1}{3}\sum_{i=1}^{3} e_{i,t,\delta}\right),
+       \left(\frac{1}{3}\sum_{i=1}^{3} y_{i,t,\delta}\right),
  \qquad \Delta=A_5-A_0,
 \]
-using population standard deviation. For each question we compute the minimum and maximum
+using population standard deviation. We write $\operatorname{SD}_{t\in T}(v_t)
+=[|T|^{-1}\sum_{t\in T}(v_t-\bar v_T)^2]^{1/2}$, where
+$\bar v_T=|T|^{-1}\sum_{t\in T}v_t$. For each question we compute the minimum and maximum
 $A_\delta$ over binary completions of unscored cells, then the outer interval
 $[A_{5,\min}-A_{0,\max}, A_{5,\max}-A_{0,\min}]$. Table~\ref{tab:expanded-bounds}
 averages these endpoints over all $200$ questions per dataset. For absent answers these
@@ -833,7 +909,15 @@ completions are hypothetical: an abstention has no hidden factual truth value. I
 completing residual U occurrences can also be more permissive than enforcing one truth label
 across all occurrences of the same pair. Thus these are conservative outer bounds, not sharp
 semantic identification regions, confidence intervals or significance tests. They include neither
-sampling uncertainty nor possible adjudicator error.
+sampling uncertainty nor possible adjudicator error. The finite optimization can be reproduced
+without enumerating all cell assignments: at each tail time, the possible erroneous-agent counts
+are consecutive integers from the known C count to that count plus the unscored count.
+A dynamic program starts at $(S,Q)=(0,0)$ and, for each possible count $c$ at the next time,
+adds $(S+c,Q+c^2)$. It therefore retains exactly the reachable sums of counts and squared counts.
+For $N=24$ tail times and three agents, the variance is $Q/(9N)-S^2/(9N^2)$; taking the
+square roots of its minimum and maximum over reachable pairs gives the completion extrema.
+The implementation keeps only the smallest and largest $Q$ for each $S$: future count choices
+do not depend on $Q$, and the final variance is increasing in $Q$ at fixed $S$.
 
 \begin{table}[t]
 \centering
@@ -869,8 +953,11 @@ responses}; it is a different estimand from $A_\delta$ with undefined truth labe
 can have frequency one and standard deviation zero.
 
 For the mean paired difference of each outcome statistic, $20000$ bootstrap resamples select
-whole, previously frozen question clusters, preserving both conditions and all questions within
-each selected cluster. The resampled statistic remains a mean over included questions.
+whole, previously frozen question clusters with replacement, preserving both conditions and all
+questions within each selected cluster. Each resample draws the original number of clusters
+with equal probabilities; repeated clusters contribute repeated copies of their questions.
+The resampled statistic remains a mean over included questions, whose count can vary when
+cluster sizes differ. The reported interval is the empirical $2.5$th to $97.5$th percentile.
 There are $200$ PsiloQA source-article clusters and $151$ TruthfulQA question/family clusters,
 the latter with maximum size $11$; resampling individual agent states would create
 pseudoreplication. We use the pairs cluster-bootstrap principle \cite{CameronMiller} and report
@@ -914,12 +1001,14 @@ the labelled-error fraction, v2 gives changes $+0.00282$ ($95\%$ interval
 $[-0.00771,0.01341]$) on PsiloQA and $+0.00211$ ($[-0.00485,0.00915]$) on TruthfulQA;
 v1 likewise gives intervals spanning zero. These observations do not establish equivalence,
 stability or the proposed feedback mechanism. Full five-outcome means, standard deviations,
-paired results and both scoring versions are retained in the supplementary analysis files.
+paired results and both scoring versions are retained in the repository analysis files
+(Appendix~\ref{app:repro}).
 
 \subsection{Externally controlled signed-error variability across models (RQ3)}
 
 We study a designed controller with LLM agents in its feedback loop, using eight author-curated
-numeric questions with fixed reference values and scales. The harness computes a suggestion
+numeric questions with fixed reference values and positive normalization scales (in the same units
+as each answer), recorded in \path{paper/remote/debate_v3.py}. The harness computes a suggestion
 $V_{i,t}=b_{i,t}-\alpha(b_{i,t-\ell}-b^\star)$ outside the LLM, rounds it to one decimal place,
 and supplies it alongside peer estimates. The prompt instructs agents to follow the suggestion and
 peers and to use no outside knowledge. Thus the update law is imposed by the experimental protocol;
@@ -947,7 +1036,8 @@ agree within the resulting $0.001$ tolerance, while two movement flags lie at a 
 threshold. The analyses below retain the originally stored flags and amplitudes.
 
 The stored experiment has $22$ states per run and three repeated runs per question and cell. Its
-``amplitude'' is the standard deviation of $e_t=(\bar b_t-b^\star)/\mathrm{scale}$ over states
+``amplitude'' is the standard deviation of $e_t=(\bar b_t-b^\star)/\mathrm{scale}$, where
+$\bar b_t$ is the mean of the three free-agent estimates, over states
 $3,\ldots,21$; it measures finite-window variability, including transients. The overshoot statistic
 below requires both $\min_t e_t<-0.02$ and $\max_t e_t>0.02$ over the stored trajectory.
 The separately stored \texttt{zc} field instead counts crossings of the trajectory's own centred
@@ -1036,37 +1126,13 @@ If $g>0$, however, an all-zero history produces $p_{t+1}=g$, and non-negative pe
 possible. For example, with $\alpha=1$, $\delta=1$, $g=1$ and
 $\sigma(p)=\max(-2,\min(p,2))$, the history $(p_{-1},p_0)=(0,0)$ generates
 $0,0,1,2,2,1,0,0,\ldots$, a period-six orbit. With $\sigma=\tanh$, the parameters
-$\alpha=1.5$, $\delta=1$, $g=0.2$ also yield a non-negative periodic orbit in the numerical check.
+$\alpha=1.5$, $\delta=1$, $g=0.2$ also produce recurrent non-negative oscillations in the
+finite numerical check; exact periodicity is not proved for that example.
 Thus projection removes signed overshoot but does not establish absence of oscillation under forcing.
 The factual-QA observations should be interpreted as protocol-specific evidence; the projected
 recurrence is not an identified model of those experiments. Likewise, loss of linear stability in
 the signed model alone does not prove existence of a bounded nonlinear limit cycle.
 \end{remark}
-
-\section{Conclusion}
-We modeled the multi-agent LLM verifier loop as a delayed consensus over a graph with grounded
-corrector nodes, and derived closed-form thresholds showing that verification carries a stability
-budget in this model. Excessive correction gain can cause loss of linear stability.
-When communication and verification delays coincide, the ceiling for the dimensionless combined
-dose $\eta(\mu+\kappa)$ is the inverse golden ratio at delay two. This does not make equal delays universally worst. For a fixed corrector budget, greedy placement guarantees at least
-$1-1/e$ of the optimal coherence reduction; this does not imply optimal static mean-square error.
-
-The synthetic loop brackets onset near the linear prediction at the sweep resolution. The LLM
-experiment demonstrates transmission of an externally specified correction signal. Correcting the
-history indexing maps its stored labels $1,6$ to effective lags $0,5$; the exploratory all-run
-comparison supports larger variability at the longer lag in five of six models. This does not
-establish the same law for natural factual verification or persistent nonlinear oscillation.
-The historical factual-QA contrasts are inconclusive and have small selected samples, aliased
-delay labels and departures from the planned controls. The separate expanded study addresses
-sample count, delay indexing and missing response logs, but its $400$ questions still leave both
-signs of the binary-amplitude contrast possible under conservative completion bounds. Abstentions
-dominate the remaining unscored cells. A post-hoc outcome analysis finds lower abstention frequency
-at lag five on TruthfulQA, identically under both scoring versions; intervals for the change in
-labelled-error variability span zero. This does not establish greater accuracy, absence of an
-amplitude effect or general factual stability.
-
-Within the assumed recurrence, dose is limited by stability,
-while a placement objective must specify the error or noise model it represents.
 
 \section{Limitations}
 
@@ -1074,7 +1140,8 @@ Several limitations bound the scope. The analysis is exact for the postulated li
 With constant forcing, its stable equilibrium is generally biased away from truth. Interpreting the
 recurrence as a local model of a nonlinear LLM loop requires an independently identified equilibrium
 and Jacobian; the synthetic onset comparison does not supply that identification. Unlike the dose limit, the placement rule is so far validated only on the coherence surrogate, not with LLM agents. Its approximation guarantee does not cover static mean-square error or the stochastic variance of the delayed loop.
-We model soft fixed-bias faults and node-level (state-overwriting) correctors; Byzantine faults and
+We model constant additive fault forcing, hard pins and a separate delayed restoring term;
+the placement surrogate uses finite soft pins. Byzantine faults and
 edge-level (message-filtering) correctors are future work. For general unequal delays,
 Theorem~\ref{thm:twodelay} gives candidate boundary loci, including singular cases; it does not provide
 a closed-form classification of every stable cell or a universal worst delay allocation.
@@ -1118,6 +1185,31 @@ For a diagonal gain matrix $K$, independent grounded-Laplacian modes require a c
 delays with scalar gains may preserve the spatial modes, but require a time-varying stability analysis
 rather than a fixed characteristic polynomial. Coupling correction to an online change detector
 likewise remains outside the present results.
+
+\section{Conclusion}
+We modeled the multi-agent LLM verifier loop as a delayed consensus over a graph with grounded
+corrector nodes, and derived exact thresholds showing that verification carries a stability
+budget in this model. Excessive correction gain can cause loss of linear stability.
+When communication and verification delays coincide, the ceiling for the dimensionless combined
+dose $\eta(\mu+\kappa)$ is the inverse golden ratio at delay two. This does not make equal delays universally worst. For a fixed corrector budget, greedy placement guarantees at least
+$1-1/e$ of the optimal coherence reduction; this does not imply optimal static mean-square error.
+
+The synthetic loop brackets onset near the linear prediction at the sweep resolution. The LLM
+experiment demonstrates transmission of an externally specified correction signal. Correcting the
+history indexing maps its stored labels $1,6$ to effective lags $0,5$; the exploratory all-run
+comparison supports larger variability at the longer lag in five of six models. This does not
+establish the same law for natural factual verification or persistent nonlinear oscillation.
+The historical factual-QA contrasts are inconclusive and have small selected samples, aliased
+delay labels and departures from the planned controls. The separate expanded study addresses
+sample count, delay indexing and missing response logs, but its $400$ questions still leave both
+signs of the binary-amplitude contrast possible under conservative completion bounds. Abstentions
+dominate the remaining unscored cells. A post-hoc outcome analysis finds lower abstention frequency
+at lag five on TruthfulQA, identically under both scoring versions; intervals for the change in
+labelled-error variability span zero. This does not establish greater accuracy, absence of an
+amplitude effect or general factual stability.
+
+Within the assumed recurrence, dose is limited by stability,
+while a placement objective must specify the error or noise model it represents.
 
 \section*{Acknowledgments}
 The author thanks Ilya Makarov for valuable feedback on the manuscript.
@@ -1277,7 +1369,7 @@ criterion for every integer $\delta\ge1$, without a finite-delay enumeration.
 
 \section{Proof of Lemma~\ref{lem:cheb} (monotonicity of the dose)}\label{app:cheb}
 Write $a_\delta(c)=U_\delta/U_{\delta-1}$. The Chebyshev recurrence $U_\delta=2cU_{\delta-1}-U_{\delta-2}$
-gives a continued fraction whose derivative telescopes,
+gives a continued fraction and the derivative recursion
 \[
   a_\delta=2c-\frac{1}{a_{\delta-1}},
   \qquad
@@ -1307,7 +1399,7 @@ $\beta_c(1,\delta)=2\sin(\pi/(4\delta+2))$. At $\delta=2$, eliminating $c$ gives
 $\beta_c^2+a\beta_c=1$, hence the positive solution in the lemma.
 
 \section{Two-delay locus and equal-delay ceiling}\label{app:twodelay}
-For Theorem~\ref{thm:twodelay}, substitute $z=e^{i\theta}$ into $P(z)=0$ and divide by $z^m$.
+For Theorem~\ref{thm:twodelay}, substitute $z=e^{i\theta}$ into $P(z)=0$ and divide by $z^h$.
 The real and imaginary parts are \eqref{eq:twodelay}. Viewed as equations for $(p,q)$, their
 coefficient matrix has determinant $\sin((\delta-d)\theta)$. If it is nonzero, Cramer's rule gives
 the displayed parametrization. If it vanishes, the rank-one system must instead be solved for
@@ -1333,12 +1425,12 @@ has numerator $(2\tau+1)(1-\cos\theta)>0$; the roots are simple and cross outwar
 therefore does not return at higher gain. Taking the largest $\mu$ gives the network condition.
 
 \section{Proof of Theorem~\ref{thm:place} (greedy placement)}\label{app:place}
-Throughout, write $M(R)=G+\kappa I+w\sum_{i\in R}e_ie_i^\top\succ0$ and $H(R)=\tr M(R)^{-1}$,
+Throughout, write $M(R)=G+\kappa I+w\sum_{i\in R}u_iu_i^\top\succ0$ and $H(R)=\tr M(R)^{-1}$,
 with the fixed baseline $G$ of Section~\ref{sec:place}.
 
 \emph{Monotonicity.} For $i\notin R$, pinning is a positive-semidefinite update,
 \[
-  M(R\cup\{i\})=M(R)+w\,e_ie_i^\top\succeq M(R)
+  M(R\cup\{i\})=M(R)+w\,u_iu_i^\top\succeq M(R)
   \;\Longrightarrow\;
   M(R\cup\{i\})^{-1}\preceq M(R)^{-1},
 \]
@@ -1347,12 +1439,12 @@ with $\rho(\varnothing)=0$.
 
 \emph{Marginal gain.} By the Sherman--Morrison identity,
 \[
-  \bigl(M+w\,e_ie_i^\top\bigr)^{-1}=M^{-1}-\frac{w\,M^{-1}e_ie_i^\top M^{-1}}{1+w\,e_i^\top M^{-1}e_i},
+  \bigl(M+w\,u_iu_i^\top\bigr)^{-1}=M^{-1}-\frac{w\,M^{-1}u_iu_i^\top M^{-1}}{1+w\,u_i^\top M^{-1}u_i},
 \]
-whose trace is $\tr M^{-1}-w\|M^{-1}e_i\|^2/(1+w\,e_i^\top M^{-1}e_i)$. Subtracting recovers
+whose trace is $\tr M^{-1}-w\|M^{-1}u_i\|^2/(1+w\,u_i^\top M^{-1}u_i)$. Subtracting recovers
 \eqref{eq:marg},
 \[
-  \Delta_i(R)=\frac{w\,\|M(R)^{-1}e_i\|^2}{1+w\,e_i^\top M(R)^{-1}e_i}\ \ge\ 0 .
+  \Delta_i(R)=\frac{w\,\|M(R)^{-1}u_i\|^2}{1+w\,u_i^\top M(R)^{-1}u_i}\ \ge\ 0 .
 \]
 
 \emph{Submodularity.} We must show the marginal is non-increasing in the pinned set,
@@ -1362,12 +1454,16 @@ whose trace is $\tr M^{-1}-w\|M^{-1}e_i\|^2/(1+w\,e_i^\top M^{-1}e_i)$. Subtract
 Here the structure of $G$ is essential. Because $M(R)=G+\kappa I+W_R$ has nonpositive off-diagonal
 entries (from $-A$) and is positive definite, it is a symmetric nonsingular \emph{M-matrix}, so
 \[
-  M(R)^{-1}\ge0\quad\text{entrywise},
+  M(R)^{-1}\ge0\quad\text{entrywise}.
 \]
+This inverse sign can be checked directly: choose $s>\lambda_{\max}(M)$ and write
+$B=I-M/s$. Then $B$ is entrywise non-negative, its eigenvalues lie in $[0,1)$, and
+$M^{-1}=s^{-1}\sum_{j=0}^{\infty}B^j$ is entrywise non-negative. The same argument applies
+after any non-negative diagonal update.
 For a direct diminishing-returns proof, let $Q(x)=(G+\kappa I+\diag x)^{-1}$ and
 $f(x)=\tr Q(x)$ for $x\ge0$. Matrix differentiation gives
 \[
- \partial_i Q=-Qe_ie_i^\top Q,\qquad
+ \partial_i Q=-Qu_iu_i^\top Q,\qquad
  \partial_i f=-(Q^2)_{ii},\qquad
  \partial_j\partial_i f=2Q_{ij}(Q^2)_{ij}\ge0.
 \]
@@ -1390,35 +1486,37 @@ $\rho(\varnothing)=0$ gives the finite-$k$ bound in \eqref{eq:greedybound};
 $(1-1/k)^k\le e^{-1}$ gives its last inequality \cite{Nemhauser}. Substituting
 $\rho(R)=H(\varnothing)-H(R)$ yields the stated bound on $H$.
 
-\section{Reproducibility}
-The project repository is:
-\url{https://github.com/YehudaItkin/delayed-verification-llm}.
-The local revision records supply updated checks and reanalyses. Historical trajectories do not
-include all raw generations; independent reconstruction of their NLI scores and historical parser
-outputs is therefore unavailable. The expanded study in Section~\ref{sec:expanded} adds new runs
-with complete response logs; it does not repair the missing historical generations.
-Targeted Lean~4 certificates for the placement counterexample and the algebraic conversion of the
-reduction guarantee are in \path{paper/lean/PlacementCheck.lean}. Certificates for the delay-allocation
-counterexample and a singular unit-circle locus are in \path{paper/lean/DelayCheck.lean}.
-The archived controller indexing and its idealized update are checked in
-\path{paper/lean/ControllerCheck.lean}. Additional gossip-only, averaging and identifiability
-witnesses are in \path{paper/lean/RecheckCheck.lean}. The normal directed-matrix and fixed-peer
-expansion witnesses are in \path{paper/lean/RereadCheck.lean}.
-These certify the specified algebraic calculations, not the complete stability or placement
-theorems or the empirical model.
+\section{Reproducibility}\label{app:repro}
+Repository: \url{https://github.com/YehudaItkin/delayed-verification-llm}.
+For offline reproduction, use Python 3.11 or later and run from the repository root:
+\begin{verbatim}
+python -m pip install -r requirements-reproduce.txt
+python reproduce.py
+\end{verbatim}
+This checks \path{RESEARCH_MANIFEST.json}, restores gzip-compressed logs and recomputes the
+expanded analyses without querying a model. For restoration alone, run
+\texttt{python restore\_data.py}. Paths below refer to restored files. Missing historical
+raw generations still prevent independent reconstruction of some old scores and parser outputs.
 
-The expanded study is versioned separately under \path{experiments/factual_expanded_v4/}.
-Its \path{code_v4_3/PROTOCOL_RU.md} specifies the final generation contract and collection design;
-\path{qwen38/v4_3_snapshot/results/primary/manifest.json} freezes questions, source evidence,
-condition definitions, model identity and code hashes. The accompanying \path{requests.jsonl}
-and \path{runs.jsonl} preserve requests, responses and states. The full technical replay is
-recorded in \path{primary_v4_3_verification.json}.
+Targeted Lean~4 certificates are under \path{paper/lean/}:
+\path{PlacementCheck.lean} covers the placement counterexample and reduction-bound algebra;
+\path{DelayCheck.lean} the delay-allocation and singular-locus examples;
+\path{ControllerCheck.lean} archived indexing;
+\path{RecheckCheck.lean} gossip-only, averaging and identifiability witnesses; and
+\path{RereadCheck.lean} the normal directed matrix and fixed-peer expansion.
+They do not certify the complete stability or placement theorems or the empirical model.
 
-Scoring v1: \path{semantic_review_20260915/}; v2:
-\path{semantic_review_v2_20260915/}. Both retain decisions and their application to all trajectories.
-The separate \path{outcome_analysis_20260915/} contains its post-hoc protocol, code, tests,
-per-question results, hashes and $20000$ bootstrap replicates per dataset and scoring version.
-Seeds are $20260915$ (PsiloQA) and $20260916$ (TruthfulQA). These records verify calculations
-conditional on the preserved labels, not the labels' independent factual validity.
+Expanded-study paths are relative to \path{experiments/factual_expanded_v4/}:
+\path{code_v4_3/PROTOCOL_RU.md} specifies collection;
+\path{qwen38/v4_3_snapshot/results/primary/manifest.json} freezes questions, evidence,
+conditions, model digest and code hashes. The adjacent \path{requests.jsonl} and
+\path{runs.jsonl} preserve all requests, responses and states;
+\path{primary_v4_3_verification.json} records the technical replay.
+Semantic decisions and their application are in \path{semantic_review_20260915/}
+(v1) and \path{semantic_review_v2_20260915/} (v2).
+\path{outcome_analysis_20260915/} contains the post-hoc protocol, code, tests, per-question
+results, hashes and $20000$ bootstrap replicates per dataset and version, with seeds
+$20260915$ (PsiloQA) and $20260916$ (TruthfulQA).
+These records verify calculations conditional on frozen labels, not their independent factual validity.
 
 \end{document}
